@@ -1,0 +1,1001 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Linux | Moyuduo's blog</title><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="linux命令自查 查看cpu和内存 cpu个数 cat /proc/cpuinfo | grep &#34;physical id&#34; | uniq | wc -l cpu核数 cat /proc/cpuinfo | grep &#34;cpu cores&#34; | uniq cpu型号 cat /proc/cpuinfo | grep 'model name' |uniq 内存大小 cat /proc/meminfo | grep MemTotal 设置linux开机自启动 linux文件/etc/rc.local文件中的内容会linux启动完成后执行，所以可以用来做开机自启动，/etc/rc.local默认是lrwxrwxrwx权限，但是由于它是/etc/rc.d/rc.local的一个软连接，所以/etc/rc.d/rc.local这个文件必须要有执行权限才能开机自启动，而这个人间默认是-rw-rw-rw-权限，所以必须要修改添加执行权限,注意在这个文件中添加开机执行死循环脚本时必须使用&后台执行。
+秒级检测脚本 #!/bin/bash while true do count=`ps -ef|grep etcd|grep -v grep|wc -l` if [ $count -eq 0 ]; then cd /opt/etcd-v3.5.0-linux-amd64 ./etcd -listen-client-urls=&#34;http://0.0.0.0:2379&#34; --advertise-client-urls=&#34;http://0.0.0.0:2379&#34; echo &#34;restart etcd at $(date)&#34; >> /opt/etcd-v3.5.0-linux-amd64/record fi sleep 1 done 原理是通过ps -ef|grep按照条件过滤执行的进程，再通过wc -l转换为进程个数，最后通过shell进行判断。"><meta name=generator content="Hugo 0.107.0"><meta name=robots content="noindex, nofollow"><link rel=stylesheet href=/ananke/css/main.min.css><meta property="og:title" content="Linux"><meta property="og:description" content="linux命令自查 查看cpu和内存 cpu个数 cat /proc/cpuinfo | grep &#34;physical id&#34; | uniq | wc -l cpu核数 cat /proc/cpuinfo | grep &#34;cpu cores&#34; | uniq cpu型号 cat /proc/cpuinfo | grep 'model name' |uniq 内存大小 cat /proc/meminfo | grep MemTotal 设置linux开机自启动 linux文件/etc/rc.local文件中的内容会linux启动完成后执行，所以可以用来做开机自启动，/etc/rc.local默认是lrwxrwxrwx权限，但是由于它是/etc/rc.d/rc.local的一个软连接，所以/etc/rc.d/rc.local这个文件必须要有执行权限才能开机自启动，而这个人间默认是-rw-rw-rw-权限，所以必须要修改添加执行权限,注意在这个文件中添加开机执行死循环脚本时必须使用&后台执行。
+秒级检测脚本 #!/bin/bash while true do count=`ps -ef|grep etcd|grep -v grep|wc -l` if [ $count -eq 0 ]; then cd /opt/etcd-v3.5.0-linux-amd64 ./etcd -listen-client-urls=&#34;http://0.0.0.0:2379&#34; --advertise-client-urls=&#34;http://0.0.0.0:2379&#34; echo &#34;restart etcd at $(date)&#34; >> /opt/etcd-v3.5.0-linux-amd64/record fi sleep 1 done 原理是通过ps -ef|grep按照条件过滤执行的进程，再通过wc -l转换为进程个数，最后通过shell进行判断。"><meta property="og:type" content="article"><meta property="og:url" content="http://example.org/posts/linux/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-11-26T14:14:07+08:00"><meta property="article:modified_time" content="2022-11-26T14:14:07+08:00"><meta itemprop=name content="Linux"><meta itemprop=description content="linux命令自查 查看cpu和内存 cpu个数 cat /proc/cpuinfo | grep &#34;physical id&#34; | uniq | wc -l cpu核数 cat /proc/cpuinfo | grep &#34;cpu cores&#34; | uniq cpu型号 cat /proc/cpuinfo | grep 'model name' |uniq 内存大小 cat /proc/meminfo | grep MemTotal 设置linux开机自启动 linux文件/etc/rc.local文件中的内容会linux启动完成后执行，所以可以用来做开机自启动，/etc/rc.local默认是lrwxrwxrwx权限，但是由于它是/etc/rc.d/rc.local的一个软连接，所以/etc/rc.d/rc.local这个文件必须要有执行权限才能开机自启动，而这个人间默认是-rw-rw-rw-权限，所以必须要修改添加执行权限,注意在这个文件中添加开机执行死循环脚本时必须使用&后台执行。
+秒级检测脚本 #!/bin/bash while true do count=`ps -ef|grep etcd|grep -v grep|wc -l` if [ $count -eq 0 ]; then cd /opt/etcd-v3.5.0-linux-amd64 ./etcd -listen-client-urls=&#34;http://0.0.0.0:2379&#34; --advertise-client-urls=&#34;http://0.0.0.0:2379&#34; echo &#34;restart etcd at $(date)&#34; >> /opt/etcd-v3.5.0-linux-amd64/record fi sleep 1 done 原理是通过ps -ef|grep按照条件过滤执行的进程，再通过wc -l转换为进程个数，最后通过shell进行判断。"><meta itemprop=datePublished content="2022-11-26T14:14:07+08:00"><meta itemprop=dateModified content="2022-11-26T14:14:07+08:00"><meta itemprop=wordCount content="3073"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Linux"><meta name=twitter:description content="linux命令自查 查看cpu和内存 cpu个数 cat /proc/cpuinfo | grep &#34;physical id&#34; | uniq | wc -l cpu核数 cat /proc/cpuinfo | grep &#34;cpu cores&#34; | uniq cpu型号 cat /proc/cpuinfo | grep 'model name' |uniq 内存大小 cat /proc/meminfo | grep MemTotal 设置linux开机自启动 linux文件/etc/rc.local文件中的内容会linux启动完成后执行，所以可以用来做开机自启动，/etc/rc.local默认是lrwxrwxrwx权限，但是由于它是/etc/rc.d/rc.local的一个软连接，所以/etc/rc.d/rc.local这个文件必须要有执行权限才能开机自启动，而这个人间默认是-rw-rw-rw-权限，所以必须要修改添加执行权限,注意在这个文件中添加开机执行死循环脚本时必须使用&后台执行。
+秒级检测脚本 #!/bin/bash while true do count=`ps -ef|grep etcd|grep -v grep|wc -l` if [ $count -eq 0 ]; then cd /opt/etcd-v3.5.0-linux-amd64 ./etcd -listen-client-urls=&#34;http://0.0.0.0:2379&#34; --advertise-client-urls=&#34;http://0.0.0.0:2379&#34; echo &#34;restart etcd at $(date)&#34; >> /opt/etcd-v3.5.0-linux-amd64/record fi sleep 1 done 原理是通过ps -ef|grep按照条件过滤执行的进程，再通过wc -l转换为进程个数，最后通过shell进行判断。"></head><body class="ma0 avenir bg-near-white"><header><div class=bg-black><nav class="pv3 ph3 ph4-ns" role=navigation><div class="flex-l justify-between items-center center"><a href=/ class="f3 fw2 hover-white no-underline white-90 dib">Moyuduo's blog</a><div class="flex-l items-center"><div class=ananke-socials></div></div></div></nav></div></header><main class=pb7 role=main><article class="flex-l flex-wrap justify-between mw8 center ph3"><header class="mt4 w-100"><aside class="instapaper_ignoref b helvetica tracked">POSTS</aside><div id=sharing class="mt3 ananke-socials"></div><h1 class="f1 athelas mt3 mb1">Linux</h1><time class="f6 mv4 dib tracked" datetime=2022-11-26T14:14:07+08:00>November 26, 2022</time></header><div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id=linux命令自查>linux命令自查</h1><h2 id=查看cpu和内存>查看cpu和内存</h2><h3 id=cpu个数>cpu个数</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat /proc/cpuinfo | grep <span style=color:#e6db74>&#34;physical id&#34;</span> | uniq | wc -l
+</span></span></code></pre></div><h3 id=cpu核数>cpu核数</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat /proc/cpuinfo | grep <span style=color:#e6db74>&#34;cpu cores&#34;</span> | uniq
+</span></span></code></pre></div><h3 id=cpu型号>cpu型号</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat /proc/cpuinfo | grep <span style=color:#e6db74>&#39;model name&#39;</span> |uniq
+</span></span></code></pre></div><h3 id=内存大小>内存大小</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat /proc/meminfo | grep MemTotal
+</span></span></code></pre></div><h2 id=设置linux开机自启动>设置linux开机自启动</h2><p>linux文件<code>/etc/rc.local</code>文件中的内容会linux启动完成后执行，所以可以用来做开机自启动，<code>/etc/rc.local</code>默认是lrwxrwxrwx权限，但是由于它是<code>/etc/rc.d/rc.local</code>的一个软连接，所以<code>/etc/rc.d/rc.local</code>这个文件必须要有执行权限才能开机自启动，而这个人间默认是-rw-rw-rw-权限，所以必须要修改添加执行权限,注意在这个文件中添加开机执行死循环脚本时必须使用<code>&</code>后台执行。</p><h2 id=秒级检测脚本>秒级检测脚本</h2><pre tabindex=0><code class=language-she data-lang=she>#!/bin/bash
+while true
+do
+	count=`ps -ef|grep etcd|grep -v grep|wc -l`
+	if [ $count -eq 0 ]; then
+		cd /opt/etcd-v3.5.0-linux-amd64
+		./etcd -listen-client-urls=&#34;http://0.0.0.0:2379&#34; --advertise-client-urls=&#34;http://0.0.0.0:2379&#34;
+		echo &#34;restart etcd at $(date)&#34; &gt;&gt; /opt/etcd-v3.5.0-linux-amd64/record
+	fi
+	sleep 1
+done
+</code></pre><p>原理是通过ps -ef|grep按照条件过滤执行的进程，再通过wc -l转换为进程个数，最后通过shell进行判断。</p><p>这种方式本质上是通过循环来进行判断，相比于crontab而言，时间可以精确到秒，而crontab的最小单位是分钟</p><h2 id=单行命令直接增加cpu占有率到100>单行命令直接增加cpu占有率到100%</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#66d9ef>for</span> i in <span style=color:#e6db74>`</span>seq <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>$(</span>cat /proc/cpuinfo |grep <span style=color:#e6db74>&#34;physical id&#34;</span> |wc -l<span style=color:#66d9ef>)</span><span style=color:#e6db74>`</span>; <span style=color:#66d9ef>do</span> dd <span style=color:#66d9ef>if</span><span style=color:#f92672>=</span>/dev/zero of<span style=color:#f92672>=</span>/dev/null &amp; <span style=color:#66d9ef>done</span>
+</span></span><span style=display:flex><span>说明:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat /proc/cpuinfo |grep <span style=color:#e6db74>&#34;physical id&#34;</span> | wc -l 可以获得CPU的个数,　我们将其表示为N。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>seq <span style=color:#ae81ff>1</span> N 用来生成１到Ｎ之间的数字
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> i in <span style=color:#e6db74>`</span>seq <span style=color:#ae81ff>1</span> N<span style=color:#e6db74>`</span>; 就是循环执行命令,从１到Ｎ
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>dd <span style=color:#66d9ef>if</span><span style=color:#f92672>=</span>/dev/zero of<span style=color:#f92672>=</span>/dev/null 执行dd命令,　输出到/dev/null, 实际上只占用CPU,　没有IO操作.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>由于连续执行Ｎ个<span style=color:#f92672>(</span>Ｎ是ＣＰＵ个数<span style=color:#f92672>)</span>的dd 命令, 且使用率为100%,　这时调度器会调度每个dd命令在不同的CPU上处理.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>最终就实现所有ＣＰＵ占用率100%
+</span></span></code></pre></div><p>测试完毕后，必须使用top命令查看cpu使用率，并kill掉脚本的进程</p><h2 id=find>find</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>find path  -option name
+</span></span><span style=display:flex><span>option常用的有
+</span></span><span style=display:flex><span>name 按照名字查找文件，支持通配符
+</span></span><span style=display:flex><span>type 按照类型查找，d为目录、c为字节型文件、f一般文件、s为socket
+</span></span><span style=display:flex><span>size 
+</span></span></code></pre></div><h2 id=ssh远程免密登录>ssh远程免密登录</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#生成rsa秘钥</span>
+</span></span><span style=display:flex><span>ssh-keygen
+</span></span><span style=display:flex><span><span style=color:#75715e>#把id_rsa.pub文件拷贝打要远程登录的目标机器,并改名为authorized_keys</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#在拷贝前一定要保证有/root/.ssh这个目录，可以是用ssh-keygen生成秘钥对来创建该目录，也可以手动创建该目录</span>
+</span></span><span style=display:flex><span>scp id_rsa.pub root@192.168.37.152:/root/authorized_keys
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#配置完成后测试</span>
+</span></span><span style=display:flex><span>ssh root@192.168.37.152 <span style=color:#e6db74>&#34;ls -l /root&#34;</span> 
+</span></span><span style=display:flex><span><span style=color:#75715e>#或</span>
+</span></span><span style=display:flex><span>ssh 192.168.37.152 <span style=color:#e6db74>&#34;ls -l /root&#34;</span>
+</span></span></code></pre></div><h2 id=配置hosts本地dns>配置hosts本地DNS</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>vim /etc/hosts
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#添加</span>
+</span></span><span style=display:flex><span>ip	域名
+</span></span></code></pre></div><h2 id=防火墙操作>防火墙操作</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#开放端口</span>
+</span></span><span style=display:flex><span>firewall-cmd --add-port<span style=color:#f92672>=</span>9092/tcp --permanent
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#重新加载防火墙配置</span>
+</span></span><span style=display:flex><span>firewall-cmd --reload
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#查询端口释放开放</span>
+</span></span><span style=display:flex><span>firewall-cmd --query-port<span style=color:#f92672>=</span>9092/tcp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#关闭端口</span>
+</span></span><span style=display:flex><span>firewall-cmd --remove-port<span style=color:#f92672>=</span>9092/tcp --permanent
+</span></span></code></pre></div><h2 id=shell脚本中使用其他用户执行脚本>shell脚本中使用其他用户执行脚本</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#切换用户执行命令</span>
+</span></span><span style=display:flex><span>su - user -c command
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#切换用户执行一个shell脚本</span>
+</span></span><span style=display:flex><span>su - user -s /bin/bash xxx.sh
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#参考：https://www.cnblogs.com/bigben0123/archive/2013/05/07/3064843.html</span>
+</span></span></code></pre></div><h2 id=配置yum源>配置yum源</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cd /etc/yum.repos.d/ 
+</span></span><span style=display:flex><span>curl -O http://mirrors.aliyun.com/repo/Centos-7.repo
+</span></span><span style=display:flex><span><span style=color:#75715e>#备份原来的yum源</span>
+</span></span><span style=display:flex><span>mv CentOS-Base.repo CentOS-Base.repo.bak 
+</span></span><span style=display:flex><span><span style=color:#75715e>#修改yum源为下载的yum源</span>
+</span></span><span style=display:flex><span>mv Centos-7.repo CentOS-Base.repo
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>yum clean all
+</span></span><span style=display:flex><span>yum makecache
+</span></span><span style=display:flex><span>yum update
+</span></span></code></pre></div><h2 id=wsl下ubuntu设置密码找回密码>wsl下ubuntu设置密码找回密码</h2><ol><li>cmd打开powershell</li><li>输入ubuntu按tab选择要重置的虚拟机 ubuntu.exe conifg &ndash;default-user root</li><li>打开ubuntu,会切换指定用户登录且不需要密码，passwd修改密码</li></ol><h2 id=ubuntu更新apt源>ubuntu更新apt源</h2><ol><li>在https://opsx.alibaba.com/mirror找到对应的ubuntu版本</li><li>sudo mv /etc/apt/sources.list /etc/apt/sources.list_backup 将 sources.list 文件备份</li><li>sudo vim /etc/apt/sources.list写入配置</li><li>sudo apt-get update 更新apt软件源</li></ol><h2 id=vim>vim</h2><p>vim模式：</p><ol><li>普通默认：使用vim进来默认就是</li><li>view模式：按v进入，可以使用HJKL来移动光标选择文本</li><li>view line模式：按V进入，使用JK可上下移动光标来按行选择文本</li><li>插入默认：按i、a、o都可进入，可以插入文本</li></ol><p>在vim的普通模式中可以使用HJKL四个键来控制光标的上下左右移动，H是光标左移、J是光标下移、K是光标上移、L是光标右移</p><p>在普通模式下，按b键会跳转到单词的开头或上一个单词开头(当前以及处于单词开头),按w键会跳转到下一个单词的开头</p><p><img src=./images/Snipaste_2021-09-19_13-41-36.jpg alt></p><p>在普通模式下可以使用f+字符来对当前行光标之后进行查找包含当前查找字符的下一处，查找到会把光标移动到下一处对应的查找字符，并且可以使用；键来继续在当前行向后查找，使用，键来在当前行向前查找</p><p>在普通模式下使用F+字符来对当前行光标之前查找包含当前查找字符的上一处</p><p>可以使用:set nu来设置vim显示行号，但是这种方式退出后再次进入就失效了，可以在当前用户的家目录下建立.vimrc文件来设置当前用户的个人vim设置，也可建立/etc/vimrc来配置系统级别的vim设置</p><p>使用:set nonu来取消vim行号显示</p><p>在view模式下，按iw可以选中当前单词，按aw可以选中当前单词及后面的所有空格</p><p>在普通模式下按d、c、y、v都可以进入对应的待决模式</p><p>d是删除模式，例如要删除一个单词就可以使用diw或者daw</p><p>c是修改模式，也是用于删除，例如：ciw或caw就可删除一个单词，它与删除模式不同的是，删除模式删除之后还是在普通模式，而修改模式删除之后就进入插入模式</p><p>y是复制模式，可以使用yiw或yaw来复制一个单词，然后使用p来粘贴</p><p>使用m + 符号来设置一个标记，然后可以使用` + 符号 来快速跳转到标记的位置</p><p>普通模式下按V进入view line模式使用，JK来选择一个范围的内容，按y进行赋值，然后可以p进行粘贴</p><p>在普通模式下可以使用ctl + b向上翻页，ctl + f向下翻页，ctl + u向上翻半页，ctl + d向下翻半页</p><p>在普通模式下输入:/pattern 来进行查找，查找到的单词会高亮显示，可以按n来进行跳转，可以使用:/xxx来搜索一个不存在的关键词或：noh来取消高亮显示</p><p>在普通模式下输入:%s/pattern/string/g 来进行全局的替换，其中pattern是待替换的词，string是替换后的词</p><p>在普通模式下可以使用gg来跳转到首行第一个字符，使用G可以跳转到最后一行最后一个字符，使用：n可以跳转到指定行，n为行号</p><p>在普通模式下按0可以跳转当前行的行首，按$即ctl + 4可以跳转到行末</p><p>使用:e! 来退出文档编辑并重新打开文档</p><p>使用ngg或nG或:n 来跳转到指定的行，n为行号</p><h2 id=用户管理>用户管理</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#添加用户</span>
+</span></span><span style=display:flex><span>useradd <span style=color:#f92672>[</span>options<span style=color:#f92672>]</span> &lt;user_name&gt;
+</span></span><span style=display:flex><span>options:
+</span></span><span style=display:flex><span>-d 指定家目录，默认会在/home目录下创建和用户名同名的家目录，如果给用户指定的家目录不存在可以使用-m参数指定不存在就创建
+</span></span><span style=display:flex><span>-g 指定用户所属的组，如果指定的组不存在则创建失败，一个用户只能所属与一个组
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#删除用户</span>
+</span></span><span style=display:flex><span>userdel <span style=color:#f92672>[</span>options<span style=color:#f92672>]</span> &lt;user_name&gt;
+</span></span><span style=display:flex><span>options:
+</span></span><span style=display:flex><span>-r 会把用户的家目录一并删除
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#修改用户，主要是修改用户相关组合家目录，并不是修改名字</span>
+</span></span><span style=display:flex><span>usermod <span style=color:#f92672>[</span>options<span style=color:#f92672>]</span> &lt;user_name&gt;
+</span></span><span style=display:flex><span>参数options和useradd的类似,但是可以使用-l参数来修改用户名,ex：usermod -l new_name old_name
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#添加组</span>
+</span></span><span style=display:flex><span>groupadd <span style=color:#f92672>[</span>options<span style=color:#f92672>]</span> &lt;group_name&gt;
+</span></span><span style=display:flex><span>options:
+</span></span><span style=display:flex><span>-g 指定组编号
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#删除分组</span>
+</span></span><span style=display:flex><span>groupdel &lt;group_name&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#修改组</span>
+</span></span><span style=display:flex><span>groupmod <span style=color:#f92672>[</span>options<span style=color:#f92672>]</span> &lt;group_name&gt;
+</span></span><span style=display:flex><span>options:和groupadd类似但是可以使用-n参数来修改组名,ex：groupmod -n new_group_name old_group_name
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#用户密码管理</span>
+</span></span><span style=display:flex><span>passwd <span style=color:#f92672>[</span>options<span style=color:#f92672>]</span> &lt;user_name&gt;
+</span></span><span style=display:flex><span>如果不指定参数的话那么可以给用户设置密码，如果指定参数的话则用户下次登录就要相关限制
+</span></span><span style=display:flex><span>options:
+</span></span><span style=display:flex><span>-d 删除密码，以后该用户登录就没有密码了
+</span></span><span style=display:flex><span>-l 锁定账户
+</span></span><span style=display:flex><span>-u 解锁账户
+</span></span><span style=display:flex><span>-f 强制执行
+</span></span></code></pre></div><h2 id=tail>tail</h2><p>查看文件末内容</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#默认显示文件的最后10行</span>
+</span></span><span style=display:flex><span>tail /filename
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-f参数可使循环读取，在读取日志文件时可以实时查看日志</span>
+</span></span><span style=display:flex><span>tail -f xxx.log
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-n参数可以指定显示文件末的行数，默认为10</span>
+</span></span><span style=display:flex><span>tail -n <span style=color:#ae81ff>20</span> -f xxx.log
+</span></span></code></pre></div><h2 id=linux链接>linux链接</h2><p>硬连接：多个文件的副本，会随任意文件的修改而修改，但是删除其中的文件，并不会影响其他文件</p><p>软连接：软连接相当于创建了一个快捷方式，删除软连接不影响源文件</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>echo <span style=color:#e6db74>&#34;init&#34;</span> &gt; f1.txt
+</span></span><span style=display:flex><span><span style=color:#75715e>#对f1.txt创建名为f2.txt的硬连接</span>
+</span></span><span style=display:flex><span>ln f1.txt f2.txt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -s参数指定创建软连接</span>
+</span></span><span style=display:flex><span>ln -s <span style=color:#f92672>[</span>链接指向的目标<span style=color:#f92672>]</span> <span style=color:#f92672>[</span>软链接名称<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ln -s f1.txt f3.txt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ls -li
+</span></span><span style=display:flex><span><span style=color:#ae81ff>1094956</span> -rw-rw-r-- <span style=color:#ae81ff>2</span> aiiqh aiiqh        <span style=color:#ae81ff>5</span> Oct <span style=color:#ae81ff>13</span> 12:01 f1.txt
+</span></span><span style=display:flex><span><span style=color:#ae81ff>1094956</span> -rw-rw-r-- <span style=color:#ae81ff>2</span> aiiqh aiiqh        <span style=color:#ae81ff>5</span> Oct <span style=color:#ae81ff>13</span> 12:01 f2.txt   <span style=color:#75715e>#inode号相同</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>1094958</span> lrwxrwxrwx <span style=color:#ae81ff>1</span> aiiqh aiiqh        <span style=color:#ae81ff>6</span> Oct <span style=color:#ae81ff>13</span> 12:01 f3.txt -&gt; f1.txt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>rm -f f1.txt
+</span></span><span style=display:flex><span>cat f2.txt  <span style=color:#75715e>#init</span>
+</span></span><span style=display:flex><span>cat f3.txt  <span style=color:#75715e>#cat: f3.txt: No such file or directory</span>
+</span></span></code></pre></div><h2 id=查看文件夹内文件大小>查看文件夹内文件大小</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cd /
+</span></span><span style=display:flex><span>du -h --max-depth<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span></code></pre></div><h2 id=nc>nc</h2><p>用于快速启动一个tcp或udp服务器</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#安装</span>
+</span></span><span style=display:flex><span>yum install -y nc
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#使用-l xxx参数用于启动一个在指定端口上的tcp(默认)服务</span>
+</span></span><span style=display:flex><span>nc -l <span style=color:#ae81ff>5000</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#使用-w xxx参数指定建立连接的超时时间</span>
+</span></span><span style=display:flex><span>nc -l <span style=color:#ae81ff>5000</span> -w <span style=color:#ae81ff>5</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#使用nc ip 端口号 来与外部tcp服务建立连接</span>
+</span></span><span style=display:flex><span>nc  127.0.0.1 <span style=color:#ae81ff>22</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#使用-k参数来指定允许多个连接，不指定该参数默认只允许建立一个链接</span>
+</span></span><span style=display:flex><span>nc -l <span style=color:#ae81ff>5000</span> -k
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#使用-v参数来显示详细信息</span>
+</span></span><span style=display:flex><span>nc -l <span style=color:#ae81ff>5000</span> -v
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#使用-u参数来指定使用udp，不使用该参数默认使用tcp</span>
+</span></span><span style=display:flex><span>nc -l <span style=color:#ae81ff>5000</span> -uv
+</span></span><span style=display:flex><span>nc -u 127.0.0.1 <span style=color:#ae81ff>5000</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#使用-p参数来指定使用的源端口</span>
+</span></span><span style=display:flex><span>nc -u -p <span style=color:#ae81ff>8888</span> 127.0.0.1 <span style=color:#ae81ff>5000</span>
+</span></span></code></pre></div><h2 id=lsns>lsns</h2><p>lsns用于查看linux下的namespace</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>lsns -t <span style=color:#f92672>{</span>namespace<span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>lsns -t pid 
+</span></span><span style=display:flex><span>lsns -t net
+</span></span></code></pre></div><h2 id=brctl>brctl</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 ~<span style=color:#f92672>]</span><span style=color:#75715e># brctl</span>
+</span></span><span style=display:flex><span>-bash: brctl: command not found
+</span></span><span style=display:flex><span>yum install -y bridge-utils
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#创建虚拟网桥</span>
+</span></span><span style=display:flex><span> brctl addbr br0
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> <span style=color:#75715e>#查看</span>
+</span></span><span style=display:flex><span> ip a
+</span></span><span style=display:flex><span> 11: br0: &lt;BROADCAST,MULTICAST&gt; mtu <span style=color:#ae81ff>1500</span> qdisc noop state DOWN group default qlen <span style=color:#ae81ff>1000</span>
+</span></span><span style=display:flex><span>    link/ether 92:47:2a:9f:bf:3f brd ff:ff:ff:ff:ff:ff
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span> <span style=color:#75715e>#关闭STP(生成树协议)因为我们只有一个路由器，是绝对不可能形成一个环的</span>
+</span></span><span style=display:flex><span> brctl stp br0 off
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> <span style=color:#75715e>#添加以太物理接口</span>
+</span></span><span style=display:flex><span> brctl addif br0 ens33
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> <span style=color:#75715e>#删除网桥物理接口</span>
+</span></span><span style=display:flex><span> brctl delif br0 ens33
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> <span style=color:#75715e>#给网桥分配一个ip地址</span>
+</span></span><span style=display:flex><span> ifconfig br0 172.18.0.1
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> <span style=color:#75715e>#启用网桥</span>
+</span></span><span style=display:flex><span> ifconfig br0 up
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> <span style=color:#75715e>#关闭网桥</span>
+</span></span><span style=display:flex><span> ifconfig br0 down
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> <span style=color:#75715e>#删除网桥</span>
+</span></span><span style=display:flex><span> brctl delbr b
+</span></span></code></pre></div><h2 id=grep>grep</h2><p>grep用于过滤字符，适用于进行日志查询，grep不会一次把所有内容加载到内存，而是一次加载一部分进行匹配后继续向下匹配，相较于cat、vim、more更适用于大量日志分析。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>-C 参数用于指定显示匹配内容上下文的行数，即匹配内容的上下n行都会输出
+</span></span><span style=display:flex><span>grep -C <span style=color:#ae81ff>5</span> <span style=color:#e6db74>&#39;aaa&#39;</span> text
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>-B参数指定显示匹配内容及前n行
+</span></span><span style=display:flex><span>-A参数指定显示匹配内容及后n行
+</span></span><span style=display:flex><span>-I 忽略大小写
+</span></span><span style=display:flex><span>-o 只显示匹配的内容
+</span></span><span style=display:flex><span>-c 统计过滤到的内容的行数
+</span></span><span style=display:flex><span>-n 显示行号
+</span></span><span style=display:flex><span>-v 剔除匹配到的内容
+</span></span><span style=display:flex><span>- w 精确
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#基础正则，直接用grep就可以使用</span>
+</span></span><span style=display:flex><span>. 表示任意字符
+</span></span><span style=display:flex><span>grep <span style=color:#e6db74>&#39;A.C&#39;</span> text <span style=color:#75715e>#可匹配ABC A1C A+C ...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>^ 匹配行开头
+</span></span><span style=display:flex><span>$ 匹配行结尾
+</span></span><span style=display:flex><span>^$ 匹配空行
+</span></span><span style=display:flex><span>* 表示前一个字符出现0次或0次以上
+</span></span><span style=display:flex><span>.* 表示匹配任意字符，包括空行
+</span></span><span style=display:flex><span>0* 会匹配到任意字符，因为*表示0个或0个以上字符，所以可以匹配到空字符，而每个行都有空字符
+</span></span><span style=display:flex><span><span style=color:#f92672>[]</span> 中括号表示匹配中括号的内的任一字符，中括号内如果有特殊字符，那么这些字符都被去除特殊含义
+</span></span><span style=display:flex><span>grep <span style=color:#e6db74>&#39;[abc]123&#39;</span> <span style=color:#75715e>#可以匹配 a123 b123 c123 </span>
+</span></span><span style=display:flex><span>grep <span style=color:#e6db74>&#39;[a-c]123&#39;</span> <span style=color:#75715e>#同上</span>
+</span></span><span style=display:flex><span>grep <span style=color:#e6db74>&#39;[abc|.,]123&#39;</span> <span style=color:#75715e>#中括号内的 | . , 都被去除特殊含义，可以匹配到 |123 .123 ,123 </span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#扩展正则，使用grep -E 或 egrep</span>
+</span></span><span style=display:flex><span>+ 前一个字符出现了0次以上
+</span></span><span style=display:flex><span>| 表示或者
+</span></span><span style=display:flex><span>grep -E <span style=color:#e6db74>&#39;abc|123&#39;</span> <span style=color:#75715e>#匹配abc 或 123</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>()</span> 作为一个整体，可看做一个字符
+</span></span><span style=display:flex><span>grep -E <span style=color:#e6db74>&#39;a(b|c)d&#39;</span> <span style=color:#75715e>#匹配 abd 或 acd</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>{</span>m,n<span style=color:#f92672>}</span> 表示前一次字符出现几次
+</span></span><span style=display:flex><span>grep -E <span style=color:#e6db74>&#39;abc{1,3}&#39;</span> <span style=color:#75715e>#c出现1次以上3次即一下 匹配 abc abcc abccc</span>
+</span></span><span style=display:flex><span>grep -E <span style=color:#e6db74>&#39;abc{1,}&#39;</span> <span style=color:#75715e>#只指定最少出现几次，而不指定上界</span>
+</span></span><span style=display:flex><span>grep -E <span style=color:#e6db74>&#39;abc{,3}&#39;</span> <span style=color:#75715e>#只指定上界，而不指定下界</span>
+</span></span><span style=display:flex><span>grep -E <span style=color:#e6db74>&#39;abc{1}&#39;</span> <span style=color:#75715e>#恰好出现几次 ，匹配abc</span>
+</span></span><span style=display:flex><span>grep -E <span style=color:#e6db74>&#39;(a{1,}b{1,}c{1,}){1,}&#39;</span> <span style=color:#75715e>#匹配 abc aabbcc aabbccc</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>? 指定前一个字符出现0次或一次
+</span></span><span style=display:flex><span>grep -E <span style=color:#e6db74>&#39;abc?&#39;</span> <span style=color:#75715e>#匹配ab 或 abc</span>
+</span></span></code></pre></div><h2 id=eof>EOF</h2><p>向文件test.sh里输入内容</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>[</span>root@slave-server opt<span style=color:#f92672>]</span><span style=color:#75715e># cat &lt;&lt; EOF &gt;test.sh</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>123123123</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>3452354345</span>
+</span></span><span style=display:flex><span>asdfasdfs
+</span></span><span style=display:flex><span>EOF
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt; EOF &gt; test.go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>package main
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>import (
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>	&#34;fmt&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>	&#34;runtime&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>func main() {
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>fmt.Println(&#34;cpu:&#34;, runtime.NumCPU())
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>}
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span></code></pre></div><h2 id=alias>alias</h2><p>设置别名:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>alias k<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;kubectl&#39;</span>
+</span></span></code></pre></div><p>查看已经设置的别名：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>alias -p
+</span></span></code></pre></div><p>删除别名：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>unalias k
+</span></span></code></pre></div><p>设置别名每次登陆可用：</p><p>默认使用 <code>alias</code> 设置的别名仅本次登陆有效，如果想每次登陆都能使用别名，可以把<code>alias</code>设置别名的命令放在<code>~/.bashrc</code>文件中。</p><h2 id=清空文件内容>清空文件内容</h2><ol><li>使用<code>vi/vim</code>打开文件，输入<code>%d</code>即清空,<code>:wq</code>保存即可</li><li>使用<code>cat /dev/null > file</code></li><li>使用<code>echo "" > file</code></li></ol><h2 id=shell脚本中路径问题>shell脚本中路径问题</h2><p>在shell中如果通过<code>$PWD</code>获取路径，那么获取到的值是指向shell脚本时的路径,如<code>test.sh</code>脚本在<code>/etc</code>路径下，但是执行的时候是在<code>/root</code>路径下执行<code>./etc/test.sh</code>那么<code>$PWD</code>获取到的值就是<code>/root</code></p><h2 id=base64>base64</h2><h3 id=base64加密>base64加密</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>base64 &lt;file_name&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;abc&#34;</span> | base64
+</span></span></code></pre></div><h3 id=base64解码>base64解码</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>base64 -d &lt;file_name&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;YWJjCg==&#34;</span> | base64 -d
+</span></span></code></pre></div><h2 id=环境变量>环境变量</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>    KUBECONFIG<span style=color:#f92672>=</span>config.yaml k get ns <span style=color:#75715e>#暴露的环境变量仅改行命令有效</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    export KUBECONFIG<span style=color:#f92672>=</span>config.yaml <span style=color:#75715e>#暴露的环境变量当前终端有效，新开的终端对该环境变量不可见</span>
+</span></span><span style=display:flex><span>    k get ns
+</span></span></code></pre></div><h2 id=常用快捷键>常用快捷键</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#清屏</span>
+</span></span><span style=display:flex><span>ctrl + l
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#跳转到上一条历史命令,相当于 ↑键</span>
+</span></span><span style=display:flex><span>ctrl + p
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#跳转到下一条命令,相当于 ↓键</span>
+</span></span><span style=display:flex><span>ctrl + n
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#删除光标指向字符</span>
+</span></span><span style=display:flex><span>ctrl + d
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#命令行中向前移动一个字符</span>
+</span></span><span style=display:flex><span>ctrl + b
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#命令行中向后移动一个字符</span>
+</span></span><span style=display:flex><span>ctrl + f
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#命令行中向前移动一个单词</span>
+</span></span><span style=display:flex><span>alt + b
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#命令行中向后移动一个单词</span>
+</span></span><span style=display:flex><span>alt + f
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#移动到命令行最前端</span>
+</span></span><span style=display:flex><span>ctrl + a
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#移动到命令行最后端</span>
+</span></span><span style=display:flex><span>ctrl + e
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#停止记录命令行输入</span>
+</span></span><span style=display:flex><span>ctrl + s
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#回复记录命令行输入</span>
+</span></span><span style=display:flex><span>ctrl + q
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#根据关键字搜索历史命令，如果有多条命令被匹配到可以ctrl + r 进行切换选择，然后按tab可以把该命令显示到命令行，或者直接enter直接执行该命令</span>
+</span></span><span style=display:flex><span>ctrl + r
+</span></span></code></pre></div><h2 id=查看端口占用>查看端口占用</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># -a 参数列出所有状态的端口占用，监听的端口、已建立连接的端口</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -n 参数不进行name解析显示ip地址</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -p 参数显示端口相关程序的pid</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -t 参数显示tcp相关的端口占用</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -u 参数显示udp相关的端口占用</span>
+</span></span><span style=display:flex><span>netstat -anp
+</span></span></code></pre></div><h2 id=脚本后台运行>脚本后台运行</h2><ol><li>使用&在终端断连之后继续执行:<code>sh test.sh > test.log &</code></li><li>使用nohup加&可以在终端断连之后继续执行：<code>nohup sh test.sh > test.log &</code></li></ol><h2 id=linux运行级别>linux运行级别</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># 0 关机</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1 单用户</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2 多用户，无网络模式</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3 完全多用户模式</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 4 用户自定义级别</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 5 图形化界面多用户</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 6 重启</span>
+</span></span><span style=display:flex><span>runlevel
+</span></span><span style=display:flex><span>N <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>init 命令加对应的级别可以切换到不同的级别
+</span></span><span style=display:flex><span>init <span style=color:#ae81ff>6</span>
+</span></span></code></pre></div><h1 id=正则>正则</h1><h2 id=标准正则>标准正则</h2><p>匹配开头</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># cat /etc/passwd |grep ^a</span>
+</span></span><span style=display:flex><span>adm:x:3:4:adm:/var/adm:/sbin/nologin
+</span></span></code></pre></div><p>匹配结尾</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># cat /etc/passwd |grep n$</span>
+</span></span><span style=display:flex><span>bin:x:1:1:bin:/bin:/sbin/nologin
+</span></span><span style=display:flex><span>daemon:x:2:2:daemon:/sbin:/sbin/nologin
+</span></span><span style=display:flex><span>adm:x:3:4:adm:/var/adm:/sbin/nologin
+</span></span></code></pre></div><p>. 号,匹配任意一个字符</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># cat /etc/passwd |grep r..t</span>
+</span></span><span style=display:flex><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style=display:flex><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style=display:flex><span>ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+</span></span><span style=display:flex><span>dockerroot:x:991:988:Docker User:/var/lib/docker:/sbin/nologin
+</span></span></code></pre></div><p>* 号，不单独使用，表示匹配*号之前的字符0次或多次</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#ro*t 匹配 rot root roooot</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># cat /etc/passwd |grep ro*t</span>
+</span></span><span style=display:flex><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style=display:flex><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style=display:flex><span>dockerroot:x:991:988:Docker User:/var/lib/docker:/sbin/nologin
+</span></span></code></pre></div><p>.* 匹配任意一个字符任意次，即匹配任意字符串</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># cat /etc/passwd |grep r.*t</span>
+</span></span><span style=display:flex><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style=display:flex><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style=display:flex><span>ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+</span></span></code></pre></div><p>[] 匹配字符区间</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>[</span>6,8<span style=color:#f92672>]</span> 匹配6或者8
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>0-9<span style=color:#f92672>]</span> 匹配0-9的任意数字
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>^0-9<span style=color:#f92672>]</span> 匹配任意非数字字符
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>0-9<span style=color:#f92672>]</span>* 匹配任意数字串
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>a-z<span style=color:#f92672>]</span> 匹配a-z的字符
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>a-Z<span style=color:#f92672>]</span> 匹配a-Z的任意字符
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># cat /etc/passwd |grep r[a-z]*t</span>
+</span></span><span style=display:flex><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style=display:flex><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style=display:flex><span>sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+</span></span><span style=display:flex><span>rabbitmq:x:997:995:RabbitMQ messaging server:/var/lib/rabbitmq:/bin/bash
+</span></span><span style=display:flex><span>gitlab-prometheus:x:992:989::/var/opt/gitlab/prometheus:/bin/sh
+</span></span><span style=display:flex><span>dockerroot:x:991:988:Docker User:/var/lib/docker:/sbin/nologin
+</span></span></code></pre></div><p>\转义</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#匹配$</span>
+</span></span><span style=display:flex><span>grep <span style=color:#ae81ff>\$</span> test.sh
+</span></span></code></pre></div><h2 id=扩展正则>扩展正则</h2><p>{}指定前一个字符出现几次</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>{</span>n<span style=color:#f92672>}</span>这种写法是扩展正则，grep使用扩展正则需要加 -E 参数
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># grep -E ro{2}t /etc/passwd</span>
+</span></span><span style=display:flex><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style=display:flex><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style=display:flex><span>dockerroot:x:991:988:Docker User:/var/lib/docker:/sbin/nologin
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#{n,}匹配前一个字符至少n次</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># grep -E &#34;ro{0,}t&#34; /etc/passwd</span>
+</span></span><span style=display:flex><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style=display:flex><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style=display:flex><span>dockerroot:x:991:988:Docker User:/var/lib/docker:/sbin/nologin
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#{,n}匹配前一个字符至多n次</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># grep -E &#34;ro{,2}t&#34; /etc/passwd</span>
+</span></span><span style=display:flex><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style=display:flex><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style=display:flex><span>dockerroot:x:991:988:Docker User:/var/lib/docker:/sbin/nologin
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>{</span>n,m<span style=color:#f92672>}</span>匹配前一个字符n到m次
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># grep -E &#34;ro{1,2}t&#34; /etc/passwd</span>
+</span></span><span style=display:flex><span>root:x:0:0:root:/root:/bin/bash
+</span></span><span style=display:flex><span>operator:x:11:0:operator:/root:/sbin/nologin
+</span></span><span style=display:flex><span>dockerroot:x:991:988:Docker User:/var/lib/docker:/sbin/nologin
+</span></span></code></pre></div><p>+号匹配前一个字符一次及以上</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt; EOF | grep -E &#34;go+&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>go
+</span></span><span style=display:flex><span>goo
+</span></span><span style=display:flex><span>goole
+</span></span></code></pre></div><p>?号匹配前一个字符0次或一次</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt; EOF | grep -E &#34;go?&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>g   <span style=color:#75715e>#匹配到g</span>
+</span></span><span style=display:flex><span>go  <span style=color:#75715e>#匹配到go</span>
+</span></span><span style=display:flex><span>goo <span style=color:#75715e>#匹配到go</span>
+</span></span><span style=display:flex><span>goole   <span style=color:#75715e>#匹配到go</span>
+</span></span></code></pre></div><p>匹配13开头的手机号码</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>grep -E <span style=color:#e6db74>&#34;13[0-9]{9}&#34;</span> phone.txt
+</span></span></code></pre></div><h1 id=cat>cat</h1><p>cat命令用来查看一个文件的内容</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat test.sh
+</span></span></code></pre></div><p>cat命令配合EOF加输出重定向可以向文件中写入内容</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF &gt; test.sh
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>name=&#34;tom&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;hello,\${name}!&#34;  #在EOF</span>中使用$需要加<span style=color:#ae81ff>\转</span>移
+</span></span><span style=display:flex><span>EOF
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat test.sh
+</span></span><span style=display:flex><span>name<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;tom&#34;</span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;hello, </span><span style=color:#e6db74>${</span>name<span style=color:#e6db74>}</span><span style=color:#e6db74>!&#34;</span>
+</span></span></code></pre></div><h1 id=cut>cut</h1><p>cut命令用于获取文件指定的列，并输出到标准输出</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#-d指定分隔符 -f指定列</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | cut -d &#34; &#34; -f 1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>tom man 20
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jerry female 18
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jack man 25
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>tom
+</span></span><span style=display:flex><span>jerry
+</span></span><span style=display:flex><span>jack
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | cut -d &#34; &#34; -f 1,2
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>tom man 20
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jerry female 18
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jack man 25
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>tom man
+</span></span><span style=display:flex><span>jerry female
+</span></span><span style=display:flex><span>jack man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | cut -d &#34; &#34; -f 1-2
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>tom man 20
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jerry female 18
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jack man 25
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>tom man
+</span></span><span style=display:flex><span>jerry female
+</span></span><span style=display:flex><span>jack man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | cut -d &#34; &#34; -f -2
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>tom man 20
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jerry female 18
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jack man 25
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>tom man
+</span></span><span style=display:flex><span>jerry female
+</span></span><span style=display:flex><span>jack man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | cut -d &#34; &#34; -f 2-
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>tom man 20
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jerry female 18
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>jack man 25
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>man <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>female <span style=color:#ae81ff>18</span>
+</span></span><span style=display:flex><span>man <span style=color:#ae81ff>25</span>
+</span></span></code></pre></div><p>获取ip地址</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ifconfig ens33 |grep netmask |cut -d <span style=color:#e6db74>&#34; &#34;</span> -f <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span>192.168.37.131
+</span></span></code></pre></div><h1 id=grep-1>grep</h1><p>grep用于配合正则按行过滤数据</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep &#39;go&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>go 
+</span></span><span style=display:flex><span>goole
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -E 指定使用扩展正则</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep -E &#39;go+&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>go  <span style=color:#75715e>#匹配到go</span>
+</span></span><span style=display:flex><span>goole   <span style=color:#75715e>#匹配到goo</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -m 参数指定输出的最大行数</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep -m 1 -E &#39;go+&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>go
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -c 参数指定输出匹配到的行数</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep -c -E &#39;go+&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -i 参数指定忽略匹配正则的大小写</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep -i -E &#39;go+&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>go
+</span></span><span style=display:flex><span>Go
+</span></span><span style=display:flex><span>goole
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -v 参数指定输出匹配到的行以外的行</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep -v -E &#39;go+&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>g
+</span></span><span style=display:flex><span>Go
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -w 参数指定正则要匹配整个单词</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep -w -E &#39;go+&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>go
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -x 参数指定正则要匹配一整行的内容</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep -x -E &#39;go+&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go is good
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>go
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># -o 参数指定只显示匹配到的内容，对于同一行有多个匹配到的内容会隔行显示</span>
+</span></span><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF | grep -o -E &#39;go+&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>g
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go is good
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>go
+</span></span><span style=display:flex><span>go
+</span></span><span style=display:flex><span>goo
+</span></span><span style=display:flex><span>goo
+</span></span></code></pre></div><h1 id=sed>sed</h1><p>sed针对文件的每一行进行处理，把一行读入放入模式空间，然后对模式空间的数据进行处理(增加/修改/删除)后输出到屏幕，直到处理完文件的每一行,处理完毕后并不会改变源文件，只会把处理后的结果输出到屏幕，改变源文件需要配合输出重定向</p><h2 id=-e-参数指定多次编辑可以写多个规则>-e 参数指定多次编辑(可以写多个规则)</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF &gt; test.txt
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>line1   name    tom
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>line2   age 20
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>line3   gender  man
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;1p&#34;</span> -n test.txt <span style=color:#75715e># p参数指定打印行为 -n参数取消默认打印，只输出匹配到的行</span>
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;/name/p&#34;</span> -n test.txt    <span style=color:#75715e># 模糊匹配存在name的行</span>
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;/^line2/p&#34;</span> -n test.txt
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;1,2p&#34;</span> -n test.txt   <span style=color:#75715e># 1,2 指定第一行和第二行</span>
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;2~1p&#34;</span> -n test.txt   <span style=color:#75715e># 2~1 指定从第二行开始，已1步长匹配行</span>
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;2~2p&#34;</span> -n test.txt
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;2,+3p&#34;</span> -n test.txt  <span style=color:#75715e># 2,+3 表示从第二行开始匹配向下三行(包括本行)</span>
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;2,\$p&#34;</span> -n test.txt  <span style=color:#75715e>#   2,\$ 表示匹配从第二行开始一直到结尾的行</span>
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;1d&#34;</span> test.txt    <span style=color:#75715e># d参数指定删除的行</span>
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;1d&#34;</span> -e <span style=color:#e6db74>&#34;s/age 20/age 30/g&#34;</span> test.txt <span style=color:#75715e># s参数指定进行替换，g是全局</span>
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>30</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat test.txt    <span style=color:#75715e>#源文件内容没有变</span>
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;1a hight 170cm&#34;</span> test.txt    <span style=color:#75715e># a参数指定在指定的行后添加一行/多行</span>
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span><span style=display:flex><span>hight 170cm
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;1i weight 55kg&#34;</span> test.txt    <span style=color:#75715e># i参数指定在指定的行前插入一行/多行</span>
+</span></span><span style=display:flex><span>weight 55kg
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#输出结果重定向</span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;1a hight 170cm&#34;</span> test.txt &gt; test.txt
+</span></span></code></pre></div><h2 id=-n-参数指定只输出匹配到的被处理的内容>-n 参数指定只输出匹配到的被处理的内容</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;1p&#34;</span> -n test.txt <span style=color:#75715e># p参数指定打印行为 -n参数取消默认打印，只输出匹配到的行</span>
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span></code></pre></div><h2 id=-i-参数指定修改应用到源文件>-i 参数指定修改应用到源文件</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat test.txt
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -i -e <span style=color:#e6db74>&#34;s/age 20/age 30/g&#34;</span> test.txt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat test.txt
+</span></span><span style=display:flex><span>line1   name    tom
+</span></span><span style=display:flex><span>line2   age <span style=color:#ae81ff>30</span>
+</span></span><span style=display:flex><span>line3   gender  man
+</span></span></code></pre></div><h2 id=-r-参数指定开启扩展正则>-r 参数指定开启扩展正则</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF &gt; test.txt
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>go
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>goole
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -e <span style=color:#e6db74>&#34;s/go+/x/g&#34;</span> test.txt <span style=color:#75715e># 不加-r参数由于+是扩展正则，所以不能匹配到任何的内容</span>
+</span></span><span style=display:flex><span>go
+</span></span><span style=display:flex><span>goo
+</span></span><span style=display:flex><span>goole
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sed -r -e <span style=color:#e6db74>&#34;s/go+/x/g&#34;</span> test.txt
+</span></span><span style=display:flex><span>x
+</span></span><span style=display:flex><span>x
+</span></span><span style=display:flex><span>xle
+</span></span></code></pre></div><h2 id=sed取ip地址>sed取ip地址</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ifconfig ens33 | sed <span style=color:#e6db74>&#39;2p&#39;</span> -n | sed <span style=color:#e6db74>&#34;s/^.*inet//g&#34;</span> | sed <span style=color:#e6db74>&#34;s/netmask.*</span>$<span style=color:#e6db74>//g&#34;</span>
+</span></span><span style=display:flex><span> 192.168.37.131  <span style=color:#75715e>#前后有空格</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ifconfig ens33 | sed -e <span style=color:#e6db74>&#34;2s/^.*inet//&#34;</span> -n -e <span style=color:#e6db74>&#34;s/netmask.*</span>$<span style=color:#e6db74>//p&#34;</span> -n 
+</span></span><span style=display:flex><span> 192.168.37.131 
+</span></span></code></pre></div><h1 id=awk>awk</h1><p>awk通过正则过滤到匹配的行，然后对行进行切片(默认以空格)，然后对每个切片进行处理</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># -F 参数指定行分隔符</span>
+</span></span><span style=display:flex><span>cat /etc/passwd | awk -F <span style=color:#e6db74>&#34;:&#34;</span> <span style=color:#e6db74>&#39;/^root/ {print $7}&#39;</span>
+</span></span><span style=display:flex><span>/bin/bash
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat /etc/passwd | awk -F <span style=color:#e6db74>&#34;:&#34;</span> <span style=color:#e6db74>&#39;/^root/ {print $1 &#34;,&#34; $7}&#39;</span>
+</span></span><span style=display:flex><span>root,/bin/bash
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># BEGIN代码块在过滤之前执行 END代码块在过滤结束之后执行</span>
+</span></span><span style=display:flex><span>cat /etc/passwd | awk -F <span style=color:#e6db74>&#34;:&#34;</span> <span style=color:#e6db74>&#39;BEGIN{print &#34;start&#34;}{print $1&#34;=&#34;$7}END{print &#34;stop&#34;}&#39;</span>
+</span></span><span style=display:flex><span>start
+</span></span><span style=display:flex><span>root<span style=color:#f92672>=</span>/bin/bash
+</span></span><span style=display:flex><span>bin<span style=color:#f92672>=</span>/sbin/nologin
+</span></span><span style=display:flex><span>daemon<span style=color:#f92672>=</span>/sbin/nologin
+</span></span><span style=display:flex><span>stop
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cat /etc/passwd | awk -F <span style=color:#e6db74>&#34;:&#34;</span> <span style=color:#e6db74>&#39;{print $3+1}&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>5</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 使用-v参数可以像awk中的变量赋值</span>
+</span></span><span style=display:flex><span>cat /etc/passwd | awk -F <span style=color:#e6db74>&#34;:&#34;</span> -v num<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span> <span style=color:#e6db74>&#39;{print $3+num}&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 内置变量</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># FILENAME 文件名</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># NR 行号</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># NF 列号</span>
+</span></span><span style=display:flex><span>cat /etc/passwd | awk -F <span style=color:#e6db74>&#34;:&#34;</span> <span style=color:#e6db74>&#39;{print &#34;filename=&#34;FILENAME, &#34;row_number=&#34;NR, &#34;col_number&#34;NF}&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># cat /etc/passwd | awk -F &#34;:&#34; &#39;{print &#34;filename=&#34;FILENAME, &#34;row_number=&#34;NR, &#34;col_number&#34;NF}&#39;</span>
+</span></span><span style=display:flex><span>filename<span style=color:#f92672>=</span>- row_number<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span> col_number7
+</span></span><span style=display:flex><span>filename<span style=color:#f92672>=</span>- row_number<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span> col_number7
+</span></span><span style=display:flex><span>filename<span style=color:#f92672>=</span>- row_number<span style=color:#f92672>=</span><span style=color:#ae81ff>3</span> col_number7
+</span></span></code></pre></div><p>awk截取ip</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ifconfig | awk <span style=color:#e6db74>&#39;/netmask/ {print $2}&#39;</span>
+</span></span><span style=display:flex><span>172.17.0.1
+</span></span><span style=display:flex><span>192.168.37.131
+</span></span><span style=display:flex><span>127.0.0.1
+</span></span></code></pre></div><h1 id=sort>sort</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF &gt; sort.txt
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>aa:1:tom
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>bb:0:jack
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>dd:5:jarry
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>cc:4:lucy
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>ee:3:mike
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sort sort.txt   <span style=color:#75715e>#按照字母序排序</span>
+</span></span><span style=display:flex><span>aa:1:tom
+</span></span><span style=display:flex><span>bb:0:jack
+</span></span><span style=display:flex><span>cc:4:lucy
+</span></span><span style=display:flex><span>dd:5:jarry
+</span></span><span style=display:flex><span>ee:3:mike
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sort -r sort.txt    <span style=color:#75715e>#-r指定降序排序</span>
+</span></span><span style=display:flex><span>ee:3:mike
+</span></span><span style=display:flex><span>dd:5:jarry
+</span></span><span style=display:flex><span>cc:4:lucy
+</span></span><span style=display:flex><span>bb:0:jack
+</span></span><span style=display:flex><span>aa:1:tom
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sort -t : -k <span style=color:#ae81ff>2</span> sort.txt <span style=color:#75715e>#-t指定分隔符   -k指定对哪一列排序</span>
+</span></span><span style=display:flex><span>bb:0:jack
+</span></span><span style=display:flex><span>aa:1:tom
+</span></span><span style=display:flex><span>ee:3:mike
+</span></span><span style=display:flex><span>cc:4:lucy
+</span></span><span style=display:flex><span>dd:5:jarry
+</span></span></code></pre></div><h1 id=nohup>nohup</h1><p>nohup命令将程序以忽略挂起信号的方式后台运行，输出的结果不打印到终端而是保存在当前目录的nohup.out文件中，如果当前目录下的nohup.out文件无法写入会保存到$HOME/nohup.out文件中</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>nohup ping baidu.com
+</span></span><span style=display:flex><span>nohup: ignoring input and appending output to ‘nohup.out’   <span style=color:#75715e>#进程会hang在这儿，不能执行其他命令，如果ctrl+c结束程序，那么执行的程序也会停止</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>nohup ping bilibili.com &amp;
+</span></span><span style=display:flex><span>nohup: ignoring input and appending output to ‘nohup.out’ <span style=color:#75715e>#进程会hang在这儿,但是ctrl+c结束结束程序后，执行的程序不会停止</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>nohup ping baidu.com &gt; ping.log &amp; <span style=color:#75715e># 把程序的标准输出重定向到指定文件</span>
+</span></span><span style=display:flex><span>nohup ping baidu.com &gt;ping.log &amp;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#   标准输出 1  </span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#   标准错误输出 2</span>
+</span></span><span style=display:flex><span>nohup ping baidu.com &gt; ping.log 2&gt;&amp;<span style=color:#ae81ff>1</span> &amp; <span style=color:#75715e># 把程序的标准输出及出错信息都写入到指定文件</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>nohup ping baidu.com &gt; /dev/null 2&gt;&amp;<span style=color:#ae81ff>1</span> &amp; <span style=color:#75715e># 把程序的输出写入到linux的黑洞文件立即销毁</span>
+</span></span></code></pre></div><p>把程序的标准输出和标准错误输出写入文件</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># 把标准输出写入app.log,标准错误输出写入err.log</span>
+</span></span><span style=display:flex><span>nohup ping baidu.com &gt; ping-app.log 2&gt;ping-err.log &amp;
+</span></span><span style=display:flex><span>nohup ping baidu.com 1&gt;ping-app.log 2&gt;ping-err.log &amp;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 把标准输出标准错误输出都写入app.log文件</span>
+</span></span><span style=display:flex><span>nohup ping baidu.com &gt; app.log 2&gt;&amp;<span style=color:#ae81ff>1</span> &amp;
+</span></span><span style=display:flex><span>nohup ping baidu.com &amp;&gt;app.log &amp;
+</span></span></code></pre></div><p>nohup 执行的命令后如果要结束程序就需要取查进程号kill</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ps -ef|grep stdout
+</span></span><span style=display:flex><span>UID          PID    PPID  C STIME TTY          TIME CMD
+</span></span><span style=display:flex><span>aiiqh     <span style=color:#ae81ff>798370</span>  <span style=color:#ae81ff>798026</span>  <span style=color:#ae81ff>0</span> 09:26 pts/0    00:00:00 python3 stdout_stderr.py
+</span></span><span style=display:flex><span>aiiqh     <span style=color:#ae81ff>799200</span>  <span style=color:#ae81ff>798026</span>  <span style=color:#ae81ff>0</span> 09:59 pts/0    00:00:00 grep --color<span style=color:#f92672>=</span>auto stdout
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kill <span style=color:#ae81ff>798370</span> 
+</span></span></code></pre></div><h1 id=定时任务>定时任务</h1><h2 id=at>at</h2><p>at命令可用于执行定时任务，但是只执行一次，at定时任务的执行依赖atd后台服务，所以需要确保atd在后台运行</p><p>at定时任务也只能精确到分钟</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 shell_t<span style=color:#f92672>]</span><span style=color:#75715e># at 09:40</span>
+</span></span><span style=display:flex><span>at&gt; echo <span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>date +%H:%M:%S<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span> &gt; at.log
+</span></span><span style=display:flex><span>at&gt; &lt;EOT&gt;
+</span></span><span style=display:flex><span>job <span style=color:#ae81ff>9</span> at Thu Oct  <span style=color:#ae81ff>6</span> 09:40:00 <span style=color:#ae81ff>2022</span>
+</span></span></code></pre></div><h2 id=batch>batch</h2><p>batch命令用于在指定时间，当系统不繁忙时执行任务，用法与at相似</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>batch
+</span></span><span style=display:flex><span>at&gt; echo <span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>date +%H:%M:%S<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span> &gt; batch.log
+</span></span></code></pre></div><h2 id=crontab>crontab</h2><p>crontab依赖crond后台进程每分钟检查一次定时任务进行执行
+crond检查/var/spool/cron文件夹下的文件进行解析执行里面的定时任务，除此之外还会检查 /etc/cron.d目录以及 /etc/anaccrontab里面存放的是每小时、每天、每周、每月需要执行的定时任务</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>crontab -e
+</span></span><span style=display:flex><span>* * * * * sh test.sh
+</span></span><span style=display:flex><span><span style=color:#75715e>#第一个*是分钟</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#第二个*是小时</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#第三个*是天</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#第四个*是月</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#第五个*是星期几</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Example of job definition:</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># .---------------- minute (0 - 59)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># |  .------------- hour (0 - 23)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># |  |  .---------- day of month (1 - 31)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># |  |  |  |  |</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># *  *  *  *  * user-name  command to be executed</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#特殊符号</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># * 代表每的意思 * * * * * 代表每分钟执行一次</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># - 代表范围的意思 1-10 * * * * 代表每小时的0到10分钟之内都执行意思</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># , 代表分割    1,3,5 * * * * 代表每小时的第一、三、五分钟执行</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># /n 每隔n执行 */5 * * * * 每五分钟执行一次 0 7-11/2 * * * 每天7点到11点每隔2小时执行一次 30 10/2 * * * 从10点30分开始每2小时执行一次</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>或者直接编辑 /var/spool/cron/root
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>要删除定时任务也可以 crontab -e 或者编辑 /var/spool/cron/root 删除
+</span></span></code></pre></div><p>定时任务执行后会发送一个邮件给linux用户，使用(postfix服务),会提示you have mail in /var/spool/mail/root</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>su myd
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>myd@centos72 root<span style=color:#f92672>]</span>$ mailx -s <span style=color:#e6db74>&#34;test&#34;</span> root
+</span></span><span style=display:flex><span>hello, i am myd!
+</span></span><span style=display:flex><span>.
+</span></span><span style=display:flex><span>EOT
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>exit
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 ~<span style=color:#f92672>]</span><span style=color:#75715e># mail</span>
+</span></span><span style=display:flex><span>Heirloom Mail version 12.5 7/5/10.  Type ? <span style=color:#66d9ef>for</span> help.
+</span></span><span style=display:flex><span><span style=color:#e6db74>&#34;/var/spool/mail/root&#34;</span>: <span style=color:#ae81ff>1363</span> messages <span style=color:#ae81ff>1</span> new <span style=color:#ae81ff>1338</span> unread
+</span></span><span style=display:flex><span> U1361 <span style=color:#f92672>(</span>Cron Daemon<span style=color:#f92672>)</span>         Sun Oct  <span style=color:#ae81ff>2</span> 18:15  29/1053  <span style=color:#e6db74>&#34;Cron &lt;root@centos72&gt; sh /root/shell_t/test.sh /root/shell_t /root/backup2&#34;</span>
+</span></span><span style=display:flex><span> U1362 <span style=color:#f92672>(</span>Cron Daemon<span style=color:#f92672>)</span>         Sun Oct  <span style=color:#ae81ff>2</span> 18:16  29/1053  <span style=color:#e6db74>&#34;Cron &lt;root@centos72&gt; sh /root/shell_t/test.sh /root/shell_t /root/backup2&#34;</span>
+</span></span><span style=display:flex><span>&gt;N1363 myd@centos72.localdo  Thu Oct  <span style=color:#ae81ff>6</span> 09:23  18/601   <span style=color:#e6db74>&#34;test&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&amp; <span style=color:#ae81ff>1363</span>
+</span></span><span style=display:flex><span>Message 1363:
+</span></span><span style=display:flex><span>From myd@centos72.localdomain  Thu Oct  <span style=color:#ae81ff>6</span> 09:23:49 <span style=color:#ae81ff>2022</span>
+</span></span><span style=display:flex><span>Return-Path: &lt;myd@centos72.localdomain&gt;
+</span></span><span style=display:flex><span>X-Original-To: root
+</span></span><span style=display:flex><span>Delivered-To: root@centos72.localdomain
+</span></span><span style=display:flex><span>Date: Thu, <span style=color:#ae81ff>06</span> Oct <span style=color:#ae81ff>2022</span> 09:23:49 +0800
+</span></span><span style=display:flex><span>To: root@centos72.localdomain
+</span></span><span style=display:flex><span>Subject: test
+</span></span><span style=display:flex><span>User-Agent: Heirloom mailx 12.5 7/5/10
+</span></span><span style=display:flex><span>Content-Type: text/plain; charset<span style=color:#f92672>=</span>us-ascii
+</span></span><span style=display:flex><span>From: myd@centos72.localdomain
+</span></span><span style=display:flex><span>Status: R
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>hello, i am myd!
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&amp; 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#发送文件夹中的内容</span>
+</span></span><span style=display:flex><span>mailx -s <span style=color:#e6db74>&#34;test&#34;</span> root &lt; test.mail
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>exit
+</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@centos72 ~<span style=color:#f92672>]</span><span style=color:#75715e># mail</span>
+</span></span><span style=display:flex><span>Heirloom Mail version 12.5 7/5/10.  Type ? <span style=color:#66d9ef>for</span> help.
+</span></span><span style=display:flex><span><span style=color:#e6db74>&#34;/var/spool/mail/root&#34;</span>: <span style=color:#ae81ff>1366</span> messages <span style=color:#ae81ff>3</span> new <span style=color:#ae81ff>1340</span> unread
+</span></span><span style=display:flex><span> U1361 <span style=color:#f92672>(</span>Cron Daemon<span style=color:#f92672>)</span>         Sun Oct  <span style=color:#ae81ff>2</span> 18:15  29/1053  <span style=color:#e6db74>&#34;Cron &lt;root@centos72&gt; sh /root/shell_t/test.sh /root/shell_t /root/backup2&#34;</span>
+</span></span><span style=display:flex><span> U1362 <span style=color:#f92672>(</span>Cron Daemon<span style=color:#f92672>)</span>         Sun Oct  <span style=color:#ae81ff>2</span> 18:16  29/1053  <span style=color:#e6db74>&#34;Cron &lt;root@centos72&gt; sh /root/shell_t/test.sh /root/shell_t /root/backup2&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#ae81ff>1363</span> myd@centos72.localdo  Thu Oct  <span style=color:#ae81ff>6</span> 09:23  19/612   <span style=color:#e6db74>&#34;test&#34;</span>
+</span></span><span style=display:flex><span>&gt;N1364 myd@centos72.localdo  Thu Oct  <span style=color:#ae81ff>6</span> 09:26  16/637   <span style=color:#e6db74>&#34;*** SECURITY information for centos72 ***&#34;</span>
+</span></span><span style=display:flex><span> N1365 myd@centos72.localdo  Thu Oct  <span style=color:#ae81ff>6</span> 09:27  16/637   <span style=color:#e6db74>&#34;*** SECURITY information for centos72 ***&#34;</span>
+</span></span><span style=display:flex><span> N1366 myd@centos72.localdo  Thu Oct  <span style=color:#ae81ff>6</span> 09:28  18/606   <span style=color:#e6db74>&#34;test&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&amp; <span style=color:#ae81ff>1366</span>
+</span></span><span style=display:flex><span>Message 1366:
+</span></span><span style=display:flex><span>From myd@centos72.localdomain  Thu Oct  <span style=color:#ae81ff>6</span> 09:28:46 <span style=color:#ae81ff>2022</span>
+</span></span><span style=display:flex><span>Return-Path: &lt;myd@centos72.localdomain&gt;
+</span></span><span style=display:flex><span>X-Original-To: root
+</span></span><span style=display:flex><span>Delivered-To: root@centos72.localdomain
+</span></span><span style=display:flex><span>Date: Thu, <span style=color:#ae81ff>06</span> Oct <span style=color:#ae81ff>2022</span> 09:28:46 +0800
+</span></span><span style=display:flex><span>To: root@centos72.localdomain
+</span></span><span style=display:flex><span>Subject: test
+</span></span><span style=display:flex><span>User-Agent: Heirloom mailx 12.5 7/5/10
+</span></span><span style=display:flex><span>Content-Type: text/plain; charset<span style=color:#f92672>=</span>us-ascii
+</span></span><span style=display:flex><span>From: myd@centos72.localdomain
+</span></span><span style=display:flex><span>Status: R
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>content from txt file
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&amp; 
+</span></span></code></pre></div><h1 id=向指定登陆的终端发送信息>向指定登陆的终端发送信息</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ps -ef|grep ssh
+</span></span><span style=display:flex><span>aiiqh     <span style=color:#ae81ff>798025</span>  <span style=color:#ae81ff>797922</span>  <span style=color:#ae81ff>0</span> 09:07 ?        00:00:00 sshd: aiiqh@pts/0
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;msg&#34;</span> &gt;&gt; /dev/pts/0
+</span></span></code></pre></div><h1 id=获取后台执行程序的输出>获取后台执行程序的输出</h1><p>参考链接：https://juejin.cn/post/7089818727524335630</p><p>在linux的<code>/proc/{pid}/fd</code>目录下存在三个文件</p><ol><li>标准输入，描述符为 0，默认就是键盘输入</li><li>标准输出，描述符为 1，默认就是输出到屏幕</li><li>标准输出，描述符为 2，默认还是输出到屏幕</li></ol><h2 id=使用测试程序进行测试>使用测试程序进行测试</h2><p>stdout_stderr.py:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> time
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> sys
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>while</span> <span style=color:#66d9ef>True</span>:
+</span></span><span style=display:flex><span>    ts <span style=color:#f92672>=</span> int(time<span style=color:#f92672>.</span>time())
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> ts <span style=color:#f92672>%</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;stdout now time is </span><span style=color:#e6db74>{</span>ts<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>, file<span style=color:#f92672>=</span>sys<span style=color:#f92672>.</span>stdout)
+</span></span><span style=display:flex><span>        sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>flush()  <span style=color:#75715e>#不缓存</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;stderr now time is </span><span style=color:#e6db74>{</span>ts<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>, file<span style=color:#f92672>=</span>sys<span style=color:#f92672>.</span>stderr)
+</span></span><span style=display:flex><span>        sys<span style=color:#f92672>.</span>stderr<span style=color:#f92672>.</span>flush()  <span style=color:#75715e>#不缓存</span>
+</span></span><span style=display:flex><span>    time<span style=color:#f92672>.</span>sleep(<span style=color:#ae81ff>1</span>)
+</span></span></code></pre></div><p>后台运行</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#使用nohup命令后台运行程序，程序运行输出会被nohup进行接管</span>
+</span></span><span style=display:flex><span>nohup python3 stdout_stderr.py &amp;
+</span></span><span style=display:flex><span><span style=color:#75715e>#或者</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#必须要指定日志输出文件才行，/dev/null 这种都不会生效</span>
+</span></span><span style=display:flex><span>python3 stdout_stderr.py &amp;&gt;stdout_stderr.log &amp;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ps -ef|grep stdout
+</span></span><span style=display:flex><span>aiiqh     <span style=color:#ae81ff>798370</span>  <span style=color:#ae81ff>798026</span>  <span style=color:#ae81ff>0</span> 09:26 pts/0    00:00:00 python3 stdout_stderr.py
+</span></span><span style=display:flex><span>aiiqh     <span style=color:#ae81ff>799007</span>  <span style=color:#ae81ff>798026</span>  <span style=color:#ae81ff>0</span> 09:49 pts/0    00:00:00 grep --color<span style=color:#f92672>=</span>auto std
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>pid <span style=color:#ae81ff>798370</span> 是nohup程序
+</span></span><span style=display:flex><span>pid <span style=color:#ae81ff>798026</span> 是python3程序
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#由于python3的输出被nohup接管了，所以取nohup里查看</span>
+</span></span><span style=display:flex><span>cd /proc/798370/fd
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ls -la
+</span></span><span style=display:flex><span>total <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>dr-x------ <span style=color:#ae81ff>2</span> aiiqh aiiqh  <span style=color:#ae81ff>0</span> Oct <span style=color:#ae81ff>22</span> 09:44 .
+</span></span><span style=display:flex><span>dr-xr-xr-x <span style=color:#ae81ff>9</span> aiiqh aiiqh  <span style=color:#ae81ff>0</span> Oct <span style=color:#ae81ff>22</span> 09:26 ..
+</span></span><span style=display:flex><span>l-wx------ <span style=color:#ae81ff>1</span> aiiqh aiiqh <span style=color:#ae81ff>64</span> Oct <span style=color:#ae81ff>22</span> 09:44 <span style=color:#ae81ff>0</span> -&gt; /dev/null
+</span></span><span style=display:flex><span>l-wx------ <span style=color:#ae81ff>1</span> aiiqh aiiqh <span style=color:#ae81ff>64</span> Oct <span style=color:#ae81ff>22</span> 09:44 <span style=color:#ae81ff>1</span> -&gt; /home/aiiqh/python_proj/script/nohup.out
+</span></span><span style=display:flex><span>l-wx------ <span style=color:#ae81ff>1</span> aiiqh aiiqh <span style=color:#ae81ff>64</span> Oct <span style=color:#ae81ff>22</span> 09:44 <span style=color:#ae81ff>2</span> -&gt; /home/aiiqh/python_proj/script/nohup.out
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#查看标准输出</span>
+</span></span><span style=display:flex><span>tail -f <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#查看标准错误输出</span>
+</span></span><span style=display:flex><span>tail -f <span style=color:#ae81ff>2</span>
+</span></span></code></pre></div><h1 id=head>head</h1><p>head 命令用于查看文件的头部信息</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF &gt; test-head.txt
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 2
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 3
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 4
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 5
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 6
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 7
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 8
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 9
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 10
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 11
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>this is line 12
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#默认显示十行</span>
+</span></span><span style=display:flex><span>head test-head.txt
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>9</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-n参数指定显示几行</span>
+</span></span><span style=display:flex><span>head -n <span style=color:#ae81ff>5</span> test-head.txt 
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>5</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-c参数指定显示几字节</span>
+</span></span><span style=display:flex><span>head -c <span style=color:#ae81ff>50</span> test-head.txt 
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>this 
+</span></span></code></pre></div><h1 id=tail-1>tail</h1><p>tail 命令用于查看文件的末端内容</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#默认显示文件的最后10行</span>
+</span></span><span style=display:flex><span>tail test-head.txt 
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>5</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>6</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>7</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>8</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>9</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>11</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-n参数用于指定查看文件的最后几行</span>
+</span></span><span style=display:flex><span>tail -n <span style=color:#ae81ff>5</span> test-head.txt 
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>8</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>9</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>11</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-c参数用于指定查看文件的最后几字节</span>
+</span></span><span style=display:flex><span>tail -c <span style=color:#ae81ff>50</span> test-head.txt 
+</span></span><span style=display:flex><span><span style=color:#ae81ff>9</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>11</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-f参数用于指定循环读取，文件有新内容追加会进行打印</span>
+</span></span><span style=display:flex><span>tail -f test-head.txt 
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>5</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>6</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>7</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>8</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>9</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>11</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>12</span>
+</span></span></code></pre></div><h1 id=more>more</h1><p>more 与 cat命令类似，以分页的形式查看文件</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#-{num}参数指定一页显示几行</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#+{num}参数指定从第几行开始</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#enter 用于显示下一行</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#space 用于显示下一页</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#b 用于回到上一页</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#q 用于退出</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#v 用于调期vi指令并指向当前行,退出后还是more命令</span>
+</span></span><span style=display:flex><span>more -3 +2 test-head.txt
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>this is line <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span>--More--<span style=color:#f92672>(</span>32%<span style=color:#f92672>)</span>
+</span></span></code></pre></div><h1 id=netstat>netstat</h1><p>netstat 用于显示linux网络状态</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e>#-a 参数用于所有socket</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-n或--numeric 直接使用IP地址，而不显示域名</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-p或--programs 显示正在使用Socket的程序识别码和程序名称</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-t或--tcp 显示TCP传输协议的连线状况</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#-u或--udp 显示UDP传输协议的连线状况</span>
+</span></span><span style=display:flex><span>netstat -anp
+</span></span><span style=display:flex><span><span style=color:#f92672>(</span>Not all processes could be identified, non-owned process info
+</span></span><span style=display:flex><span> will not be shown, you would have to be root to see it all.<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>Active Internet connections <span style=color:#f92672>(</span>servers and established<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+</span></span><span style=display:flex><span>tcp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 127.0.0.1:33491         0.0.0.0:*               LISTEN      -                   
+</span></span><span style=display:flex><span>tcp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+</span></span><span style=display:flex><span>tcp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 127.0.0.1:45227         0.0.0.0:*               LISTEN      3761/node           
+</span></span><span style=display:flex><span>tcp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+</span></span><span style=display:flex><span>tcp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 127.0.0.1:45227         127.0.0.1:46626         ESTABLISHED 4224/node           
+</span></span><span style=display:flex><span>tcp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 127.0.0.1:50826         127.0.0.1:45227         ESTABLISHED -                   
+</span></span><span style=display:flex><span>tcp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 127.0.0.1:45227         127.0.0.1:58744         ESTABLISHED 5070/node
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>udp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 127.0.0.53:53           0.0.0.0:*                           -                   
+</span></span><span style=display:flex><span>udp        <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> 192.168.52.128:68       0.0.0.0:*                           -                   
+</span></span><span style=display:flex><span>raw6       <span style=color:#ae81ff>0</span>      <span style=color:#ae81ff>0</span> :::58                   :::*                    <span style=color:#ae81ff>7</span>           - 
+</span></span><span style=display:flex><span>Active UNIX domain sockets <span style=color:#f92672>(</span>servers and established<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>Proto RefCnt Flags       Type       State         I-Node   PID/Program name     Path
+</span></span><span style=display:flex><span>unix  <span style=color:#ae81ff>2</span>      <span style=color:#f92672>[</span> ACC <span style=color:#f92672>]</span>     STREAM     LISTENING     <span style=color:#ae81ff>32724</span>    -                    /run/dbus/system_bus_socket
+</span></span><span style=display:flex><span>unix  <span style=color:#ae81ff>2</span>      <span style=color:#f92672>[</span> ACC <span style=color:#f92672>]</span>     STREAM     LISTENING     <span style=color:#ae81ff>32726</span>    -                    /run/docker.sock
+</span></span><span style=display:flex><span>unix  <span style=color:#ae81ff>2</span>      <span style=color:#f92672>[</span> ACC <span style=color:#f92672>]</span>     STREAM     LISTENING     <span style=color:#ae81ff>14730</span>    -                    /run/snapd.socket
+</span></span><span style=display:flex><span>unix  <span style=color:#ae81ff>2</span>      <span style=color:#f92672>[</span> ACC <span style=color:#f92672>]</span>     STREAM     LISTENING     <span style=color:#ae81ff>14732</span>    -                    /run/snapd-snap.socket
+</span></span><span style=display:flex><span>unix  <span style=color:#ae81ff>2</span>      <span style=color:#f92672>[</span> ACC <span style=color:#f92672>]</span>     STREAM     LISTENING     <span style=color:#ae81ff>14734</span>    -                    /run/uuidd/request
+</span></span></code></pre></div><ul class=pa0></ul><div class="mt6 instapaper_ignoref"></div></div><aside class="w-30-l mt6-l"></aside></article></main><footer class="bg-black bottom-0 w-100 pa3" role=contentinfo><div class="flex justify-between"><a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://example.org/>&copy; Moyuduo's blog 2022</a><div><div class=ananke-socials></div></div></div></footer></body></html>
