@@ -1,0 +1,609 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>clickhouse | Moyuduo's Blog</title><meta name=keywords content><meta name=description content="clickhouse 安装 检查限制 ulimit -a #主要关注open files和max user processes core file size (blocks, -c) 0 data seg size (kbytes, -d) unlimited scheduling priority (-e) 0 file size (blocks, -f) unlimited pending signals (-i) 14989 max locked memory (kbytes, -l) 64 max memory size (kbytes, -m) unlimited open files (-n) 1024 pipe size (512 bytes, -p) 8 POSIX message queues (bytes, -q) 819200 real-time priority (-r) 0 stack size (kbytes, -s) 8192 cpu time (seconds, -t) unlimited max user processes (-u) 14989 virtual memory (kbytes, -v) unlimited file locks (-x) unlimited 修改限制 vi /etc/security/limits."><meta name=author content="Me"><link rel=canonical href=https://moyuduo.github.io/posts/clickhouse/><meta name=google-site-verification content="XYZabc"><meta name=yandex-verification content="XYZabc"><meta name=msvalidate.01 content="XYZabc"><link crossorigin=anonymous href=/assets/css/stylesheet.bc1149f4a72aa4858d3a9f71462f75e5884ffe8073ea9d6d5761d5663d651e20.css integrity="sha256-vBFJ9KcqpIWNOp9xRi915YhP/oBz6p1tV2HVZj1lHiA=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href=https://moyuduo.github.io/%3Clink%20/%20abs%20url%3E><link rel=icon type=image/png sizes=16x16 href=https://moyuduo.github.io/%3Clink%20/%20abs%20url%3E><link rel=icon type=image/png sizes=32x32 href=https://moyuduo.github.io/%3Clink%20/%20abs%20url%3E><link rel=apple-touch-icon href=https://moyuduo.github.io/%3Clink%20/%20abs%20url%3E><link rel=mask-icon href=https://moyuduo.github.io/%3Clink%20/%20abs%20url%3E><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-123-45","auto"),ga("send","pageview"))</script><meta property="og:title" content="clickhouse"><meta property="og:description" content="clickhouse 安装 检查限制 ulimit -a #主要关注open files和max user processes core file size (blocks, -c) 0 data seg size (kbytes, -d) unlimited scheduling priority (-e) 0 file size (blocks, -f) unlimited pending signals (-i) 14989 max locked memory (kbytes, -l) 64 max memory size (kbytes, -m) unlimited open files (-n) 1024 pipe size (512 bytes, -p) 8 POSIX message queues (bytes, -q) 819200 real-time priority (-r) 0 stack size (kbytes, -s) 8192 cpu time (seconds, -t) unlimited max user processes (-u) 14989 virtual memory (kbytes, -v) unlimited file locks (-x) unlimited 修改限制 vi /etc/security/limits."><meta property="og:type" content="article"><meta property="og:url" content="https://moyuduo.github.io/posts/clickhouse/"><meta property="og:image" content="https://moyuduo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-11-27T16:16:14+08:00"><meta property="article:modified_time" content="2022-11-27T16:16:14+08:00"><meta property="og:site_name" content="Moyuduo's Blog"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://moyuduo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta name=twitter:title content="clickhouse"><meta name=twitter:description content="clickhouse 安装 检查限制 ulimit -a #主要关注open files和max user processes core file size (blocks, -c) 0 data seg size (kbytes, -d) unlimited scheduling priority (-e) 0 file size (blocks, -f) unlimited pending signals (-i) 14989 max locked memory (kbytes, -l) 64 max memory size (kbytes, -m) unlimited open files (-n) 1024 pipe size (512 bytes, -p) 8 POSIX message queues (bytes, -q) 819200 real-time priority (-r) 0 stack size (kbytes, -s) 8192 cpu time (seconds, -t) unlimited max user processes (-u) 14989 virtual memory (kbytes, -v) unlimited file locks (-x) unlimited 修改限制 vi /etc/security/limits."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://moyuduo.github.io/posts/"},{"@type":"ListItem","position":2,"name":"clickhouse","item":"https://moyuduo.github.io/posts/clickhouse/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"clickhouse","name":"clickhouse","description":"clickhouse 安装 检查限制 ulimit -a #主要关注open files和max user processes core file size (blocks, -c) 0 data seg size (kbytes, -d) unlimited scheduling priority (-e) 0 file size (blocks, -f) unlimited pending signals (-i) 14989 max locked memory (kbytes, -l) 64 max memory size (kbytes, -m) unlimited open files (-n) 1024 pipe size (512 bytes, -p) 8 POSIX message queues (bytes, -q) 819200 real-time priority (-r) 0 stack size (kbytes, -s) 8192 cpu time (seconds, -t) unlimited max user processes (-u) 14989 virtual memory (kbytes, -v) unlimited file locks (-x) unlimited 修改限制 vi /etc/security/limits.","keywords":[],"articleBody":"clickhouse 安装 检查限制 ulimit -a #主要关注open files和max user processes core file size (blocks, -c) 0 data seg size (kbytes, -d) unlimited scheduling priority (-e) 0 file size (blocks, -f) unlimited pending signals (-i) 14989 max locked memory (kbytes, -l) 64 max memory size (kbytes, -m) unlimited open files (-n) 1024 pipe size (512 bytes, -p) 8 POSIX message queues (bytes, -q) 819200 real-time priority (-r) 0 stack size (kbytes, -s) 8192 cpu time (seconds, -t) unlimited max user processes (-u) 14989 virtual memory (kbytes, -v) unlimited file locks (-x) unlimited 修改限制 vi /etc/security/limits.conf * soft nofile 65536 * hard nofile 65536 * soft nproc 131072 * hard nproc 131072 vi /etc/security/limits.d/20-nproc.conf 追加 * sort nofile 65536 * hard nofile 65536 * soft nproc 131072 * hard nproc 131072 退出当前所有登录root用户的终端后重新登录，使用ulimit -a查看应该已经生效\n安装依赖 yum install -y libtool yum install -y *unixODBC* 取消selinux vi /etc/selinux/config 修改 SELINUX=disable 修改selinux配置文件之后必须要重启才能生效\ngetenforce可以用于查看当前selinux状态，并且setenforce 0可以临时禁用selinux\n使用docker运行clickhouse docker run -d --ulimit nofile=262144:262144 -p 8123:8123 -p 9000:9000 yandex/clickhouse-server docker run -d -p 8123:8123 -p9000:9000 --name clickhouse-server --ulimit nofile=262144:262144 clickhouse/clickhouse-server sudo docker exec -it $(sudo docker ps | grep \"clickhouse-server\" | awk '{print $1}') sh clickhouse-client ClickHouse client version 22.1.3.7 (official build). Connecting to localhost:9000 as user default. Connected to ClickHouse server version 22.1.3 revision 54455. 8f9048b8bfd4 :) 数据类型 整型 Int8: -128 - 127 Int16: -32768 - 32767 Int32: -2147483648 - 214748364 Int64: -9223372036854775808 - 9223372036854775807 UInt8: 0 - 255 UInt16: 0 - 65535 UInt32: 0 - 4294967295 UInt64: 0 - 18446744073709551615 浮点型 Float16: Float32: 浮点进行计算时会有精度丢失问题\n布尔类型 没有单独的类型存储布尔类型，可以使用Uint8来进行存储\nDecimal 有符号浮点数，在进行运算是能保持精度\nDicimal32(n): 整数部分加小数部分一共9位，其中小数部分n位 Decimal64(n)：整数部分加小数部分一共18位，其中小数部分n位 Decimal129(n)：整数部分加小数部分一共38位，其中小数部分n位 如果存放3.1415926 Decimal32(4)只能保存 3.1415 并不会四舍五入 字符串 String: 任意长度字符串，可以存储空字符串 FixedString(N)：固定长度字符串，如果存储的字符串不够N那么使用空格填充，如果大于N报错 clickhouse字符串类型必须使用单引号不能使用双引号 枚举类型 Enum8 Enum16 create table t_enum ( `x` Enum8('hello' = 1, 'world' = 2) ) ENGINE = TinyLog; insert into t_enum values ('hello'),('world'),('hello'); insert into t_enum values ('haha'); Exception on client: Code: 36. DB::Exception: Unknown element 'haha' for enum: While executing ValuesBlockInputFormat: data for INSERT was parsed from query. (BAD_ARGUMENTS) 时间类型 Date: 精确到天，存储2019-12-16 Datetime: 精确到秒，存储2019-12-16 20:00:00 Datetime64：精确到毫秒，存储2019-12-16 20:00:00.66 数组 Array(T): 由T类型元素组成的数组，T可以是任何类型，包括数组类型 select array(1, 2) as x, toTypeName(x); #select [1, 2] as x, toTypeName(x); SELECT [1, 2] AS x, toTypeName(x) Query id: 21f9ebd2-44d6-4297-9d27-d0f21b5d06ad ┌─x─────┬─toTypeName(array(1, 2))─┐ │ [1,2] │ Array(UInt8) │ └───────┴─────────────────────────┘ 1 rows in set. Elapsed: 0.003 sec. select array(1, 2, 'a') as x, toTypeName(x); #不能混用，报错 Nullable create table t_null(x Int8, y Nullable(Int8))ENGINE = TinyLog; #Nullable字段不能建立所以 表引擎 TinyLog 以列文件的格式保存在磁盘上，不支持索引，没有并发kongz，一般保存少量数据的小表。\nMemory 数据以未压缩的形式直接存储在内存中，服务器重启数据就会丢失，读写操作不会相互阻塞，不支持索引，简单查询下有非常高的性能表现(超10G/s)\nMergeTree create table t_mgtree ( id UInt32, sku_id String, total_amount Decimal(16, 2), create_time Datetime )engine = MergeTree partition by toYYYYMMDD(create_time) primary key(id) order by(id, sku_id); insert into t_mgtree values(101,'sku_001',500.00,'2020-01-02 12:00:00'), (102,'sku_001',9.00,'2020-01-01 20:00:00'), (101,'sku_002',999.99,'2020-01-03 12:30:00'), (103,'sku_003',500.00,'2020-01-01 12:00:05'), (102,'sku_002',899.99,'2020-01-03 19:21:00'), (103,'sku_001',99.00,'2020-01-02 14:12:00'); select * from t_mgtree; SELECT * FROM t_mgtree Query id: bc02a3d9-687c-4533-b282-1e4d63dd5c7f ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-01-01 12:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 500 │ 2020-01-02 12:00:00 │ │ 103 │ sku_001 │ 99 │ 2020-01-02 14:12:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 102 │ sku_001 │ 9 │ 2020-01-01 20:00:00 │ │ 103 │ sku_003 │ 500 │ 2020-01-01 12:00:05 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 999.99 │ 2020-01-03 12:30:00 │ │ 102 │ sku_002 │ 899.99 │ 2020-01-03 19:21:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ 7 rows in set. Elapsed: 0.003 sec. MergeTree 的primary key不要求唯一\n插入的数据会根据指定的 partition by 进行分区\norder by 指定分区内的数据排序规则，创建表是必须指定\npartition by 如果不填只会使用一个all分区\n分区后，如果查询涉及多个分区那么会以分区未单位并行查询\nclickhouse的数据存储在/var/lib/clickhouse下，改目录下metadata存储的是库好表的元数据信息，data存储的是具体的数据\npwd /var/lib/clickhouse/metadata ls -l lrwxrwxrwx 1 clickhouse clickhouse 67 Oct 9 06:28 default -\u003e /var/lib/clickhouse/store/209/209bb034-cd2a-4329-a517-f274a1a009e7/ -rw-r----- 1 clickhouse clickhouse 78 Oct 9 06:28 default.sql drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 06:28 information_schema drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 06:28 INFORMATION_SCHEMA -rw-r----- 1 clickhouse clickhouse 51 Oct 9 06:28 information_schema.sql -rw-r----- 1 clickhouse clickhouse 51 Oct 9 06:28 INFORMATION_SCHEMA.sql lrwxrwxrwx 1 clickhouse clickhouse 67 Oct 9 06:28 system -\u003e /var/lib/clickhouse/store/fb6/fb6b524c-6d89-424a-9e02-b24f82b6311f/ cd default #两个表的定义文件 -rw-r----- 1 clickhouse clickhouse 120 Oct 9 07:04 t_enum.sql -rw-r----- 1 clickhouse clickhouse 290 Oct 9 07:41 t_mgtree.sql cat t_mgtree.sql ATTACH TABLE _ UUID '432446b3-924c-478f-90d3-3e7c4d64e190' ( `id` UInt32, `sku_id` String, `total_amount` Decimal(16, 2), `create_time` DateTime ) ENGINE = MergeTree PARTITION BY toYYYYMMDD(create_time) PRIMARY KEY id ORDER BY (id, sku_id) SETTINGS index_granularity = 8192 cd /var/lib/clickhouse/data ls -l drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:41 default drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:42 system cd default ls -l total 8 lrwxrwxrwx 1 clickhouse clickhouse 67 Oct 9 07:04 t_enum -\u003e /var/lib/clickhouse/store/b96/b96f976b-f452-4f19-9e73-de3c52e38b96/ lrwxrwxrwx 1 clickhouse clickhouse 67 Oct 9 07:41 t_mgtree -\u003e /var/lib/clickhouse/store/432/432446b3-924c-478f-90d3-3e7c4d64e190/ cd t_mgtree ls -l total 24 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:42 20200101_1_1_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:46 20200101_3_3_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:46 20200102_2_2_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:46 20200103_4_4_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:41 detached -rw-r----- 1 clickhouse clickhouse 1 Oct 9 07:41 format_version.txt cd 20200101_1_1_0 #第一个 _1 MinBlockNum 代表最小分区编号，每产生一个分区就向上递增一个数字 #第二个 _1 MaxBlockNum 代表最大分区编号，新创建的分区MinBlockNum等于MaxBlockNum #第三个 _0 Level 代表合并层级，合并次数越多改数值越大 ls -l total 36 -rw-r----- 1 clickhouse clickhouse 259 Oct 9 07:42 checksums.txt #校验文件，用于校验各个文件的正确性 -rw-r----- 1 clickhouse clickhouse 118 Oct 9 07:42 columns.txt #列信息 -rw-r----- 1 clickhouse clickhouse 1 Oct 9 07:42 count.txt #数据条数 -rw-r----- 1 clickhouse clickhouse 128 Oct 9 07:42 data.bin #数据文件 -rw-r----- 1 clickhouse clickhouse 144 Oct 9 07:42 data.mrk3 #标记文件 -rw-r----- 1 clickhouse clickhouse 10 Oct 9 07:42 default_compression_codec.txt #默认压缩格式 -rw-r----- 1 clickhouse clickhouse 8 Oct 9 07:42 minmax_create_time.idx #分区键中的最大值和最小值 -rw-r----- 1 clickhouse clickhouse 4 Oct 9 07:42 partition.dat -rw-r----- 1 clickhouse clickhouse 8 Oct 9 07:42 primary.idx #主键索引文件 任何一批数据写入都会产生一个临时分区，不会纳入一个已有的分区，写入后大概10-15分钟后ck会自动执行合并操作(也可 optimize table xxx final / optimize table xxx partition xxx final 只针对指定表的指定分区进行合并)把临时分区的内容合并到已有分区中。\nclickhouse-client ClickHouse client version 22.1.3.7 (official build). Connecting to localhost:9000 as user default. Connected to ClickHouse server version 22.1.3 revision 54455. 8f9048b8bfd4 :) select * from t_mgtree; SELECT * FROM t_mgtree Query id: e3fdf710-f253-4874-91b6-fc71b258cf92 ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 999.99 │ 2020-01-03 12:30:00 │ │ 102 │ sku_002 │ 899.99 │ 2020-01-03 19:21:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 102 │ sku_001 │ 9 │ 2020-01-01 20:00:00 │ │ 103 │ sku_003 │ 500 │ 2020-01-01 12:00:05 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 500 │ 2020-01-02 12:00:00 │ │ 103 │ sku_001 │ 99 │ 2020-01-02 14:12:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-01-01 12:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ 7 rows in set. Elapsed: 0.009 sec. # 手动进行分区合并 optimize table t_mgtree final; #再次查询，分区已经被合并 select * from t_mgtree; SELECT * FROM t_mgtree Query id: 03d6a0b8-ba00-460d-a893-2e7fc3039cfa ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 999.99 │ 2020-01-03 12:30:00 │ │ 102 │ sku_002 │ 899.99 │ 2020-01-03 19:21:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 500 │ 2020-01-02 12:00:00 │ │ 103 │ sku_001 │ 99 │ 2020-01-02 14:12:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-01-01 12:00:00 │ │ 102 │ sku_001 │ 9 │ 2020-01-01 20:00:00 │ │ 103 │ sku_003 │ 500 │ 2020-01-01 12:00:05 │ └─────┴─────────┴──────────────┴─────────────────────┘ 7 rows in set. Elapsed: 0.002 sec. exit cd /var/lib/clickhouse/data/default/t_mgtree ls -l drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:42 20200101_1_1_0 # 这个原始分区文件后续会被清理 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 08:46 20200101_1_3_1 #改文件是 20200101_1_1_0 和 20200101_3_3_0 合并而来，第一个 _1 取的是两个文件对于位置的最小值，第二个 _3 取的是两个文件对于位置的最大值，第三个 _1 取的是对于位置合并次数的最大值+1 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:46 20200101_3_3_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:46 20200102_2_2_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 08:46 20200102_2_2_1 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:46 20200103_4_4_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 08:46 20200103_4_4_1 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:41 detached -rw-r----- 1 clickhouse clickhouse 1 Oct 9 07:41 format_version.txt #测试只针对指定表的指定分区进行合并 insert into t_mgtree values(101, 'sku_002', 50, '2020-01-02 18:00:00'), (102, 'sku_001', 222, '2020-01-03 18:00:00'); select * from t_mgtree; SELECT * FROM t_mgtree Query id: ca5b4975-dcf2-47d8-b14c-26511e3b36f4 ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 102 │ sku_001 │ 222 │ 2020-01-03 18:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 500 │ 2020-01-02 12:00:00 │ │ 103 │ sku_001 │ 99 │ 2020-01-02 14:12:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 999.99 │ 2020-01-03 12:30:00 │ │ 102 │ sku_002 │ 899.99 │ 2020-01-03 19:21:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 50 │ 2020-01-02 18:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-01-01 12:00:00 │ │ 102 │ sku_001 │ 9 │ 2020-01-01 20:00:00 │ │ 103 │ sku_003 │ 500 │ 2020-01-01 12:00:05 │ └─────┴─────────┴──────────────┴─────────────────────┘ 9 rows in set. Elapsed: 0.004 sec. #有两个可以合并的分区 exit ls -l total 28 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 08:46 20200101_1_3_1 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 08:46 20200102_2_2_1 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 09:01 20200102_5_5_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 08:46 20200103_4_4_1 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 09:01 20200103_6_6_0 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:41 detached -rw-r----- 1 clickhouse clickhouse 1 Oct 9 07:41 format_version.txt #只合并 20200103 分区 clickhouse-client optimize table t_mgtree partition '20200103' final; select * from t_mgtree; #只有 20200103 一个分区合并了 SELECT * FROM t_mgtree Query id: fed711df-e69e-45a8-bd09-0db900de0ca0 ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 500 │ 2020-01-02 12:00:00 │ │ 103 │ sku_001 │ 99 │ 2020-01-02 14:12:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 50 │ 2020-01-02 18:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-01-01 12:00:00 │ │ 102 │ sku_001 │ 9 │ 2020-01-01 20:00:00 │ │ 103 │ sku_003 │ 500 │ 2020-01-01 12:00:05 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 999.99 │ 2020-01-03 12:30:00 │ │ 102 │ sku_001 │ 222 │ 2020-01-03 18:00:00 │ │ 102 │ sku_002 │ 899.99 │ 2020-01-03 19:21:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ 9 rows in set. Elapsed: 0.004 sec. primary key(非必须) primary key不要求唯一 primary key字段会建立稀疏索引，默认稀疏值为8192，不建议改除非存在大量primary key字段重复的记录 primary key的字段必须为order by字段的前缀字段，比如：order by(id, sku_id) 那么primary key必须是 id 或者 (id, sku_id) order by(建表必选) order by在建表时可以指定多个字段，在每个分区内按照指定的order by字段排序，指定多个字段从左到右进行字段排序 当用户不设主键，很多处理会依照order by指定的字段进行处理 二级索引 create table t_mgtree2 ( id UInt32, sku_id String, total_amount Decimal(16, 2), create_time Datetime, index a total_amount type minmax granularity 5 )engine = MergeTree partition by toYYYYMMDD(create_time) primary key(id) order by(id, sku_id); #其中granularity 5是指定二级索引对于一级索引的粒度 数据TTL 列ttl 提供了管理数据表或者列的生命周期管理。会对失效的表或者列在进行数据合并时设置默认值。\n#创建表时定义 create table t_mgtree3 ( id UInt32, sku_id String, total_amount Decimal(16, 2) ttl create_time + interval 30 second, create_time Datetime )engine = MergeTree partition by toYYYYMMDD(create_time) primary key(id) order by(id, sku_id); #修改表时定义 alter table t_mgtree3 modify column total_amount Decimal(16, 2) ttl create_time + interval 30 second #注意插入的时间要以运行ck的机器(物理机/虚拟机/容器)时间为准，而不是windows时间 insert into t_mgtree3 values (106,'sku_001',1000.00,'2022-10-09 11:56:00'), (107,'sku_002',2000.00,'2022-10-09 11:56:00'), (110,'sku_003',600.00,'2022-10-09 11:56:00'); select * from t_mgtree3; SELECT * FROM t_mgtree3 Query id: 5eb51e86-9bfa-46a9-a63a-f71651b48ecf ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 106 │ sku_001 │ 1000 │ 2022-10-09 19:27:30 │ │ 107 │ sku_002 │ 2000 │ 2022-10-09 19:27:30 │ │ 110 │ sku_003 │ 600 │ 2022-10-09 19:27:30 │ └─────┴─────────┴──────────────┴─────────────────────┘ 3 rows in set. Elapsed: 0.005 sec. #手动执行一次数据合并，观察效果 optimize table t_mgtree3 final; select * from t_mgtree3; SELECT * FROM t_mgtree3 Query id: cbb757b8-0cfc-48b2-9025-bf6a61911a83 Ok. 0 rows in set. Elapsed: 0.001 sec. 行ttl alter table t_mgtree3 modify ttl create_time + interval 10 second; select * from t_mgtree3; #查询数据所有create_time+10s小于当期时间的行记录都被删除了 ReplacingMergeTree ReplacingMergeTree是MergeTree的变种，它存储特性继承MergeTree只是多了一个去重功能，虽然MergeTree可以设置主键，但是主键没有唯一性要求，如果要想处理掉重复的数据，可以借助ReplacingMergeTree。\n去重时机：数据去重只会出现在执行合并的过程过，由于合并是在未知的时间在后台进行，所以无法进行预测。\n去重范围：如果表经过了分区，去重只会在分区内进行，不能跨分区去重。所以ReplacingMergeTree去重的能力是有限的，适用于在后台清除重复的数据节省空间。\n#ReplacingMergeTree()填入列作为版本字段，重复数据只保留版本字段最大的，如果不填，默认按照插入顺序保留最后一条 create table t_rmgtree1 ( id UInt32, sku_id String, total_amount Decimal(16, 2), create_time Datetime )engine = ReplacingMergeTree(create_time) partition by toYYYYMMDD(create_time) primary key(id) order by(id, sku_id); insert into t_rmgtree1 values (101,'sku_001',1000.00,'2020-06-01 12:00:00'), (101,'sku_001',1000.00,'2020-06-02 12:00:00'), (102,'sku_002',2000.00,'2020-06-01 11:00:00'), (102,'sku_002',2000.00,'2020-06-01 13:00:00'), (102,'sku_002',12000.00,'2020-06-01 13:00:00'); #可以看到数据已经进行去重了，如果order by指定的字段一致，那么clickhouse就认为数据是一样的 select * from t_rmgtree1; SELECT * FROM t_rmgtree1 Query id: b05144fd-5f4c-46fd-8379-74b2414eba88 ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-06-02 12:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-06-01 12:00:00 │ │ 102 │ sku_002 │ 12000 │ 2020-06-01 13:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ 3 rows in set. Elapsed: 0.003 sec ReplacingMergeTree特点：\n以order by指定的字段作为判断数据是否重复的依据，如果两条记录order by指定的字段相同，那么ck就认为这两条数据重复 去重是针对同一分区内的数据而言的，不能跨分区去重 在分区合并时进行去重，也就意味着某一时刻可能存在多条应该去重的数据 如果ReplacingMergeTree()指定了字段，那么去重时保留该字段最大的记录，如果没指定字段，那么按照插入顺序保留最后插入的数据 SummingMergeTree 对于不关心明细，只关心以聚合方式进行查询的场景，存储开销和聚合查询时的聚合开销都能大，对于这种场景可以使用\"预聚合\"引擎SummingMergeTree.\n该引擎会把相同的行(order by指定的所有字段的值都相同)\ncreate table t_smgtree1 ( id UInt32, sku_id String, total_amount Decimal(16, 2), create_time Datetime )engine = SummingMergeTree(total_amount) partition by toYYYYMMDD(create_time) primary key(id) order by(id, sku_id); insert into t_smgtree1 values (101,'sku_001',1000.00,'2020-06-01 12:00:00'), (102,'sku_002',2000.00,'2020-06-01 11:00:00'), (102,'sku_002',2000.00,'2020-06-01 13:00:00'), (102,'sku_002',12000.00,'2020-06-01 13:00:00'), (102,'sku_002',600.00,'2020-06-02 12:00:00'), (102,'sku_004',2500.00,'2020-06-01 12:00:00'); #这三条数据应该会进行聚合 (102,'sku_002',2000.00,'2020-06-01 11:00:00'), (102,'sku_002',2000.00,'2020-06-01 13:00:00'), (102,'sku_002',12000.00,'2020-06-01 13:00:00'), #这条数据不会和以上三条数据进行聚合，因为他们不在一个分区 (102,'sku_002',600.00,'2020-06-02 12:00:00'), #可以看到数据已经被聚合了，而且非聚合字段取的是第一条记录的值 select * from t_smgtree1; SELECT * FROM t_smgtree1 Query id: 6a215617-6e4e-41a7-9ef0-8b0cf3bfdc3d ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 102 │ sku_002 │ 600 │ 2020-06-02 12:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-06-01 12:00:00 │ │ 102 │ sku_002 │ 16000 │ 2020-06-01 11:00:00 │ │ 102 │ sku_004 │ 2500 │ 2020-06-01 12:00:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ 4 rows in set. Elapsed: 0.003 sec. SummingMergeTree特点：\n以建表时SummingMergeTree()中指定的字段作为聚合字段，如果未指定，那么除了order by指定的字段之外的所有数值列都会进行聚合 以order by列作为一句判断行是不是需要进行聚合(对于多行数据来说，如果order by的列都相同，那么就聚合) 除开聚合的列之外的其他列取第一行的值 只有同一分区的数据才会进行聚合 执行聚合的时机是执行合并式，所以某一时刻不一定该聚合的数据都聚合了 注意：虽然SummingMergeTree引擎有聚合的特点，但是统计某一条件的记录仍要使用sum，因为某一时刻不一定数据都聚合了\nsql操作 insert create table if not exists tab1 ( id UInt64, name String )engine=TinyLog; insert into tab1 values(1, 'aaa'), (2, 'bbb'), (3, 'ccc'); create table if not exists tab2 ( id UInt64, name String )engine=TinyLog; insert into tab2 select id,name from tab1; update clickhouse的更新和删除都会导致放弃原有的分区，把分区内处理完后的数据(更新完或删除后)的数据保存到新的分区并把原来的分区打上逻辑失效的标记(同步执行)，然后在执行合并时删除失效的分区，所以更新和删除的代价都非常大\n#更新之前 select * from t_mgtree; SELECT * FROM t_mgtree Query id: 26ec771a-26fc-45ab-8df0-6a4ebd06608a ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 999.99 │ 2020-01-03 12:30:00 │ │ 102 │ sku_001 │ 222 │ 2020-01-03 18:00:00 │ │ 102 │ sku_002 │ 899.99 │ 2020-01-03 19:21:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 500 │ 2020-01-02 12:00:00 │ │ 101 │ sku_002 │ 50 │ 2020-01-02 18:00:00 │ │ 103 │ sku_001 │ 99 │ 2020-01-02 14:12:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-01-01 12:00:00 │ │ 102 │ sku_001 │ 9 │ 2020-01-01 20:00:00 │ │ 103 │ sku_003 │ 500 │ 2020-01-01 12:00:05 │ └─────┴─────────┴──────────────┴─────────────────────┘ #分区文件 ls -la total 28 drwxr-x--- 6 clickhouse clickhouse 4096 Oct 11 14:02 . drwxr-x--- 3 clickhouse clickhouse 4096 Oct 9 07:41 .. drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 13:54 20200101_1_3_2 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 13:54 20200102_2_5_2 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 13:54 20200103_4_6_3 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:41 detached -rw-r----- 1 clickhouse clickhouse 1 Oct 9 07:41 format_version.txt #更新一条记录 alter table t_mgtree update total_amount=0 where id=103 and sku_id='sku_003'; #观察现在的分区文件 #所有分区文件不管更新有没有涉及到，都重新复制了一份保存更新后的数据 ls -la total 44 drwxr-x--- 9 clickhouse clickhouse 4096 Oct 11 14:09 . drwxr-x--- 3 clickhouse clickhouse 4096 Oct 9 07:41 .. drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 13:54 20200101_1_3_2 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:09 20200101_1_3_2_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 13:54 20200102_2_5_2 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:09 20200102_2_5_2_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 13:54 20200103_4_6_3 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:09 20200103_4_6_3_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:41 detached -rw-r----- 1 clickhouse clickhouse 1 Oct 9 07:41 format_version.txt -rw-r----- 1 clickhouse clickhouse 129 Oct 11 14:09 mutation_7.txt #多了这个文件 delete #删除数据以前查看分区文件 ls -la total 32 drwxr-x--- 6 clickhouse clickhouse 4096 Oct 11 14:22 . drwxr-x--- 3 clickhouse clickhouse 4096 Oct 9 07:41 .. drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:14 20200101_1_3_3_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:14 20200102_2_5_3_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:14 20200103_4_6_4_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:41 detached -rw-r----- 1 clickhouse clickhouse 1 Oct 9 07:41 format_version.txt -rw-r----- 1 clickhouse clickhouse 129 Oct 11 14:09 mutation_7.txt select * from t_mgtree; SELECT * FROM t_mgtree Query id: 08eb4c31-241a-4197-84d9-526b3d3007bf ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_002 │ 999.99 │ 2020-01-03 12:30:00 │ │ 102 │ sku_001 │ 222 │ 2020-01-03 18:00:00 │ │ 102 │ sku_002 │ 899.99 │ 2020-01-03 19:21:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 500 │ 2020-01-02 12:00:00 │ │ 101 │ sku_002 │ 50 │ 2020-01-02 18:00:00 │ │ 103 │ sku_001 │ 99 │ 2020-01-02 14:12:00 │ └─────┴─────────┴──────────────┴─────────────────────┘ ┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐ │ 101 │ sku_001 │ 1000 │ 2020-01-01 12:00:00 │ │ 102 │ sku_001 │ 9 │ 2020-01-01 20:00:00 │ │ 103 │ sku_003 │ 0 │ 2020-01-01 12:00:05 │ └─────┴─────────┴──────────────┴─────────────────────┘ #删除数据 alter table t_mgtree delete where id=103 and sku_id='sku_003'; #查看分区文件，所有分区都复制了一份不管删除操作有没有涉及到 ls -la total 48 drwxr-x--- 9 clickhouse clickhouse 4096 Oct 11 14:34 . drwxr-x--- 3 clickhouse clickhouse 4096 Oct 9 07:41 .. drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:14 20200101_1_3_3_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:34 20200101_1_3_3_8 #新增的 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:14 20200102_2_5_3_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:34 20200102_2_5_3_8 #新增的 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:14 20200103_4_6_4_7 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 11 14:34 20200103_4_6_4_8 #新增的 drwxr-x--- 2 clickhouse clickhouse 4096 Oct 9 07:41 detached -rw-r----- 1 clickhouse clickhouse 1 Oct 9 07:41 format_version.txt -rw-r----- 1 clickhouse clickhouse 129 Oct 11 14:09 mutation_7.txt -rw-r----- 1 clickhouse clickhouse 112 Oct 11 14:34 mutation_8.txt #多了这个文件 #删除素有数据 alter table t_mgtree delete where 1=1; select clickhouse的查询同mysql类似，但是ck提供了许多内置的函数\nalter alter用于修改表的结构，添加/删除/修改列的定义\n#新增列 alter table tableName add column newcolname String after col1; #删除列 alter table tableName drop column col1; #修改列 alter table tableName add column col2 String after col1; 副本引擎 副本的目的主要是保障数据的高可用性，即使一台 ClickHouse 节点宕机，那么也可以从 其他服务器获得相同的数据。\n分片集群 副本虽然能够提高数据的可用性，降低丢失风险，但是每台服务器实际上必须容纳全量 数据，对数据的横向扩容没有解决。 要解决数据水平切分的问题，需要引入分片的概念。通过分片把一份完整的数据进行切 分，不同的分片分布到不同的节点上，再通过 Distributed 表引擎把数据拼接起来一同使用。 Distributed 表引擎本身不存储数据，有点类似于 MyCat 之于 MySql，成为一种中间件， 通过分布式逻辑表来写入、分发、路由来操作多台节点不同分片的分布式数据。\n","wordCount":"2682","inLanguage":"en","datePublished":"2022-11-27T16:16:14+08:00","dateModified":"2022-11-27T16:16:14+08:00","author":{"@type":"Person","name":"Me"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://moyuduo.github.io/posts/clickhouse/"},"publisher":{"@type":"Organization","name":"Moyuduo's Blog","logo":{"@type":"ImageObject","url":"https://moyuduo.github.io/%3Clink%20/%20abs%20url%3E"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://moyuduo.github.io/ accesskey=h title="Moyuduo's Blog (Alt + H)"><img src=https://moyuduo.github.io/apple-touch-icon.png alt aria-label=logo height=35>Moyuduo's Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://moyuduo.github.io/categories/ title=categories><span>categories</span></a></li><li><a href=https://moyuduo.github.io/tags/ title=tags><span>tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://moyuduo.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://moyuduo.github.io/posts/>Posts</a></div><h1 class=post-title>clickhouse</h1><div class=post-meta><span title='2022-11-27 16:16:14 +0800 +0800'>November 27, 2022</span>&nbsp;·&nbsp;13 min&nbsp;·&nbsp;2682 words&nbsp;·&nbsp;Me&nbsp;|&nbsp;<a href=https://github.com/%3cpath_to_repo%3e/content/posts/clickhouse.md rel="noopener noreferrer" target=_blank>Suggest Changes</a></div></header><div class=post-content><h1 id=clickhouse>clickhouse<a hidden class=anchor aria-hidden=true href=#clickhouse>#</a></h1><h2 id=安装>安装<a hidden class=anchor aria-hidden=true href=#安装>#</a></h2><h3 id=检查限制>检查限制<a hidden class=anchor aria-hidden=true href=#检查限制>#</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=nb>ulimit</span> -a   <span class=c1>#主要关注open files和max user processes</span>
+</span></span><span class=line><span class=cl>core file size          <span class=o>(</span>blocks, -c<span class=o>)</span> <span class=m>0</span>
+</span></span><span class=line><span class=cl>data seg size           <span class=o>(</span>kbytes, -d<span class=o>)</span> unlimited
+</span></span><span class=line><span class=cl>scheduling priority             <span class=o>(</span>-e<span class=o>)</span> <span class=m>0</span>
+</span></span><span class=line><span class=cl>file size               <span class=o>(</span>blocks, -f<span class=o>)</span> unlimited
+</span></span><span class=line><span class=cl>pending signals                 <span class=o>(</span>-i<span class=o>)</span> <span class=m>14989</span>
+</span></span><span class=line><span class=cl>max locked memory       <span class=o>(</span>kbytes, -l<span class=o>)</span> <span class=m>64</span>
+</span></span><span class=line><span class=cl>max memory size         <span class=o>(</span>kbytes, -m<span class=o>)</span> unlimited
+</span></span><span class=line><span class=cl>open files                      <span class=o>(</span>-n<span class=o>)</span> <span class=m>1024</span>
+</span></span><span class=line><span class=cl>pipe size            <span class=o>(</span><span class=m>512</span> bytes, -p<span class=o>)</span> <span class=m>8</span>
+</span></span><span class=line><span class=cl>POSIX message queues     <span class=o>(</span>bytes, -q<span class=o>)</span> <span class=m>819200</span>
+</span></span><span class=line><span class=cl>real-time priority              <span class=o>(</span>-r<span class=o>)</span> <span class=m>0</span>
+</span></span><span class=line><span class=cl>stack size              <span class=o>(</span>kbytes, -s<span class=o>)</span> <span class=m>8192</span>
+</span></span><span class=line><span class=cl>cpu <span class=nb>time</span>               <span class=o>(</span>seconds, -t<span class=o>)</span> unlimited
+</span></span><span class=line><span class=cl>max user processes              <span class=o>(</span>-u<span class=o>)</span> <span class=m>14989</span>
+</span></span><span class=line><span class=cl>virtual memory          <span class=o>(</span>kbytes, -v<span class=o>)</span> unlimited
+</span></span><span class=line><span class=cl>file locks                      <span class=o>(</span>-x<span class=o>)</span> unlimited
+</span></span></code></pre></div><h3 id=修改限制>修改限制<a hidden class=anchor aria-hidden=true href=#修改限制>#</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>vi /etc/security/limits.conf
+</span></span><span class=line><span class=cl>* soft nofile <span class=m>65536</span>
+</span></span><span class=line><span class=cl>* hard nofile <span class=m>65536</span>
+</span></span><span class=line><span class=cl>* soft nproc <span class=m>131072</span>
+</span></span><span class=line><span class=cl>* hard nproc <span class=m>131072</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>vi /etc/security/limits.d/20-nproc.conf
+</span></span><span class=line><span class=cl>追加
+</span></span><span class=line><span class=cl>* sort nofile <span class=m>65536</span>
+</span></span><span class=line><span class=cl>* hard nofile <span class=m>65536</span>
+</span></span><span class=line><span class=cl>* soft nproc <span class=m>131072</span>
+</span></span><span class=line><span class=cl>* hard nproc <span class=m>131072</span>
+</span></span></code></pre></div><p>退出当前<strong>所有</strong>登录root用户的终端后重新登录，使用<code>ulimit -a</code>查看应该已经生效</p><h3 id=安装依赖>安装依赖<a hidden class=anchor aria-hidden=true href=#安装依赖>#</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>yum install -y libtool
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>yum install -y *unixODBC*
+</span></span></code></pre></div><h3 id=取消selinux>取消selinux<a hidden class=anchor aria-hidden=true href=#取消selinux>#</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>vi /etc/selinux/config
+</span></span><span class=line><span class=cl>修改 <span class=nv>SELINUX</span><span class=o>=</span>disable
+</span></span></code></pre></div><p>修改selinux配置文件之后必须要重启才能生效</p><p>getenforce可以用于查看当前selinux状态，并且<code>setenforce 0</code>可以临时禁用selinux</p><h2 id=使用docker运行clickhouse>使用docker运行clickhouse<a hidden class=anchor aria-hidden=true href=#使用docker运行clickhouse>#</a></h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>docker run -d --ulimit <span class=nv>nofile</span><span class=o>=</span>262144:262144 -p 8123:8123 -p 9000:9000 yandex/clickhouse-server
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>docker run -d -p 8123:8123 -p9000:9000 --name clickhouse-server --ulimit <span class=nv>nofile</span><span class=o>=</span>262144:262144 clickhouse/clickhouse-server
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>sudo docker <span class=nb>exec</span> -it <span class=k>$(</span>sudo docker ps <span class=p>|</span> grep <span class=s2>&#34;clickhouse-server&#34;</span> <span class=p>|</span> awk <span class=s1>&#39;{print $1}&#39;</span><span class=k>)</span> sh
+</span></span><span class=line><span class=cl>clickhouse-client
+</span></span><span class=line><span class=cl>ClickHouse client version 22.1.3.7 <span class=o>(</span>official build<span class=o>)</span>.
+</span></span><span class=line><span class=cl>Connecting to localhost:9000 as user default.
+</span></span><span class=line><span class=cl>Connected to ClickHouse server version 22.1.3 revision 54455.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>8f9048b8bfd4 :<span class=o>)</span> 
+</span></span></code></pre></div><h2 id=数据类型>数据类型<a hidden class=anchor aria-hidden=true href=#数据类型>#</a></h2><h3 id=整型>整型<a hidden class=anchor aria-hidden=true href=#整型>#</a></h3><ol><li>Int8: -128 - 127</li><li>Int16: -32768 - 32767</li><li>Int32: -2147483648 - 214748364</li><li>Int64: -9223372036854775808 - 9223372036854775807</li><li>UInt8: 0 - 255</li><li>UInt16: 0 - 65535</li><li>UInt32: 0 - 4294967295</li><li>UInt64: 0 - 18446744073709551615</li></ol><h3 id=浮点型>浮点型<a hidden class=anchor aria-hidden=true href=#浮点型>#</a></h3><ol><li>Float16:</li><li>Float32:</li></ol><p>浮点进行计算时会有精度丢失问题</p><h3 id=布尔类型>布尔类型<a hidden class=anchor aria-hidden=true href=#布尔类型>#</a></h3><p>没有单独的类型存储布尔类型，可以使用Uint8来进行存储</p><h3 id=decimal>Decimal<a hidden class=anchor aria-hidden=true href=#decimal>#</a></h3><p>有符号浮点数，在进行运算是能保持精度</p><ol><li>Dicimal32(n): 整数部分加小数部分一共9位，其中小数部分n位</li><li>Decimal64(n)：整数部分加小数部分一共18位，其中小数部分n位</li><li>Decimal129(n)：整数部分加小数部分一共38位，其中小数部分n位</li></ol><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>如果存放3.1415926
+</span></span><span class=line><span class=cl>Decimal32<span class=o>(</span>4<span class=o>)</span>只能保存 3.1415 并不会四舍五入
+</span></span></code></pre></div><h3 id=字符串>字符串<a hidden class=anchor aria-hidden=true href=#字符串>#</a></h3><ol><li>String: 任意长度字符串，可以存储空字符串</li><li>FixedString(N)：固定长度字符串，如果存储的字符串不够N那么使用空格填充，如果大于N报错</li><li><strong>clickhouse字符串类型必须使用单引号不能使用双引号</strong></li></ol><h3 id=枚举类型>枚举类型<a hidden class=anchor aria-hidden=true href=#枚举类型>#</a></h3><ol><li>Enum8</li><li>Enum16</li></ol><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>create table t_enum <span class=o>(</span>
+</span></span><span class=line><span class=cl>    <span class=sb>`</span>x<span class=sb>`</span> Enum8<span class=o>(</span><span class=s1>&#39;hello&#39;</span> <span class=o>=</span> 1, <span class=s1>&#39;world&#39;</span> <span class=o>=</span> 2<span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=o>)</span> <span class=nv>ENGINE</span> <span class=o>=</span> TinyLog<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>insert into t_enum values <span class=o>(</span><span class=s1>&#39;hello&#39;</span><span class=o>)</span>,<span class=o>(</span><span class=s1>&#39;world&#39;</span><span class=o>)</span>,<span class=o>(</span><span class=s1>&#39;hello&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>insert into t_enum values <span class=o>(</span><span class=s1>&#39;haha&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>Exception on client:
+</span></span><span class=line><span class=cl>Code: 36. DB::Exception: Unknown element <span class=s1>&#39;haha&#39;</span> <span class=k>for</span> enum: While executing ValuesBlockInputFormat: data <span class=k>for</span> INSERT was parsed from query. <span class=o>(</span>BAD_ARGUMENTS<span class=o>)</span>
+</span></span></code></pre></div><h3 id=时间类型>时间类型<a hidden class=anchor aria-hidden=true href=#时间类型>#</a></h3><ol><li>Date: 精确到天，存储2019-12-16</li><li>Datetime: 精确到秒，存储2019-12-16 20:00:00</li><li>Datetime64：精确到毫秒，存储2019-12-16 20:00:00.66</li></ol><h3 id=数组>数组<a hidden class=anchor aria-hidden=true href=#数组>#</a></h3><ol><li>Array(T): 由T类型元素组成的数组，T可以是任何类型，包括数组类型</li></ol><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=k>select</span> array<span class=o>(</span>1, 2<span class=o>)</span> as x, toTypeName<span class=o>(</span>x<span class=o>)</span><span class=p>;</span> <span class=c1>#select [1, 2] as x, toTypeName(x);</span>
+</span></span><span class=line><span class=cl>SELECT
+</span></span><span class=line><span class=cl>    <span class=o>[</span>1, 2<span class=o>]</span> AS x,
+</span></span><span class=line><span class=cl>    toTypeName<span class=o>(</span>x<span class=o>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: 21f9ebd2-44d6-4297-9d27-d0f21b5d06ad
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌─x─────┬─toTypeName<span class=o>(</span>array<span class=o>(</span>1, 2<span class=o>))</span>─┐
+</span></span><span class=line><span class=cl>│ <span class=o>[</span>1,2<span class=o>]</span> │ Array<span class=o>(</span>UInt8<span class=o>)</span>            │
+</span></span><span class=line><span class=cl>└───────┴─────────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>1</span> rows in set. Elapsed: 0.003 sec. 
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>select</span> array<span class=o>(</span>1, 2, <span class=s1>&#39;a&#39;</span><span class=o>)</span> as x, toTypeName<span class=o>(</span>x<span class=o>)</span><span class=p>;</span> <span class=c1>#不能混用，报错</span>
+</span></span></code></pre></div><h3 id=nullable>Nullable<a hidden class=anchor aria-hidden=true href=#nullable>#</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>create table t_null<span class=o>(</span>x Int8, y Nullable<span class=o>(</span>Int8<span class=o>))</span><span class=nv>ENGINE</span> <span class=o>=</span> TinyLog<span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=c1>#Nullable字段不能建立所以</span>
+</span></span></code></pre></div><h2 id=表引擎>表引擎<a hidden class=anchor aria-hidden=true href=#表引擎>#</a></h2><h3 id=tinylog>TinyLog<a hidden class=anchor aria-hidden=true href=#tinylog>#</a></h3><p>以列文件的格式保存在磁盘上，不支持索引，没有并发kongz，一般保存少量数据的小表。</p><h3 id=memory>Memory<a hidden class=anchor aria-hidden=true href=#memory>#</a></h3><p>数据以未压缩的形式直接存储在内存中，服务器重启数据就会丢失，读写操作不会相互阻塞，不支持索引，简单查询下有非常高的性能表现(超10G/s)</p><h3 id=mergetree>MergeTree<a hidden class=anchor aria-hidden=true href=#mergetree>#</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>create table t_mgtree <span class=o>(</span>
+</span></span><span class=line><span class=cl>    id UInt32,
+</span></span><span class=line><span class=cl>    sku_id String,
+</span></span><span class=line><span class=cl>    total_amount Decimal<span class=o>(</span>16, 2<span class=o>)</span>,
+</span></span><span class=line><span class=cl>    create_time Datetime
+</span></span><span class=line><span class=cl><span class=o>)</span><span class=nv>engine</span> <span class=o>=</span> MergeTree
+</span></span><span class=line><span class=cl>partition by toYYYYMMDD<span class=o>(</span>create_time<span class=o>)</span>
+</span></span><span class=line><span class=cl>primary key<span class=o>(</span>id<span class=o>)</span>
+</span></span><span class=line><span class=cl>order by<span class=o>(</span>id, sku_id<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>insert into t_mgtree values<span class=o>(</span>101,<span class=s1>&#39;sku_001&#39;</span>,500.00,<span class=s1>&#39;2020-01-02 12:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_001&#39;</span>,9.00,<span class=s1>&#39;2020-01-01 20:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>101,<span class=s1>&#39;sku_002&#39;</span>,999.99,<span class=s1>&#39;2020-01-03 12:30:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>103,<span class=s1>&#39;sku_003&#39;</span>,500.00,<span class=s1>&#39;2020-01-01 12:00:05&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,899.99,<span class=s1>&#39;2020-01-03 19:21:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>103,<span class=s1>&#39;sku_001&#39;</span>,99.00,<span class=s1>&#39;2020-01-02 14:12:00&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: bc02a3d9-687c-4533-b282-1e4d63dd5c7f
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-01-01 12:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │          <span class=m>500</span> │ 2020-01-02 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_001 │           <span class=m>99</span> │ 2020-01-02 14:12:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │            <span class=m>9</span> │ 2020-01-01 20:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_003 │          <span class=m>500</span> │ 2020-01-01 12:00:05 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │       999.99 │ 2020-01-03 12:30:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │       899.99 │ 2020-01-03 19:21:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>7</span> rows in set. Elapsed: 0.003 sec. 
+</span></span></code></pre></div><p>MergeTree 的primary key不要求唯一</p><p>插入的数据会根据指定的 partition by 进行分区</p><p>order by 指定分区内的数据排序规则，创建表是必须指定</p><h4 id=partition-by>partition by<a hidden class=anchor aria-hidden=true href=#partition-by>#</a></h4><p>如果不填只会使用一个all分区</p><p>分区后，如果查询涉及多个分区那么会以分区未单位并行查询</p><p>clickhouse的数据存储在<code>/var/lib/clickhouse</code>下，改目录下<code>metadata</code>存储的是库好表的元数据信息，<code>data</code>存储的是具体的数据</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=nb>pwd</span>
+</span></span><span class=line><span class=cl>/var/lib/clickhouse/metadata
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>ls -l
+</span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> clickhouse clickhouse   <span class=m>67</span> Oct  <span class=m>9</span> 06:28 default -&gt; /var/lib/clickhouse/store/209/209bb034-cd2a-4329-a517-f274a1a009e7/
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse   <span class=m>78</span> Oct  <span class=m>9</span> 06:28 default.sql
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 06:28 information_schema
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 06:28 INFORMATION_SCHEMA
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse   <span class=m>51</span> Oct  <span class=m>9</span> 06:28 information_schema.sql
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse   <span class=m>51</span> Oct  <span class=m>9</span> 06:28 INFORMATION_SCHEMA.sql
+</span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> clickhouse clickhouse   <span class=m>67</span> Oct  <span class=m>9</span> 06:28 system -&gt; /var/lib/clickhouse/store/fb6/fb6b524c-6d89-424a-9e02-b24f82b6311f/
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>cd</span> default
+</span></span><span class=line><span class=cl><span class=c1>#两个表的定义文件</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse <span class=m>120</span> Oct  <span class=m>9</span> 07:04 t_enum.sql
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse <span class=m>290</span> Oct  <span class=m>9</span> 07:41 t_mgtree.sql
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>cat t_mgtree.sql
+</span></span><span class=line><span class=cl>ATTACH TABLE _ UUID <span class=s1>&#39;432446b3-924c-478f-90d3-3e7c4d64e190&#39;</span>
+</span></span><span class=line><span class=cl><span class=o>(</span>
+</span></span><span class=line><span class=cl>    <span class=sb>`</span>id<span class=sb>`</span> UInt32,
+</span></span><span class=line><span class=cl>    <span class=sb>`</span>sku_id<span class=sb>`</span> String,
+</span></span><span class=line><span class=cl>    <span class=sb>`</span>total_amount<span class=sb>`</span> Decimal<span class=o>(</span>16, 2<span class=o>)</span>,
+</span></span><span class=line><span class=cl>    <span class=sb>`</span>create_time<span class=sb>`</span> DateTime
+</span></span><span class=line><span class=cl><span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=nv>ENGINE</span> <span class=o>=</span> MergeTree
+</span></span><span class=line><span class=cl>PARTITION BY toYYYYMMDD<span class=o>(</span>create_time<span class=o>)</span>
+</span></span><span class=line><span class=cl>PRIMARY KEY id
+</span></span><span class=line><span class=cl>ORDER BY <span class=o>(</span>id, sku_id<span class=o>)</span>
+</span></span><span class=line><span class=cl>SETTINGS <span class=nv>index_granularity</span> <span class=o>=</span> <span class=m>8192</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>cd</span> /var/lib/clickhouse/data
+</span></span><span class=line><span class=cl>ls -l
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 default
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:42 system
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>cd</span> default
+</span></span><span class=line><span class=cl>ls -l
+</span></span><span class=line><span class=cl>total <span class=m>8</span>
+</span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> clickhouse clickhouse <span class=m>67</span> Oct  <span class=m>9</span> 07:04 t_enum -&gt; /var/lib/clickhouse/store/b96/b96f976b-f452-4f19-9e73-de3c52e38b96/
+</span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> clickhouse clickhouse <span class=m>67</span> Oct  <span class=m>9</span> 07:41 t_mgtree -&gt; /var/lib/clickhouse/store/432/432446b3-924c-478f-90d3-3e7c4d64e190/
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>cd</span> t_mgtree
+</span></span><span class=line><span class=cl>ls -l
+</span></span><span class=line><span class=cl>total <span class=m>24</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:42 20200101_1_1_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:46 20200101_3_3_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:46 20200102_2_2_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:46 20200103_4_4_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 detached
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse    <span class=m>1</span> Oct  <span class=m>9</span> 07:41 format_version.txt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>cd</span> 20200101_1_1_0   
+</span></span><span class=line><span class=cl><span class=c1>#第一个 _1 MinBlockNum 代表最小分区编号，每产生一个分区就向上递增一个数字</span>
+</span></span><span class=line><span class=cl><span class=c1>#第二个 _1 MaxBlockNum 代表最大分区编号，新创建的分区MinBlockNum等于MaxBlockNum</span>
+</span></span><span class=line><span class=cl><span class=c1>#第三个 _0 Level 代表合并层级，合并次数越多改数值越大</span>
+</span></span><span class=line><span class=cl>ls -l
+</span></span><span class=line><span class=cl>total <span class=m>36</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse <span class=m>259</span> Oct  <span class=m>9</span> 07:42 checksums.txt   <span class=c1>#校验文件，用于校验各个文件的正确性</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse <span class=m>118</span> Oct  <span class=m>9</span> 07:42 columns.txt <span class=c1>#列信息</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse   <span class=m>1</span> Oct  <span class=m>9</span> 07:42 count.txt   <span class=c1>#数据条数</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse <span class=m>128</span> Oct  <span class=m>9</span> 07:42 data.bin    <span class=c1>#数据文件</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse <span class=m>144</span> Oct  <span class=m>9</span> 07:42 data.mrk3   <span class=c1>#标记文件</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse  <span class=m>10</span> Oct  <span class=m>9</span> 07:42 default_compression_codec.txt   <span class=c1>#默认压缩格式</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse   <span class=m>8</span> Oct  <span class=m>9</span> 07:42 minmax_create_time.idx  <span class=c1>#分区键中的最大值和最小值</span>
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse   <span class=m>4</span> Oct  <span class=m>9</span> 07:42 partition.dat   
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse   <span class=m>8</span> Oct  <span class=m>9</span> 07:42 primary.idx <span class=c1>#主键索引文件</span>
+</span></span></code></pre></div><p>任何一批数据写入都会产生一个临时分区，不会纳入一个已有的分区，写入后大概10-15分钟后ck会自动执行合并操作(也可 optimize table xxx final / optimize table xxx partition xxx final 只针对指定表的指定分区进行合并)把临时分区的内容合并到已有分区中。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>clickhouse-client
+</span></span><span class=line><span class=cl>ClickHouse client version 22.1.3.7 <span class=o>(</span>official build<span class=o>)</span>.
+</span></span><span class=line><span class=cl>Connecting to localhost:9000 as user default.
+</span></span><span class=line><span class=cl>Connected to ClickHouse server version 22.1.3 revision 54455.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>8f9048b8bfd4 :<span class=o>)</span> <span class=k>select</span> * from t_mgtree<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: e3fdf710-f253-4874-91b6-fc71b258cf92
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │       999.99 │ 2020-01-03 12:30:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │       899.99 │ 2020-01-03 19:21:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │            <span class=m>9</span> │ 2020-01-01 20:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_003 │          <span class=m>500</span> │ 2020-01-01 12:00:05 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │          <span class=m>500</span> │ 2020-01-02 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_001 │           <span class=m>99</span> │ 2020-01-02 14:12:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-01-01 12:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>7</span> rows in set. Elapsed: 0.009 sec. 
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 手动进行分区合并</span>
+</span></span><span class=line><span class=cl>optimize table t_mgtree final<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#再次查询，分区已经被合并</span>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: 03d6a0b8-ba00-460d-a893-2e7fc3039cfa
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │       999.99 │ 2020-01-03 12:30:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │       899.99 │ 2020-01-03 19:21:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │          <span class=m>500</span> │ 2020-01-02 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_001 │           <span class=m>99</span> │ 2020-01-02 14:12:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-01-01 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │            <span class=m>9</span> │ 2020-01-01 20:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_003 │          <span class=m>500</span> │ 2020-01-01 12:00:05 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>7</span> rows in set. Elapsed: 0.002 sec. 
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>exit</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>cd</span> /var/lib/clickhouse/data/default/t_mgtree
+</span></span><span class=line><span class=cl>ls -l
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:42 20200101_1_1_0 <span class=c1># 这个原始分区文件后续会被清理</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 08:46 20200101_1_3_1 <span class=c1>#改文件是 20200101_1_1_0 和 20200101_3_3_0 合并而来，第一个 _1 取的是两个文件对于位置的最小值，第二个 _3 取的是两个文件对于位置的最大值，第三个 _1 取的是对于位置合并次数的最大值+1</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:46 20200101_3_3_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:46 20200102_2_2_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 08:46 20200102_2_2_1
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:46 20200103_4_4_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 08:46 20200103_4_4_1
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 detached
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse    <span class=m>1</span> Oct  <span class=m>9</span> 07:41 format_version.txt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#测试只针对指定表的指定分区进行合并</span>
+</span></span><span class=line><span class=cl>insert into t_mgtree values<span class=o>(</span>101, <span class=s1>&#39;sku_002&#39;</span>, 50, <span class=s1>&#39;2020-01-02 18:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102, <span class=s1>&#39;sku_001&#39;</span>, 222, <span class=s1>&#39;2020-01-03 18:00:00&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: ca5b4975-dcf2-47d8-b14c-26511e3b36f4
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │          <span class=m>222</span> │ 2020-01-03 18:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │          <span class=m>500</span> │ 2020-01-02 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_001 │           <span class=m>99</span> │ 2020-01-02 14:12:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │       999.99 │ 2020-01-03 12:30:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │       899.99 │ 2020-01-03 19:21:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │           <span class=m>50</span> │ 2020-01-02 18:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-01-01 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │            <span class=m>9</span> │ 2020-01-01 20:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_003 │          <span class=m>500</span> │ 2020-01-01 12:00:05 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>9</span> rows in set. Elapsed: 0.004 sec.
+</span></span><span class=line><span class=cl><span class=c1>#有两个可以合并的分区</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>exit</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>ls -l
+</span></span><span class=line><span class=cl>total <span class=m>28</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 08:46 20200101_1_3_1
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 08:46 20200102_2_2_1
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 09:01 20200102_5_5_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 08:46 20200103_4_4_1
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 09:01 20200103_6_6_0
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 detached
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse    <span class=m>1</span> Oct  <span class=m>9</span> 07:41 format_version.txt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#只合并 20200103 分区</span>
+</span></span><span class=line><span class=cl>clickhouse-client
+</span></span><span class=line><span class=cl>optimize table t_mgtree partition <span class=s1>&#39;20200103&#39;</span> final<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree<span class=p>;</span> <span class=c1>#只有 20200103 一个分区合并了</span>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: fed711df-e69e-45a8-bd09-0db900de0ca0
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │          <span class=m>500</span> │ 2020-01-02 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_001 │           <span class=m>99</span> │ 2020-01-02 14:12:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │           <span class=m>50</span> │ 2020-01-02 18:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-01-01 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │            <span class=m>9</span> │ 2020-01-01 20:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_003 │          <span class=m>500</span> │ 2020-01-01 12:00:05 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │       999.99 │ 2020-01-03 12:30:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │          <span class=m>222</span> │ 2020-01-03 18:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │       899.99 │ 2020-01-03 19:21:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>9</span> rows in set. Elapsed: 0.004 sec. 
+</span></span></code></pre></div><h4 id=primary-key非必须>primary key(非必须)<a hidden class=anchor aria-hidden=true href=#primary-key非必须>#</a></h4><ol><li>primary key不要求唯一</li><li>primary key字段会建立稀疏索引，默认稀疏值为8192，不建议改除非存在大量primary key字段重复的记录</li><li>primary key的字段必须为order by字段的前缀字段，比如：order by(id, sku_id) 那么primary key必须是 id 或者 (id, sku_id)</li></ol><h4 id=order-by建表必选>order by(建表必选)<a hidden class=anchor aria-hidden=true href=#order-by建表必选>#</a></h4><ol><li>order by在建表时可以指定多个字段，在每个分区内按照指定的order by字段排序，指定多个字段从左到右进行字段排序</li><li>当用户不设主键，很多处理会依照order by指定的字段进行处理</li></ol><h4 id=二级索引>二级索引<a hidden class=anchor aria-hidden=true href=#二级索引>#</a></h4><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>create table t_mgtree2 <span class=o>(</span>
+</span></span><span class=line><span class=cl>    id UInt32,
+</span></span><span class=line><span class=cl>    sku_id String,
+</span></span><span class=line><span class=cl>    total_amount Decimal<span class=o>(</span>16, 2<span class=o>)</span>,
+</span></span><span class=line><span class=cl>    create_time Datetime,
+</span></span><span class=line><span class=cl>    index a total_amount <span class=nb>type</span> minmax granularity <span class=m>5</span>
+</span></span><span class=line><span class=cl><span class=o>)</span><span class=nv>engine</span> <span class=o>=</span> MergeTree
+</span></span><span class=line><span class=cl>partition by toYYYYMMDD<span class=o>(</span>create_time<span class=o>)</span>
+</span></span><span class=line><span class=cl>primary key<span class=o>(</span>id<span class=o>)</span>
+</span></span><span class=line><span class=cl>order by<span class=o>(</span>id, sku_id<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#其中granularity 5是指定二级索引对于一级索引的粒度</span>
+</span></span></code></pre></div><h4 id=数据ttl>数据TTL<a hidden class=anchor aria-hidden=true href=#数据ttl>#</a></h4><h5 id=列ttl>列ttl<a hidden class=anchor aria-hidden=true href=#列ttl>#</a></h5><p>提供了管理数据表或者列的生命周期管理。会对失效的表或者列在进行数据合并时设置默认值。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1>#创建表时定义</span>
+</span></span><span class=line><span class=cl>create table t_mgtree3 <span class=o>(</span>
+</span></span><span class=line><span class=cl>    id UInt32,
+</span></span><span class=line><span class=cl>    sku_id String,
+</span></span><span class=line><span class=cl>    total_amount Decimal<span class=o>(</span>16, 2<span class=o>)</span> ttl create_time + interval <span class=m>30</span> second,
+</span></span><span class=line><span class=cl>    create_time Datetime
+</span></span><span class=line><span class=cl><span class=o>)</span><span class=nv>engine</span> <span class=o>=</span> MergeTree
+</span></span><span class=line><span class=cl>partition by toYYYYMMDD<span class=o>(</span>create_time<span class=o>)</span>
+</span></span><span class=line><span class=cl>primary key<span class=o>(</span>id<span class=o>)</span>
+</span></span><span class=line><span class=cl>order by<span class=o>(</span>id, sku_id<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#修改表时定义</span>
+</span></span><span class=line><span class=cl>alter table t_mgtree3 modify column total_amount Decimal<span class=o>(</span>16, 2<span class=o>)</span> ttl create_time + interval <span class=m>30</span> second
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#注意插入的时间要以运行ck的机器(物理机/虚拟机/容器)时间为准，而不是windows时间</span>
+</span></span><span class=line><span class=cl>insert into t_mgtree3 values
+</span></span><span class=line><span class=cl><span class=o>(</span>106,<span class=s1>&#39;sku_001&#39;</span>,1000.00,<span class=s1>&#39;2022-10-09 11:56:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>107,<span class=s1>&#39;sku_002&#39;</span>,2000.00,<span class=s1>&#39;2022-10-09 11:56:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>110,<span class=s1>&#39;sku_003&#39;</span>,600.00,<span class=s1>&#39;2022-10-09 11:56:00&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree3<span class=p>;</span>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree3
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: 5eb51e86-9bfa-46a9-a63a-f71651b48ecf
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>106</span> │ sku_001 │         <span class=m>1000</span> │ 2022-10-09 19:27:30 │
+</span></span><span class=line><span class=cl>│ <span class=m>107</span> │ sku_002 │         <span class=m>2000</span> │ 2022-10-09 19:27:30 │
+</span></span><span class=line><span class=cl>│ <span class=m>110</span> │ sku_003 │          <span class=m>600</span> │ 2022-10-09 19:27:30 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>3</span> rows in set. Elapsed: 0.005 sec.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#手动执行一次数据合并，观察效果</span>
+</span></span><span class=line><span class=cl>optimize table t_mgtree3 final<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree3<span class=p>;</span>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree3
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: cbb757b8-0cfc-48b2-9025-bf6a61911a83
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Ok.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>0</span> rows in set. Elapsed: 0.001 sec.
+</span></span></code></pre></div><h5 id=行ttl>行ttl<a hidden class=anchor aria-hidden=true href=#行ttl>#</a></h5><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>alter table t_mgtree3 modify ttl create_time + interval <span class=m>10</span> second<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree3<span class=p>;</span> <span class=c1>#查询数据所有create_time+10s小于当期时间的行记录都被删除了</span>
+</span></span></code></pre></div><h3 id=replacingmergetree>ReplacingMergeTree<a hidden class=anchor aria-hidden=true href=#replacingmergetree>#</a></h3><p>ReplacingMergeTree是MergeTree的变种，它存储特性继承MergeTree只是多了一个去重功能，虽然MergeTree可以设置主键，但是主键没有唯一性要求，如果要想处理掉重复的数据，可以借助ReplacingMergeTree。</p><p>去重时机：数据去重只会出现在执行合并的过程过，由于合并是在未知的时间在后台进行，所以无法进行预测。</p><p>去重范围：如果表经过了分区，去重只会在分区内进行，不能跨分区去重。所以ReplacingMergeTree去重的能力是有限的，适用于在后台清除重复的数据节省空间。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1>#ReplacingMergeTree()填入列作为版本字段，重复数据只保留版本字段最大的，如果不填，默认按照插入顺序保留最后一条</span>
+</span></span><span class=line><span class=cl>create table t_rmgtree1 <span class=o>(</span>
+</span></span><span class=line><span class=cl>    id UInt32,
+</span></span><span class=line><span class=cl>    sku_id String,
+</span></span><span class=line><span class=cl>    total_amount Decimal<span class=o>(</span>16, 2<span class=o>)</span>,
+</span></span><span class=line><span class=cl>    create_time Datetime
+</span></span><span class=line><span class=cl><span class=o>)</span><span class=nv>engine</span> <span class=o>=</span> ReplacingMergeTree<span class=o>(</span>create_time<span class=o>)</span>
+</span></span><span class=line><span class=cl>partition by toYYYYMMDD<span class=o>(</span>create_time<span class=o>)</span>
+</span></span><span class=line><span class=cl>primary key<span class=o>(</span>id<span class=o>)</span>
+</span></span><span class=line><span class=cl>order by<span class=o>(</span>id, sku_id<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>insert into t_rmgtree1 values
+</span></span><span class=line><span class=cl><span class=o>(</span>101,<span class=s1>&#39;sku_001&#39;</span>,1000.00,<span class=s1>&#39;2020-06-01 12:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>101,<span class=s1>&#39;sku_001&#39;</span>,1000.00,<span class=s1>&#39;2020-06-02 12:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,2000.00,<span class=s1>&#39;2020-06-01 11:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,2000.00,<span class=s1>&#39;2020-06-01 13:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,12000.00,<span class=s1>&#39;2020-06-01 13:00:00&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#可以看到数据已经进行去重了，如果order by指定的字段一致，那么clickhouse就认为数据是一样的</span>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_rmgtree1<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_rmgtree1
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: b05144fd-5f4c-46fd-8379-74b2414eba88
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-06-02 12:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-06-01 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │        <span class=m>12000</span> │ 2020-06-01 13:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>3</span> rows in set. Elapsed: 0.003 sec
+</span></span></code></pre></div><p>ReplacingMergeTree特点：</p><ol><li>以order by指定的字段作为判断数据是否重复的依据，如果两条记录order by指定的字段相同，那么ck就认为这两条数据重复</li><li>去重是针对同一分区内的数据而言的，不能跨分区去重</li><li>在分区合并时进行去重，也就意味着某一时刻可能存在多条应该去重的数据</li><li>如果ReplacingMergeTree()指定了字段，那么去重时保留该字段最大的记录，如果没指定字段，那么按照插入顺序保留最后插入的数据</li></ol><h3 id=summingmergetree>SummingMergeTree<a hidden class=anchor aria-hidden=true href=#summingmergetree>#</a></h3><p>对于不关心明细，只关心以聚合方式进行查询的场景，存储开销和聚合查询时的聚合开销都能大，对于这种场景可以使用"预聚合"引擎SummingMergeTree.</p><p>该引擎会把相同的行(order by指定的所有字段的值都相同)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>create table t_smgtree1 <span class=o>(</span>
+</span></span><span class=line><span class=cl>    id UInt32,
+</span></span><span class=line><span class=cl>    sku_id String,
+</span></span><span class=line><span class=cl>    total_amount Decimal<span class=o>(</span>16, 2<span class=o>)</span>,
+</span></span><span class=line><span class=cl>    create_time Datetime
+</span></span><span class=line><span class=cl><span class=o>)</span><span class=nv>engine</span> <span class=o>=</span> SummingMergeTree<span class=o>(</span>total_amount<span class=o>)</span>
+</span></span><span class=line><span class=cl>partition by toYYYYMMDD<span class=o>(</span>create_time<span class=o>)</span>
+</span></span><span class=line><span class=cl>primary key<span class=o>(</span>id<span class=o>)</span>
+</span></span><span class=line><span class=cl>order by<span class=o>(</span>id, sku_id<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>insert into t_smgtree1 values
+</span></span><span class=line><span class=cl><span class=o>(</span>101,<span class=s1>&#39;sku_001&#39;</span>,1000.00,<span class=s1>&#39;2020-06-01 12:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,2000.00,<span class=s1>&#39;2020-06-01 11:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,2000.00,<span class=s1>&#39;2020-06-01 13:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,12000.00,<span class=s1>&#39;2020-06-01 13:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,600.00,<span class=s1>&#39;2020-06-02 12:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_004&#39;</span>,2500.00,<span class=s1>&#39;2020-06-01 12:00:00&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#这三条数据应该会进行聚合</span>
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,2000.00,<span class=s1>&#39;2020-06-01 11:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,2000.00,<span class=s1>&#39;2020-06-01 13:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,12000.00,<span class=s1>&#39;2020-06-01 13:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#这条数据不会和以上三条数据进行聚合，因为他们不在一个分区</span>
+</span></span><span class=line><span class=cl><span class=o>(</span>102,<span class=s1>&#39;sku_002&#39;</span>,600.00,<span class=s1>&#39;2020-06-02 12:00:00&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#可以看到数据已经被聚合了，而且非聚合字段取的是第一条记录的值</span>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_smgtree1<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_smgtree1
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: 6a215617-6e4e-41a7-9ef0-8b0cf3bfdc3d
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │          <span class=m>600</span> │ 2020-06-02 12:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-06-01 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │        <span class=m>16000</span> │ 2020-06-01 11:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_004 │         <span class=m>2500</span> │ 2020-06-01 12:00:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=m>4</span> rows in set. Elapsed: 0.003 sec.
+</span></span></code></pre></div><p>SummingMergeTree特点：</p><ol><li>以建表时SummingMergeTree()中指定的字段作为聚合字段，如果未指定，那么除了order by指定的字段之外的所有数值列都会进行聚合</li><li>以order by列作为一句判断行是不是需要进行聚合(对于多行数据来说，如果order by的列都相同，那么就聚合)</li><li>除开聚合的列之外的其他列取第一行的值</li><li>只有同一分区的数据才会进行聚合</li><li>执行聚合的时机是执行合并式，所以某一时刻不一定该聚合的数据都聚合了</li></ol><p>注意：虽然SummingMergeTree引擎有聚合的特点，但是统计某一条件的记录仍要使用sum，因为某一时刻不一定数据都聚合了</p><h2 id=sql操作>sql操作<a hidden class=anchor aria-hidden=true href=#sql操作>#</a></h2><h3 id=insert>insert<a hidden class=anchor aria-hidden=true href=#insert>#</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>create table <span class=k>if</span> not exists tab1 <span class=o>(</span>
+</span></span><span class=line><span class=cl>    id UInt64,
+</span></span><span class=line><span class=cl>    name String
+</span></span><span class=line><span class=cl><span class=o>)</span><span class=nv>engine</span><span class=o>=</span>TinyLog<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>insert into tab1 values<span class=o>(</span>1, <span class=s1>&#39;aaa&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>2, <span class=s1>&#39;bbb&#39;</span><span class=o>)</span>,
+</span></span><span class=line><span class=cl><span class=o>(</span>3, <span class=s1>&#39;ccc&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>create table <span class=k>if</span> not exists tab2 <span class=o>(</span>
+</span></span><span class=line><span class=cl>    id UInt64,
+</span></span><span class=line><span class=cl>    name String
+</span></span><span class=line><span class=cl><span class=o>)</span><span class=nv>engine</span><span class=o>=</span>TinyLog<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>insert into tab2 <span class=k>select</span> id,name from tab1<span class=p>;</span>
+</span></span></code></pre></div><h3 id=update>update<a hidden class=anchor aria-hidden=true href=#update>#</a></h3><p>clickhouse的更新和删除都会导致放弃原有的分区，把分区内处理完后的数据(更新完或删除后)的数据保存到新的分区并把原来的分区打上逻辑失效的标记(同步执行)，然后在执行合并时删除失效的分区，所以更新和删除的代价都非常大</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1>#更新之前</span>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: 26ec771a-26fc-45ab-8df0-6a4ebd06608a
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │       999.99 │ 2020-01-03 12:30:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │          <span class=m>222</span> │ 2020-01-03 18:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │       899.99 │ 2020-01-03 19:21:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │          <span class=m>500</span> │ 2020-01-02 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │           <span class=m>50</span> │ 2020-01-02 18:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_001 │           <span class=m>99</span> │ 2020-01-02 14:12:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-01-01 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │            <span class=m>9</span> │ 2020-01-01 20:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_003 │          <span class=m>500</span> │ 2020-01-01 12:00:05 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#分区文件</span>
+</span></span><span class=line><span class=cl>ls -la
+</span></span><span class=line><span class=cl>total <span class=m>28</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>6</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:02 .
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>3</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 ..
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 13:54 20200101_1_3_2
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 13:54 20200102_2_5_2
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 13:54 20200103_4_6_3
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 detached
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse    <span class=m>1</span> Oct  <span class=m>9</span> 07:41 format_version.txt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#更新一条记录</span>
+</span></span><span class=line><span class=cl>alter table t_mgtree update <span class=nv>total_amount</span><span class=o>=</span><span class=m>0</span> where <span class=nv>id</span><span class=o>=</span><span class=m>103</span> and <span class=nv>sku_id</span><span class=o>=</span><span class=s1>&#39;sku_003&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#观察现在的分区文件</span>
+</span></span><span class=line><span class=cl><span class=c1>#所有分区文件不管更新有没有涉及到，都重新复制了一份保存更新后的数据</span>
+</span></span><span class=line><span class=cl>ls -la
+</span></span><span class=line><span class=cl>total <span class=m>44</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>9</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:09 .
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>3</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 ..
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 13:54 20200101_1_3_2
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:09 20200101_1_3_2_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 13:54 20200102_2_5_2
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:09 20200102_2_5_2_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 13:54 20200103_4_6_3
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:09 20200103_4_6_3_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 detached
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse    <span class=m>1</span> Oct  <span class=m>9</span> 07:41 format_version.txt
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse  <span class=m>129</span> Oct <span class=m>11</span> 14:09 mutation_7.txt <span class=c1>#多了这个文件</span>
+</span></span></code></pre></div><h3 id=delete>delete<a hidden class=anchor aria-hidden=true href=#delete>#</a></h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1>#删除数据以前查看分区文件</span>
+</span></span><span class=line><span class=cl>ls -la
+</span></span><span class=line><span class=cl>total <span class=m>32</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>6</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:22 .
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>3</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 ..
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:14 20200101_1_3_3_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:14 20200102_2_5_3_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:14 20200103_4_6_4_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 detached
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse    <span class=m>1</span> Oct  <span class=m>9</span> 07:41 format_version.txt
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse  <span class=m>129</span> Oct <span class=m>11</span> 14:09 mutation_7.txt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>select</span> * from t_mgtree<span class=p>;</span>
+</span></span><span class=line><span class=cl>SELECT *
+</span></span><span class=line><span class=cl>FROM t_mgtree
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Query id: 08eb4c31-241a-4197-84d9-526b3d3007bf
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │       999.99 │ 2020-01-03 12:30:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │          <span class=m>222</span> │ 2020-01-03 18:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_002 │       899.99 │ 2020-01-03 19:21:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │          <span class=m>500</span> │ 2020-01-02 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_002 │           <span class=m>50</span> │ 2020-01-02 18:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_001 │           <span class=m>99</span> │ 2020-01-02 14:12:00 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>┌──id─┬─sku_id──┬─total_amount─┬─────────create_time─┐
+</span></span><span class=line><span class=cl>│ <span class=m>101</span> │ sku_001 │         <span class=m>1000</span> │ 2020-01-01 12:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>102</span> │ sku_001 │            <span class=m>9</span> │ 2020-01-01 20:00:00 │
+</span></span><span class=line><span class=cl>│ <span class=m>103</span> │ sku_003 │            <span class=m>0</span> │ 2020-01-01 12:00:05 │
+</span></span><span class=line><span class=cl>└─────┴─────────┴──────────────┴─────────────────────┘
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#删除数据</span>
+</span></span><span class=line><span class=cl>alter table t_mgtree delete where <span class=nv>id</span><span class=o>=</span><span class=m>103</span> and <span class=nv>sku_id</span><span class=o>=</span><span class=s1>&#39;sku_003&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#查看分区文件，所有分区都复制了一份不管删除操作有没有涉及到</span>
+</span></span><span class=line><span class=cl>ls -la
+</span></span><span class=line><span class=cl>total <span class=m>48</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>9</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:34 .
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>3</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 ..
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:14 20200101_1_3_3_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:34 20200101_1_3_3_8   <span class=c1>#新增的</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:14 20200102_2_5_3_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:34 20200102_2_5_3_8   <span class=c1>#新增的</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:14 20200103_4_6_4_7
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct <span class=m>11</span> 14:34 20200103_4_6_4_8   <span class=c1>#新增的</span>
+</span></span><span class=line><span class=cl>drwxr-x--- <span class=m>2</span> clickhouse clickhouse <span class=m>4096</span> Oct  <span class=m>9</span> 07:41 detached
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse    <span class=m>1</span> Oct  <span class=m>9</span> 07:41 format_version.txt
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse  <span class=m>129</span> Oct <span class=m>11</span> 14:09 mutation_7.txt
+</span></span><span class=line><span class=cl>-rw-r----- <span class=m>1</span> clickhouse clickhouse  <span class=m>112</span> Oct <span class=m>11</span> 14:34 mutation_8.txt <span class=c1>#多了这个文件</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#删除素有数据</span>
+</span></span><span class=line><span class=cl>alter table t_mgtree delete where <span class=nv>1</span><span class=o>=</span>1<span class=p>;</span>
+</span></span></code></pre></div><h3 id=select>select<a hidden class=anchor aria-hidden=true href=#select>#</a></h3><p>clickhouse的查询同mysql类似，但是ck提供了许多<a href=https://clickhouse.com/docs/en/sql-reference/functions/>内置的函数</a></p><h3 id=alter>alter<a hidden class=anchor aria-hidden=true href=#alter>#</a></h3><p>alter用于修改表的结构，添加/删除/修改列的定义</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1>#新增列</span>
+</span></span><span class=line><span class=cl>alter table tableName add column newcolname String after col1<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#删除列</span>
+</span></span><span class=line><span class=cl>alter table tableName drop column col1<span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#修改列</span>
+</span></span><span class=line><span class=cl>alter table tableName add column col2 String after col1<span class=p>;</span>
+</span></span></code></pre></div><h2 id=副本引擎>副本引擎<a hidden class=anchor aria-hidden=true href=#副本引擎>#</a></h2><p>副本的目的主要是保障数据的高可用性，即使一台 ClickHouse 节点宕机，那么也可以从
+其他服务器获得相同的数据。</p><p><img loading=lazy src=./images/Snipaste_2022-11-09_21-47-15.jpg alt></p><h2 id=分片集群>分片集群<a hidden class=anchor aria-hidden=true href=#分片集群>#</a></h2><p>副本虽然能够提高数据的可用性，降低丢失风险，但是每台服务器实际上必须容纳全量
+数据，对数据的横向扩容没有解决。
+要解决数据水平切分的问题，需要引入分片的概念。通过分片把一份完整的数据进行切
+分，不同的分片分布到不同的节点上，再通过 Distributed 表引擎把数据拼接起来一同使用。
+Distributed 表引擎本身不存储数据，有点类似于 MyCat 之于 MySql，成为一种中间件，
+通过分布式逻辑表来写入、分发、路由来操作多台节点不同分片的分布式数据。</p><p><img loading=lazy src=./images/Snipaste_2022-11-09_21-49-32.jpg alt></p></div><footer class=post-footer><ul class=post-tags></ul><nav class=paginav><a class=prev href=https://moyuduo.github.io/posts/arraylistlinkedlist%E5%92%8Cvector%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/><span class=title>« Prev</span><br><span>ArrayList、LinkedList和Vector源码分析</span></a>
+<a class=next href=https://moyuduo.github.io/posts/edgewize1.1/><span class=title>Next »</span><br><span>edgewize1.1</span></a></nav><div class=share-buttons><a target=_blank rel="noopener noreferrer" aria-label="share clickhouse on twitter" href="https://twitter.com/intent/tweet/?text=clickhouse&url=https%3a%2f%2fmoyuduo.github.io%2fposts%2fclickhouse%2f&hashtags="><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM195.519 424.544c135.939.0 210.268-112.643 210.268-210.268.0-3.218.0-6.437-.153-9.502 14.406-10.421 26.973-23.448 36.935-38.314-13.18 5.824-27.433 9.809-42.452 11.648 15.326-9.196 26.973-23.602 32.49-40.92-14.252 8.429-30.038 14.56-46.896 17.931-13.487-14.406-32.644-23.295-53.946-23.295-40.767.0-73.87 33.104-73.87 73.87.0 5.824.613 11.494 1.992 16.858-61.456-3.065-115.862-32.49-152.337-77.241-6.284 10.881-9.962 23.601-9.962 37.088.0 25.594 13.027 48.276 32.95 61.456-12.107-.307-23.448-3.678-33.41-9.196v.92c0 35.862 25.441 65.594 59.311 72.49-6.13 1.686-12.72 2.606-19.464 2.606-4.751.0-9.348-.46-13.946-1.38 9.349 29.426 36.628 50.728 68.965 51.341-25.287 19.771-57.164 31.571-91.8 31.571-5.977.0-11.801-.306-17.625-1.073 32.337 21.15 71.264 33.41 112.95 33.41z"/></svg></a><a target=_blank rel="noopener noreferrer" aria-label="share clickhouse on linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fmoyuduo.github.io%2fposts%2fclickhouse%2f&title=clickhouse&summary=clickhouse&source=https%3a%2f%2fmoyuduo.github.io%2fposts%2fclickhouse%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM160.461 423.278V197.561h-75.04v225.717h75.04zm270.539.0V293.839c0-69.333-37.018-101.586-86.381-101.586-39.804.0-57.634 21.891-67.617 37.266v-31.958h-75.021c.995 21.181.0 225.717.0 225.717h75.02V297.222c0-6.748.486-13.492 2.474-18.315 5.414-13.475 17.767-27.434 38.494-27.434 27.135.0 38.007 20.707 38.007 51.037v120.768H431zM123.448 88.722C97.774 88.722 81 105.601 81 127.724c0 21.658 16.264 39.002 41.455 39.002h.484c26.165.0 42.452-17.344 42.452-39.002-.485-22.092-16.241-38.954-41.943-39.002z"/></svg></a><a target=_blank rel="noopener noreferrer" aria-label="share clickhouse on reddit" href="https://reddit.com/submit?url=https%3a%2f%2fmoyuduo.github.io%2fposts%2fclickhouse%2f&title=clickhouse"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM446 265.638c0-22.964-18.616-41.58-41.58-41.58-11.211.0-21.361 4.457-28.841 11.666-28.424-20.508-67.586-33.757-111.204-35.278l18.941-89.121 61.884 13.157c.756 15.734 13.642 28.29 29.56 28.29 16.407.0 29.706-13.299 29.706-29.701.0-16.403-13.299-29.702-29.706-29.702-11.666.0-21.657 6.792-26.515 16.578l-69.105-14.69c-1.922-.418-3.939-.042-5.585 1.036-1.658 1.073-2.811 2.761-3.224 4.686l-21.152 99.438c-44.258 1.228-84.046 14.494-112.837 35.232-7.468-7.164-17.589-11.591-28.757-11.591-22.965.0-41.585 18.616-41.585 41.58.0 16.896 10.095 31.41 24.568 37.918-.639 4.135-.99 8.328-.99 12.576.0 63.977 74.469 115.836 166.33 115.836s166.334-51.859 166.334-115.836c0-4.218-.347-8.387-.977-12.493 14.564-6.47 24.735-21.034 24.735-38.001zM326.526 373.831c-20.27 20.241-59.115 21.816-70.534 21.816-11.428.0-50.277-1.575-70.522-21.82-3.007-3.008-3.007-7.882.0-10.889 3.003-2.999 7.882-3.003 10.885.0 12.777 12.781 40.11 17.317 59.637 17.317 19.522.0 46.86-4.536 59.657-17.321 3.016-2.999 7.886-2.995 10.885.008 3.008 3.011 3.003 7.882-.008 10.889zm-5.23-48.781c-16.373.0-29.701-13.324-29.701-29.698.0-16.381 13.328-29.714 29.701-29.714 16.378.0 29.706 13.333 29.706 29.714.0 16.374-13.328 29.698-29.706 29.698zM160.91 295.348c0-16.381 13.328-29.71 29.714-29.71 16.369.0 29.689 13.329 29.689 29.71.0 16.373-13.32 29.693-29.689 29.693-16.386.0-29.714-13.32-29.714-29.693z"/></svg></a><a target=_blank rel="noopener noreferrer" aria-label="share clickhouse on facebook" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fmoyuduo.github.io%2fposts%2fclickhouse%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H342.978V319.085h66.6l12.672-82.621h-79.272v-53.617c0-22.603 11.073-44.636 46.58-44.636H425.6v-70.34s-32.71-5.582-63.982-5.582c-65.288.0-107.96 39.569-107.96 111.204v62.971h-72.573v82.621h72.573V512h-191.104c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892z"/></svg></a><a target=_blank rel="noopener noreferrer" aria-label="share clickhouse on whatsapp" href="https://api.whatsapp.com/send?text=clickhouse%20-%20https%3a%2f%2fmoyuduo.github.io%2fposts%2fclickhouse%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zm-58.673 127.703c-33.842-33.881-78.847-52.548-126.798-52.568-98.799.0-179.21 80.405-179.249 179.234-.013 31.593 8.241 62.428 23.927 89.612l-25.429 92.884 95.021-24.925c26.181 14.28 55.659 21.807 85.658 21.816h.074c98.789.0 179.206-80.413 179.247-179.243.018-47.895-18.61-92.93-52.451-126.81zM263.976 403.485h-.06c-26.734-.01-52.954-7.193-75.828-20.767l-5.441-3.229-56.386 14.792 15.05-54.977-3.542-5.637c-14.913-23.72-22.791-51.136-22.779-79.287.033-82.142 66.867-148.971 149.046-148.971 39.793.014 77.199 15.531 105.329 43.692 28.128 28.16 43.609 65.592 43.594 105.4-.034 82.149-66.866 148.983-148.983 148.984zm81.721-111.581c-4.479-2.242-26.499-13.075-30.604-14.571-4.105-1.495-7.091-2.241-10.077 2.241-2.986 4.483-11.569 14.572-14.182 17.562-2.612 2.988-5.225 3.364-9.703 1.12-4.479-2.241-18.91-6.97-36.017-22.23C231.8 264.15 222.81 249.484 220.198 245s-.279-6.908 1.963-9.14c2.016-2.007 4.48-5.232 6.719-7.847 2.24-2.615 2.986-4.484 4.479-7.472 1.493-2.99.747-5.604-.374-7.846-1.119-2.241-10.077-24.288-13.809-33.256-3.635-8.733-7.327-7.55-10.077-7.688-2.609-.13-5.598-.158-8.583-.158-2.986.0-7.839 1.121-11.944 5.604-4.105 4.484-15.675 15.32-15.675 37.364.0 22.046 16.048 43.342 18.287 46.332 2.24 2.99 31.582 48.227 76.511 67.627 10.685 4.615 19.028 7.371 25.533 9.434 10.728 3.41 20.492 2.929 28.209 1.775 8.605-1.285 26.499-10.833 30.231-21.295 3.732-10.464 3.732-19.431 2.612-21.298-1.119-1.869-4.105-2.99-8.583-5.232z"/></svg></a><a target=_blank rel="noopener noreferrer" aria-label="share clickhouse on telegram" href="https://telegram.me/share/url?text=clickhouse&url=https%3a%2f%2fmoyuduo.github.io%2fposts%2fclickhouse%2f"><svg viewBox="2 2 28 28" height="30" width="30" fill="currentcolor"><path d="M26.49 29.86H5.5a3.37 3.37.0 01-2.47-1 3.35 3.35.0 01-1-2.47V5.48A3.36 3.36.0 013 3 3.37 3.37.0 015.5 2h21A3.38 3.38.0 0129 3a3.36 3.36.0 011 2.46V26.37a3.35 3.35.0 01-1 2.47 3.38 3.38.0 01-2.51 1.02zm-5.38-6.71a.79.79.0 00.85-.66L24.73 9.24a.55.55.0 00-.18-.46.62.62.0 00-.41-.17q-.08.0-16.53 6.11a.59.59.0 00-.41.59.57.57.0 00.43.52l4 1.24 1.61 4.83a.62.62.0 00.63.43.56.56.0 00.4-.17L16.54 20l4.09 3A.9.9.0 0021.11 23.15zM13.8 20.71l-1.21-4q8.72-5.55 8.78-5.55c.15.0.23.0.23.16a.18.18.0 010 .06s-2.51 2.3-7.52 6.8z"/></svg></a></div></footer></article></main><footer class=footer><span>&copy; 2022 <a href=https://moyuduo.github.io/>Moyuduo's Blog</a></span>
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>

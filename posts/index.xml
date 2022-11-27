@@ -2,30 +2,956 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Moyuduo&#39;s Blog</title>
-    <link>https://examplesite.com/posts/</link>
+    <link>https://moyuduo.github.io/posts/</link>
     <description>Recent content in Posts on Moyuduo&#39;s Blog</description>
     <image>
-      <url>https://examplesite.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>https://examplesite.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>https://moyuduo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://moyuduo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 26 Nov 2022 14:14:07 +0800</lastBuildDate><atom:link href="https://examplesite.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Nov 2022 16:16:14 +0800</lastBuildDate><atom:link href="https://moyuduo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ArrayList、LinkedList和Vector源码分析</title>
+      <link>https://moyuduo.github.io/posts/arraylistlinkedlist%E5%92%8Cvector%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/arraylistlinkedlist%E5%92%8Cvector%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
+      <description>ArrayList、LinkedList和Vector源码分析 ArrayList ArrayList是一个底层使用数组来存储对象，但不是线程安全的集合类
+ArrayList的类结构关系 public class ArrayList&amp;lt;E&amp;gt; extends AbstractList&amp;lt;E&amp;gt; implements List&amp;lt;E&amp;gt;, RandomAccess, Cloneable, java.io.Serializable { } ArrayList实现了List接口，List接口中定义了一些对列表通过下标进行添加删除等方法
+ArrayList实现了RandomAccess接口，这个接口是一个标记接口，接口中并没有任何的方法，ArrayList底层是用数组来存储对象，当然是能够通过下标随机访问的，实现了RandomAccess接口的类在查询时的速度会很快但是添加删除元素慢，而LinkedList是通过链表的方式实现的，它没有实现RandomAccess接口，在查询时慢但是增加删除的速度快
+所以在使用集合遍历大量数据时，可以先用instanceof来判断集合是不是实现了RandomAccess
+public void test1() { List&amp;lt;Integer&amp;gt; list=new ArrayList&amp;lt;Integer&amp;gt;(); list.add(1); if(list instanceof RandomAccess) {//RandomAccess实现类，使用下标访问 for(int i=0;i&amp;lt;list.size();i++) { //todo } }else {//不是RandomAccess实现类，使用iterator遍历 Iterator&amp;lt;Integer&amp;gt; iterator = list.iterator(); while(iterator.hasNext()) { //todo } } } ArrayList实现了Cloneable接口,所以可以合法调用clone方法，如果没有实现Cloneable接口，那么会抛出CloneNotSupporteddException，详见
+ArrayList实现了Serializable接口，可以将对象序列化，用于传输或持久化，详见
+属性 //序列化Id private static final long serialVersionUID = 8683452581122892189L; //默认初始化大小 private static final int DEFAULT_CAPACITY = 10; //空数组对象，用于有参构造且初始化大小为0时 private static final Object[] EMPTY_ELEMENTDATA = {}; //空数组对象，用于无参构造时，这两个属性主要用来区分创建ArrayList时有没有指定容量 private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}; //保存对象的容器，使用transient修饰即在序列化时，不进行序列化，这是因为ArrayList添加了序列化方法private void writeObject(java.</description>
+    </item>
+    
+    <item>
+      <title>clickhouse</title>
+      <link>https://moyuduo.github.io/posts/clickhouse/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/clickhouse/</guid>
+      <description>clickhouse 安装 检查限制 ulimit -a #主要关注open files和max user processes core file size (blocks, -c) 0 data seg size (kbytes, -d) unlimited scheduling priority (-e) 0 file size (blocks, -f) unlimited pending signals (-i) 14989 max locked memory (kbytes, -l) 64 max memory size (kbytes, -m) unlimited open files (-n) 1024 pipe size (512 bytes, -p) 8 POSIX message queues (bytes, -q) 819200 real-time priority (-r) 0 stack size (kbytes, -s) 8192 cpu time (seconds, -t) unlimited max user processes (-u) 14989 virtual memory (kbytes, -v) unlimited file locks (-x) unlimited 修改限制 vi /etc/security/limits.</description>
+    </item>
+    
+    <item>
+      <title>edgewize1.1</title>
+      <link>https://moyuduo.github.io/posts/edgewize1.1/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/edgewize1.1/</guid>
+      <description>edgewize1.1 云端调用边端驱动服务流程：
+req(/devices/{deviceId}/call/{identifier})	=&amp;gt;	iot-api-server	=&amp;gt;	iot-dispatch =&amp;gt;	构建topic /sys/{thingId}/{deviceId}/thing/service/{identifier}/call	=&amp;gt;	kafka =&amp;gt;	xxx	=&amp;gt;	exia.bridge	=&amp;gt; exia.broker	=&amp;gt;	driver
+应用管理中的应用启动、停止、重启也是使用的和调用边端驱动相同的接口，启动使用的identifier是appStart,停止使用的identifier是appStop，重启使用的identifier也是appStart，所以重启并不是真正意义上的重启。
+云端部署驱动流程：
+req(/deploy)	=&amp;gt;	iot-api-server	=&amp;gt;	iot-deployserver	=&amp;gt;	iot-deploycore	=&amp;gt;	redis	=&amp;gt;	iot-deployexecutor	=&amp;gt;	15s每次http轮询	=&amp;gt; scheduler
+应用管理中的应用升级也是走的和边端驱动部署一样的接口，只能传递参数是deploy_type不一样</description>
+    </item>
+    
+    <item>
+      <title>edgewize备忘录</title>
+      <link>https://moyuduo.github.io/posts/edgewize%E5%A4%87%E5%BF%98%E5%BD%95/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/edgewize%E5%A4%87%E5%BF%98%E5%BD%95/</guid>
+      <description>edgewize备忘录 安装脚本 sudo curl -O https://iot-edgewize.pek3a.qingstor.com/public/index.sh &amp;amp;&amp;amp; sudo chmod +x index.sh &amp;amp;&amp;amp; sudo ./index.sh edgewize-1.0.0-Linux-Ubuntu-16.04.6-x86_64 eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY3IiOiIxIiwiYXVkIjoiaWFtIiwiYXpwIjoiaWFtIiwiZXhwIjoxNjYzNDcwMjQyLCJpYXQiOjE2MzE5MzQyNDIsImlzcyI6InN0cyIsImp0aSI6InM5aVM5UWdxS1E1bGxqZmxBdjRTaTAiLCJuYmYiOjAsIm9yZ2kiOiJpb3RkLTg1YzFjOTk1LTNjNzktNGM3MS1iYzJkLWI0NDFjNTRjMjI3OSIsIm93dXIiOiJ1c3ItSGdrSmZ2UkUiLCJzdWIiOiJzdHMiLCJ0aGlkIjoiaW90dC14UHpxZmJBWUtqIiwidHlwIjoiSUQifQ.BZU_Vx07rm_0zq9ZITqZ8Q6ylfBuIRl8oQRzAPZB9-migJQC_NZdu_hTr4pgdDgjciADUDJyhlNVKUKo4FJh-6aEzuPs6Q7xd-ooJQKjKLz3syRGzQNKTVZKLXAZDFO0tOzU_Zom9M-ZprnPHIMJa_TS_UWEy7uLK9ymYjTMNCs static c2d93559-182e-11ec-80b9-52549e8f212b edge_param_version=$1=edgewize-1.0.0-Linux-Ubuntu-16.04.6-x86_64 #/etc/token中的内容 edge_param_certificate=$2=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY3IiOiIxIiwiYXVkIjoiaWFtIiwiYXpwIjoiaWFtIiwiZXhwIjoxNjYzNDcwMjQyLCJpYXQiOjE2MzE5MzQyNDIsImlzcyI6InN0cyIsImp0aSI6InM5aVM5UWdxS1E1bGxqZmxBdjRTaTAiLCJuYmYiOjAsIm9yZ2kiOiJpb3RkLTg1YzFjOTk1LTNjNzktNGM3MS1iYzJkLWI0NDFjNTRjMjI3OSIsIm93dXIiOiJ1c3ItSGdrSmZ2UkUiLCJzdWIiOiJzdHMiLCJ0aGlkIjoiaW90dC14UHpxZmJBWUtqIiwidHlwIjoiSUQifQ.BZU_Vx07rm_0zq9ZITqZ8Q6ylfBuIRl8oQRzAPZB9-migJQC_NZdu_hTr4pgdDgjciADUDJyhlNVKUKo4FJh-6aEzuPs6Q7xd-ooJQKjKLz3syRGzQNKTVZKLXAZDFO0tOzU_Zom9M-ZprnPHIMJa_TS_UWEy7uLK9ymYjTMNCs edge_param_register_type=$3=static edge_param_active_code=$4=c2d93559-182e-11ec-80b9-52549e8f212b 项目 端口 备注 exia 1883 本地mqtt broker监听端口 exia 9612 本地mqtt broker桥接上传云端的计量服务 metadata 9611 本地保存配置的服务 scheduler 9610 </description>
+    </item>
+    
+    <item>
+      <title>edgex</title>
+      <link>https://moyuduo.github.io/posts/edgex/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/edgex/</guid>
+      <description>edgex 架构 EdgeX是一个开源、供应商中立、灵活、可互操作的边缘软件平台，可与设备、传感器、执行器和其他物联网对象的物理世界进行交互。Edgex采用微服务架构，这些微服务被组织成 4 个服务层和 2 个底层增强系统服务。四个服务层从下向上依次是：
+设备服务层：
+设备服务层负责把设备接入到edgex中，对于一些常用协议如：modbus、opc-ua、mqtt等，edgex已经有设备服务可供选择，可直接进行部署。对于一些私有协议，edgex提供了设备接入sdk，开发者通过sdk来进行设备接入。
+核心服务层：
+核心服务层主要是core data、command、metadata三个服务，core data是负责把设备收集的数据提供集中持久化。command服务对设备进行控制操作设备。metadata服务保存设备的定义和控制设备的命令。
+支持服务层：
+支持服务主要包含rules engine、scheduling、alerts &amp;amp; notifications服务，该层服务为可选的。其中rules engine服务是基于kuiper实现的一个规则引擎。scheduling服务可以进行配置规则通过REST API定时调用，如定时清理核心服务层持久化的数据。alerts &amp;amp; notifications服务通过设置的规则将告警信息通知到应用。
+应用服务层：
+应用服务层负责将数据从edgex导出到外部系统(iot平台)或程序,目前开箱即用的端点有http和mqtt。开发人员也可以基于提供的sdk进行开发，将数据导出至任何地方。
+2 个底层增强系统服是：
+安全服务：
+主要是提供安全的存储和使用反向代理使得服务REST API不能直接访问必须经过安全服务鉴权后进行访问
+管理服务：
+提供对edgex服务的管理，如：启动服务、停止服务、重启服务、获取配置、获取运行状态、获取服务占用资源信息
+##工作原理
+温度测量仪将真实的设备数据通过mqtt协议上报到设备服务层的mqtt服务，mqtt服务将传感器数据转换为edgex事件对象并通过REST通信将事件对象发送到核心服务层的core服务 核心服务层的core服务将收到的事件对象发送到消息中间件的指定主题上 应用服务层根据需要将数据进行过滤、压缩、加密或导出到外部系统或应用程序 应用服务层的程序将包发送给edgex内置的规则引擎 当规则引起中的规则被匹配时，会调用核心服务层的command服务来触发某些操作 核心服务层的command服务获取到命令并确定需要对那个设备执行命令，然后调用设备的服务来执行 openyurt和edgex整合 整合架构：
+yurt-edgex-manager组件 yurt-edgex-manager组件是openyurt用来管理edgex生命周期的组件，它定义了一个edgex自定义资源用来表示运行在边缘节点的edgex实例，用户可以操作edgex的cr来对edgex进行安装/删除/升级操作。
+yurt-device-controller组件 func main() { //监听k8s DeviceProfile资源的变化把DeviceProfile的增加/删除/更新 同步到edgex if err = (&amp;amp;controllers.DeviceProfileReconciler{ Client: mgr.GetClient(), Log: ctrl.Log.WithName(&amp;#34;controllers&amp;#34;).WithName(&amp;#34;DeviceProfile&amp;#34;), Scheme: mgr.GetScheme(), }).SetupWithManager(mgr); err != nil { setupLog.Error(err, &amp;#34;unable to create controller&amp;#34;, &amp;#34;controller&amp;#34;, &amp;#34;DeviceProfile&amp;#34;) os.</description>
+    </item>
+    
+    <item>
+      <title>elasticsearch相关</title>
+      <link>https://moyuduo.github.io/posts/elasticsearch%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/elasticsearch%E7%9B%B8%E5%85%B3/</guid>
+      <description>elasticsearch相关 安装 保证已有java环境
+下载安装包
+mkdir -p /opt/elasticsearch cd /opt/elasticsearch #从https://www.elastic.co/cn/downloads/elasticsearch获取es安装包路径 curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.14.1-linux-x86_64.tar.gz 解压
+tar -zxvf elasticsearch-7.14.1-linux-x86_64.tar.gz 启动
+cd elasticsearch-7.14.1/bin/ ./elasticsearch #出现以下错误 java.lang.RuntimeException: can not run elasticsearch as root #第一步，添加es组及该组下的es用户 groupadd es useradd es -g es #出现以下错误 useradd: cannot open /etc/passwd #查看该文件的权限 lsattr /etc/passwd -----a-------e-- /etc/passwd #去除掉该文件的a权限 chattr -a /etc/passwd #再次尝试添加用户 useradd es -g es #出现以下错误，解决思路和上面类似 useradd: cannot open /etc/shadow lsattr /etc/shadow -----a-------e-- /etc/shadow chattr -a /etc/shadow #再次创建用户就成功了 useradd es -g es #第二部，更改elasticsearch文件夹的权限为es组下的es用户 chown -R es:es /opt/elasticsearch #第三步，切换到es用户再启动es su es .</description>
+    </item>
+    
+    <item>
+      <title>equals和hashCode方法</title>
+      <link>https://moyuduo.github.io/posts/equals%E5%92%8Chashcode%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/equals%E5%92%8Chashcode%E6%96%B9%E6%B3%95/</guid>
+      <description>equals和hashCode方法 equals 我们知道equals是用来比较两个对象是否相等的，比如我们常用的String.equals方法 @Test public void test() { String str1=new String(&amp;#34;abc&amp;#34;); String str2=new String(&amp;#34;abc&amp;#34;); boolean equals = str1.equals(str2); System.out.println(equals);//true } hashCode方法 hashCode方法是通过一定的算法得到一个hash值，一般配合散列集合一起使用，如HashMap、HashSet都是不可以存放重复元素的，那么当容器中元素个数很多时，你要添加一个元素时，难道一个一个去equals比较？当然这是可以的，但是难免效率很低，而HashMap和HashSet的底层都是使用数组+链表的方式实现的，这样有什么好处呢，当一个对象要加入集合，直接用hashCode进行一些运算得到保存的数组下标，再去数组下标对应的链表中一个一个元素比较（equals）,这样显然减少了比较次数，提高了效率
+那Object的hashCode方法的默认实现是怎样的呢？
+public native int hashCode(); 可以看到它是一个本地方法，实际上Object的hashCode方法返回是元素的地址（不同的虚拟机可能不一样，但Hotspot的是）
+class Emp{ String idCord; String name; int age; public Emp(String idCord, String name, int age) { super(); this.idCord = idCord; this.name = name; this.age = age; } } @Test public void test2() { Emp e=new Emp(&amp;#34;0101001&amp;#34;,&amp;#34;zhangsan&amp;#34;,20); System.out.println(e.hashCode());//1717159510 System.out.println(e);//com.moyuduo.test.Emp@6659c656 } 6659c656转换成十进制也就是1717159510
+哈希集合的使用 我们很多时候这样使用HashMap</description>
+    </item>
+    
+    <item>
+      <title>etcd</title>
+      <link>https://moyuduo.github.io/posts/etcd/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/etcd/</guid>
+      <description>etcd docker起etcd docker run -d --name Etcd-server \ -p 22379:2379 \ -p 22380:2380 \ --env ALLOW_NONE_AUTHENTICATION=yes \ --env ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379 \ bitnami/etcd:latest 连接远程 etcdctl --endpoints=http://192.168.12.223:2379 put /msg hello etcdctl --endpoints=http://192.168.12.223:2379 get --prefix &amp;#34;/&amp;#34; etcdctl --endpoints=http://192.168.14.102:2379 get --prefix &amp;#34;ruleV0.0.2/usr-wEL6MHRg/iot-rule-9bd4422e5d9a4b&amp;#34; ruleV0.0.2/usr-K0G9udc8 ruleV0.0.2/usr-wEL6MHRg </description>
+    </item>
+    
+    <item>
+      <title>fabedge云边通信、边边通信</title>
+      <link>https://moyuduo.github.io/posts/fabedge%E4%BA%91%E8%BE%B9%E9%80%9A%E4%BF%A1%E8%BE%B9%E8%BE%B9%E9%80%9A%E4%BF%A1/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/fabedge%E4%BA%91%E8%BE%B9%E9%80%9A%E4%BF%A1%E8%BE%B9%E8%BE%B9%E9%80%9A%E4%BF%A1/</guid>
+      <description>fabedge云边通信、边边通信 operator Operator组件通过监听node、svc、endpoint等k8s的资源为每个节点维护一个ConfigMap和Secret，其中ConfigMap中主要保存节点上svc、运行的pod等详细信息，Secret中则保存有fabedge如何创建隧道、和哪个node创建隧道以及创建隧道所需要的证书等信息，并实时为每个agent更新配置信息，并管理agent的生命周期。
+func (opts Options) initializeControllers(ctx context.Context) error { ... //获取edge node和解析community err := opts.recordEndpoints(ctx) if err != nil { log.Error(err, &amp;#34;failed to initialize allocator and store&amp;#34;) return err } //通过解析出的node 定时检查生成community和所有节点的信息保存到configmap getConnectorEndpoint, err := connectorctl.AddToManager(opts.Connector) if err != nil { log.Error(err, &amp;#34;failed to add communities controller to manager&amp;#34;) return err } opts.Agent.GetConnectorEndpoint = getConnectorEndpoint //创建agent启动需要的configmap(保存节点的ip、pod cidr、service pod对应关系)和secret(保存创建隧道锁需要的证书) if err = agentctl.AddToManager(opts.Agent); err != nil { log.Error(err, &amp;#34;failed to add agent controller to manager&amp;#34;) return err } //监听community资源的变化，维护保存的community信息 if err = cmmctl.</description>
+    </item>
+    
+    <item>
+      <title>git相关</title>
+      <link>https://moyuduo.github.io/posts/git%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/git%E7%9B%B8%E5%85%B3/</guid>
+      <description>git相关 linux下安装git yum install -y git clone #克隆指定分支 git clone -b &amp;lt;branchname&amp;gt; xxx.git &amp;lt;DirName&amp;gt; #克隆指定tag git clone -b &amp;lt;tag&amp;gt; --depth=1 xxx.git &amp;lt;DirName&amp;gt; --depth 表示克隆深度, 1 表示只克隆最新的版本. 因为如果项目迭代的版本很多, 克隆会很慢 init git init初始化一个仓库
+#1.新建一个文件夹并初始化为一个仓库 mkdir proj1 cd proj1 git init #2.在当前文件夹下新建一个文件夹并初始化为仓库 git init proj2 workspace workspace即为工作区，当在任何分支下进行代码操作都是在工作区下进行的，如果没有使用git add进行缓存，或进行了缓存，但是工作区或暂存区内的代码和要切换的分支的代码有冲突，都会提示:
+error: Your local changes to the following files would be overwritten by checkout: file.txt Please commit your changes or stash them before you switch branches. Aborting 工作区和暂存区对所有分支是可见的，也就是说在切换分支之前应该保持工作区、暂存区、HEAD一致</description>
+    </item>
+    
+    <item>
+      <title>go mod依赖管理</title>
+      <link>https://moyuduo.github.io/posts/go-mod%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/go-mod%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86/</guid>
+      <description>go mod依赖管理 go get命令 go get用来获取特点的版本、升级、降级依赖，该命令会修改go.mod文件，在go.mod文件中
+使用exclude排除的包，使用go get命令不能下载下来。
+go get github.com/gorilla/mux # 匹配最新的一个 tag go get github.com/gorilla/mux@latest # 和上面一样 go get github.com/gorilla/mux@v1.6.2 # 匹配 v1.6.2 go get github.com/gorilla/mux@e3702bed2 # 匹配 v1.6.2 go get github.com/gorilla/mux@c856192 # 匹配 c85619274f5d go get github.com/gorilla/mux@master # 匹配 master 分支 latest匹配最新的tag
+v1.6.2完整版本的写法
+v1、v1.2匹配这个前缀最新的tag，如果最新的版本是1.2.7那么它会匹配到1.2.7
+c856192为版本hash的前缀
+go mod可以使用模糊版本匹配，但是go.mod文件中只体现完整的版本号</description>
+    </item>
+    
+    <item>
+      <title>go开源框架</title>
+      <link>https://moyuduo.github.io/posts/%E5%BC%80%E6%BA%90go%E6%A1%86%E6%9E%B6/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E5%BC%80%E6%BA%90go%E6%A1%86%E6%9E%B6/</guid>
+      <description>开源go框架 通信 https://github.com/OpenIMSDK/Open-IM-Server </description>
+    </item>
+    
+    <item>
+      <title>go相关</title>
+      <link>https://moyuduo.github.io/posts/go%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/go%E7%9B%B8%E5%85%B3/</guid>
+      <description>go相关 linux下go环境安装 下载go安装包
+# 1.在windows下载后上传linux，golang官网：https://golang.org/dl/ # 2.使用wget下载或curl go_version=1.16.8 wget https://dl.google.com/go/go${go_version}.linux-amd64.tar.gz curl -O https://dl.google.com/go/go${go_version}.linux-amd64.tar.gz 执行tar解压到/usr/loacl目录下（官方推荐），得到go文件夹等
+tar -zxvf go1.16.8.linux-amd64.tar.gz -C /usr/local 添加/usr/loacl/go/bin目录到PATH变量中
+vim /etc/profile #添加 export GOROOT=/usr/local/go export GOPATH=/usr/local/gopath export PATH=$PATH:$GOROOT/bin:$GOPATH 使环境变量生效
+source /etc/profile 查看go
+go version go build 在go build 时build 的包必须包含main方法，且包含main方法的文件的package必须是main,否则在运行时会报syntax error near unexpected token newline&amp;rsquo;`错误，build后的文件会自动添加可执行权限
+#使用go build编译包时 go build -o main cmd/add #会报错 #CGO_ENABLED=0 GO111MODULE=on go build -ldflags &amp;#34;-X makef/version.Version=v2.0.0&amp;#34; -o add cmd/add #package cmd/add is not in GOROOT (/storehouse/go/src/cmd/add) #make: *** [add] Error 1 #但是这样可以 go build -o main .</description>
+    </item>
+    
+    <item>
+      <title>HashMap源码分析</title>
+      <link>https://moyuduo.github.io/posts/hashmap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/hashmap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
+      <description>HashMap源码分析 简介 HashMap是一个底层用数组+链表实现的存储KV键值对数据结构，它允许null键和null值。
+原理 HashMap的存储规则是，根据K的hashCode运算得到hash值，然后根据hash值运算得到下标，如果数组中该下标没有值就放入，有值就一个一个比较是否hash值相同并且equals也为true，如果是就用value更新原来的value，如果到达最后都没找到相同的，就新增节点，在jdk1.8中进行了优化，当链表长度达到8时，就把链表变为红黑树
+类结构 public class HashMap&amp;lt;K,V&amp;gt; extends AbstractMap&amp;lt;K,V&amp;gt; implements Map&amp;lt;K,V&amp;gt;, Cloneable, Serializable HashMap继承了AbstractMap并重写了里面的方法。
+HashMap实现了Cloneable接口，可以被克隆。
+HashMap实现了Serializable接口，可以被序列化。
+属性 //默认初始化容量16 static final int DEFAULT_INITIAL_CAPACITY = 1 &amp;lt;&amp;lt; 4; //最大容量为2的30此方法 static final int MAXIMUM_CAPACITY = 1 &amp;lt;&amp;lt; 30; //默认加载因子0.75 static final float DEFAULT_LOAD_FACTOR = 0.75f; //链表转成树的阈值 static final int TREEIFY_THRESHOLD = 8; //树转换成链表的阈值 static final int UNTREEIFY_THRESHOLD = 6; //转换成树的最小容量阈值 static final int MIN_TREEIFY_CAPACITY = 64; //保存节点的数组 transient Node&amp;lt;K,V&amp;gt;[] table; //保存的所有节点 transient Set&amp;lt;Map.</description>
+    </item>
+    
+    <item>
+      <title>HashSet源码分析</title>
+      <link>https://moyuduo.github.io/posts/hashset%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/hashset%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
+      <description>HashSet源码分析 简介 HashSet不能存放重复的值，且不保证存放的顺序。
+类结构 public class HashSet&amp;lt;E&amp;gt; extends AbstractSet&amp;lt;E&amp;gt; implements Set&amp;lt;E&amp;gt;, Cloneable, java.io.Serializable HashSet继承自AbstractSet并重写了方法
+HashSet实现可Cloneable接口，可被克隆
+HashSet实现了Serializable接口，可以被序列化
+属性 //维护了一个HashMap，正是用这个HashMap来实现的去重 private transient HashMap&amp;lt;E,Object&amp;gt; map; //用于HashMap存放时的value，节约空间 private static final Object PRESENT = new Object(); 构造器 //无参构造器，初始化了HashMap public HashSet() { map = new HashMap&amp;lt;&amp;gt;(); } //使用集合初始化的构造器 public HashSet(Collection&amp;lt;? extends E&amp;gt; c) { //使用集合的大小计算容量 map = new HashMap&amp;lt;&amp;gt;(Math.max((int) (c.size()/.75f) + 1, 16)); addAll(c); } //指定初始化大小和加载因子的构造器 public HashSet(int initialCapacity, float loadFactor) { map = new HashMap&amp;lt;&amp;gt;(initialCapacity, loadFactor); } //指定初始化大小的构造器 public HashSet(int initialCapacity) { map = new HashMap&amp;lt;&amp;gt;(initialCapacity); } //同指定初始化大小和加载因子的构造器，第三个参数预留 HashSet(int initialCapacity, float loadFactor, boolean dummy) { map = new LinkedHashMap&amp;lt;&amp;gt;(initialCapacity, loadFactor); } 方法 iterator()获取迭代器</description>
+    </item>
+    
+    <item>
+      <title>Hashtable源码分析</title>
+      <link>https://moyuduo.github.io/posts/hashtable%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/hashtable%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
+      <description>Hashtable源码分析 类结构 public class Hashtable&amp;lt;K,V&amp;gt; extends Dictionary&amp;lt;K,V&amp;gt; implements Map&amp;lt;K,V&amp;gt;, Cloneable, java.io.Serializable Hashtable继承自Dictionary实现了Map接口。
+Hashtable实现了Cloneable可以进行克隆。
+Hashtable实现了Serializable可以进行序列化。
+属性 //保存节点的数组bucket private transient Entry&amp;lt;?,?&amp;gt;[] table; //Hashtable中存放元素的个数 private transient int count; //Hashtable进行扩容的阈值 private int threshold; //用于计算阈值的加载因子 private float loadFactor; //进行破坏结构的修改次数，与遍历时的快速失败有关 private transient int modCount = 0; //最大容量，2的31次方-9 private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8; 节点 private static class Entry&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; { final int hash; final K key; V value; Entry&amp;lt;K,V&amp;gt; next; protected Entry(int hash, K key, V value, Entry&amp;lt;K,V&amp;gt; next) { this.</description>
+    </item>
+    
+    <item>
+      <title>helm</title>
+      <link>https://moyuduo.github.io/posts/helm/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/helm/</guid>
+      <description>概念 chart: 包含创建 kubernetes 应用实例的必要信息 config: 包含应用发布配置信息 release: 是 chart 及其配置的一个运行实例 command repo chart 对应的是一个应用实例的信息，而要安装一个 chart 可以从多个仓库进行安装，repo 提供对仓库的增删
+# 在 https://artifacthub.io/ 上查询要安装的应用有哪些提供安装的 repo helm repo add bitnami https://charts.bitnami.com/bitnami &amp;#34;bitnami&amp;#34; has been added to your repositories helm repo list NAME URL bitnami	https://charts.bitnami.com/bitnami # 确定我们可以拿到最新的charts列表 helm repo update # TODO helm repo remove search 从仓库中查找 chart,提供从两种来源查找 chart: 1.https://artifacthub.io/ 使用 helm search hub 命令来进行查找，2.使用 helm repo add 添加的仓库，使用 helm search repo {repo_name}</description>
+    </item>
+    
+    <item>
+      <title>iot环境相关</title>
+      <link>https://moyuduo.github.io/posts/iot%E7%8E%AF%E5%A2%83%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/iot%E7%8E%AF%E5%A2%83%E7%9B%B8%E5%85%B3/</guid>
+      <description>iot环境相关 平台服务staging地址 #iot-auth ETCDCTL_API=3 etcdctl put /grpc-lb/iot-auth/v1.0.0/mgmt-staging &amp;#39;{&amp;#34;ServerName&amp;#34;:&amp;#34;iot-auth&amp;#34;,&amp;#34;Addr&amp;#34;:&amp;#34;192.168.14.94:9302&amp;#34;,&amp;#34;Metadata&amp;#34;:{}}&amp;#39; #iot-search ETCDCTL_API=3 etcdctl put /grpc-lb/iot-search/v1.0.0/mgmt-staging &amp;#39;{&amp;#34;ServerName&amp;#34;:&amp;#34;iot-search&amp;#34;,&amp;#34;Addr&amp;#34;:&amp;#34;192.168.14.94:8891&amp;#34;,&amp;#34;Metadata&amp;#34;:{}}&amp;#39; #iot-tag ETCDCTL_API=3 etcdctl put /grpc-lb/iot-tag/v1.0.0/mgmt-staging/192.168.14.94:8899 &amp;#39;{&amp;#34;server_name&amp;#34;:&amp;#34;iot-tag&amp;#34;,&amp;#34;addr&amp;#34;:&amp;#34;192.168.14.94:8899&amp;#34;,&amp;#34;metadata&amp;#34;:{}}&amp;#39; #iot-device ETCDCTL_API=3 etcdctl put /grpc-lb/iot-device/v1.0.0/mgmt-staging &amp;#39;{&amp;#34;ServerName&amp;#34;:&amp;#34;iot-device&amp;#34;,&amp;#34;Addr&amp;#34;:&amp;#34;192.168.21.163:9301&amp;#34;,&amp;#34;Metadata&amp;#34;:{}}&amp;#39; #iot-log ETCDCTL_API=3 etcdctl put /grpc-lb/iot-log/v1.0.0/iot-test2 &amp;#39;{&amp;#34;ServerName&amp;#34;:&amp;#34;iot-log&amp;#34;,&amp;#34;Addr&amp;#34;:&amp;#34;192.168.21.163:9509&amp;#34;,&amp;#34;Metadata&amp;#34;:{}}&amp;#39; ETCDCTL_API=3 etcdctl put /grpc-lb/deploy_rpc_server/v1.0.0/192.168.21.163:20021 &amp;#39;{&amp;#34;Addr&amp;#34;:&amp;#34;192.168.14.94:20021&amp;#34;,&amp;#34;Metadata&amp;#34;:null}&amp;#39; ETCDCTL_API=3 etcdctl put /grpc-lb/deploycore_rpc_server/v1.0.0/192.168.21.163:20025 &amp;#39;{&amp;#34;Addr&amp;#34;:&amp;#34;192.168.21.163:20025&amp;#34;,&amp;#34;Metadata&amp;#34;:null}&amp;#39; ETCDCTL_API=3 etcdctl put /grpc-lb/iot-data-export/v1.0.0/mgmt-staging &amp;#39;{&amp;#34;ServerName&amp;#34;:&amp;#34;iot-data-export&amp;#34;,&amp;#34;Addr&amp;#34;:&amp;#34;192.168.21.163:9505&amp;#34;,&amp;#34;Metadata&amp;#34;:{}}&amp;#39; ETCDCTL_API=3 etcdctl put /grpc-lb/iot-data-server/v1.0.0/mgmt-staging &amp;#39;{&amp;#34;ServerName&amp;#34;:&amp;#34;iot-data-server&amp;#34;,&amp;#34;Addr&amp;#34;:&amp;#34;192.168.21.163:28889&amp;#34;,&amp;#34;Metadata&amp;#34;:{}}&amp;#39; ETCDCTL_API=3 etcdctl put /grpc-lb/iot-dispatch/v1.0.0/mgmt-staging &amp;#39;{&amp;#34;ServerName&amp;#34;:&amp;#34;&amp;#34;,&amp;#34;Addr&amp;#34;:&amp;#34;192.168.21.163:18880&amp;#34;,&amp;#34;Metadata&amp;#34;:null}&amp;#39; ETCDCTL_API=3 etcdctl put /grpc-lb/iot-metering-server/v1.0.0/mgmt-staging/192.168.21.163:9508 &amp;#39;{&amp;#34;server_name&amp;#34;:&amp;#34;iot-metering-server&amp;#34;,&amp;#34;addr&amp;#34;:&amp;#34;192.168.21.163:9508&amp;#34;,&amp;#34;metadata&amp;#34;:{}}&amp;#39; ETCDCTL_API=3 etcdctl put /grpc-lb/iot-shadow/v1.0.0/mgmt-staging/192.168.21.163:20078 &amp;#39;{&amp;#34;server_name&amp;#34;:&amp;#34;iot-shadow&amp;#34;,&amp;#34;addr&amp;#34;:&amp;#34;192.168.21.163:20078&amp;#34;,&amp;#34;metadata&amp;#34;:{}}&amp;#39; ETCDCTL_API=3 etcdctl put /grpc-lb/iot-thing/v1.</description>
+    </item>
+    
+    <item>
+      <title>iot部署流程</title>
+      <link>https://moyuduo.github.io/posts/iot%E9%83%A8%E7%BD%B2%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/iot%E9%83%A8%E7%BD%B2%E6%B5%81%E7%A8%8B/</guid>
+      <description>iot部署流程 依赖处理 如果go.mod文件中有依赖其他的库，而这些库也修改了，那么
+module git.internal.yunify.com/manage/iot-deployserver go 1.13 require ( git.internal.yunify.com/manage/common v0.0.0-20210224064702-87d49bb67e50 git.internal.yunify.com/manage/edge-libs v0.0.0-20211209135215-d932b0e2ad57 github.com/go-pg/pg v8.0.6+incompatible github.com/jinzhu/configor v1.2.0 github.com/satori/go.uuid v1.2.0 github.com/stretchr/testify v1.4.0 google.golang.org/grpc v1.23.1 ) #把依赖的库替换成修改后并推送到gitlab的分支名 git.internal.yunify.com/manage/edge-libs feature/xxxx #然后执行go mod download 会把分支名替换 git.internal.yunify.com/manage/edge-libs v0.0.0-20211209135215-d932b0e2ad57 此时会提示go.sum不是最新的，执行go run main.go 会自动生成最新的go.sum
+开发流程： ##1、从master拉取最新代码 git clone master分支的url路径
+##2、从本地master建立新分支,以feat/add-model为例子 git checkout -b feat/add-model
+##3、提交 当前在feat/add-model分支，等代码修改完以后 git add . 或者是git add -A，这个根据情况而定 commit提交，后面跟自己的提交信息，如 git commit -m &amp;ldquo;增加modbus模型&amp;rdquo;
+##4、push到远程自己的分支 这时候就可以在gitlab上看到自己的分支了，可以看看有没有问题 git push origin feat/add-model
+##5、从远程dev拉取分支 git checkout -b dev origin/dev #操作后当前处于dev分支</description>
+    </item>
+    
+    <item>
+      <title>iptables</title>
+      <link>https://moyuduo.github.io/posts/iptables/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/iptables/</guid>
+      <description>iptables 介绍 iptables是按照规则来办事的，我们就来说说规则（rules），规则其实就是网络管理员预定义的条件，规则一般的定义为”如果数据包头符合这样的条件，就这样处理这个数据包”。规则存储在内核空间的信息包过滤表中，这些规则分别指定了源地址、目的地址、传输协议（如TCP、UDP、ICMP）和服务类型（如HTTP、FTP和SMTP）等。当数据包与规则匹配时，iptables就根据规则所定义的方法来处理这些数据包，如放行（accept）、拒绝（reject）和丢弃（drop）等。配置防火墙的主要工作就是添加、修改和删除这些规则。
+当客户端访问服务器的web服务时，客户端发送报文到网卡，而tcp/ip协议栈是属于内核的一部分，所以，客户端的信息会通过内核的TCP协议传输到用户空间中的web服务中，而此时，客户端报文的目标终点为web服务所监听的套接字（IP：Port）上，当web服务需要响应客户端请求时，web服务发出的响应报文的目标终点则为客户端，这个时候，web服务所监听的IP与端口反而变成了原点，我们说过，netfilter才是真正的防火墙，它是内核的一部分，所以，如果我们想要防火墙能够达到”防火”的目的，则需要在内核中设置关卡，所有进出的报文都要通过这些关卡，经过检查后，符合放行条件的才能放行，符合阻拦条件的则需要被阻止，于是，就出现了input关卡和output关卡，而这些关卡在iptables中不被称为”关卡”,而被称为”链”。
+其实我们上面描述的场景并不完善，因为客户端发来的报文访问的目标地址可能并不是本机，而是其他服务器，当本机的内核支持IP_FORWARD时，我们可以将报文转发给其他服务器，所以，这个时候，我们就会提到iptables中的其他”关卡”，也就是其他”链”，他们就是 “路由前”、”转发”、”路由后”，他们的英文名是
+PREROUTING、FORWARD、POSTROUTING
+也就是说，当我们启用了防火墙功能时，报文需要经过如下关卡，也就是说，根据实际情况的不同，报文经过”链”可能不同。如果报文需要转发，那么报文则不会经过input链发往用户空间，而是直接在内核空间中经过forward链和postrouting链转发出去的。
+根据上图，我们能够想象出某些常用场景中，报文的流向：
+到本机某进程的报文：PREROUTING –&amp;gt; INPUT
+由本机转发的报文：PREROUTING –&amp;gt; FORWARD –&amp;gt; POSTROUTING
+由本机的某进程发出报文（通常为响应报文）：OUTPUT –&amp;gt; POSTROUTING
+链 现在，我们想象一下，这些”关卡”在iptables中为什么被称作”链”呢？我们知道，防火墙的作用就在于对经过的报文匹配”规则”，然后执行对应的”动作”,所以，当报文经过这些关卡的时候，则必须匹配这个关卡上的规则，但是，这个关卡上可能不止有一条规则，而是有很多条规则，当我们把这些规则串到一个链条上的时候，就形成了”链”,所以，我们把每一个”关卡”想象成如下图中的模样 ，这样来说，把他们称为”链”更为合适，每个经过这个”关卡”的报文，都要将这条”链”上的所有规则匹配一遍，如果有符合条件的规则，则执行规则对应的动作。
+表 我们再想想另外一个问题，我们对每个”链”上都放置了一串规则，但是这些规则有些很相似，比如，A类规则都是对IP或者端口的过滤，B类规则是修改报文，那么这个时候，我们是不是能把实现相同功能的规则放在一起呢，必须能的。
+我们把具有相同功能的规则的集合叫做”表”，所以说，不同功能的规则，我们可以放置在不同的表中进行管理，而iptables已经为我们定义了4种表，每种表对应了不同的功能，而我们定义的规则也都逃脱不了这4种功能的范围，所以，学习iptables之前，我们必须先搞明白每种表 的作用。
+iptables为我们提供了如下规则的分类，或者说，iptables为我们提供了如下”表”
+filter表：负责过滤功能，防火墙；内核模块：iptables_filter
+nat表：network address translation，网络地址转换功能；内核模块：iptable_nat
+mangle表：拆解报文，做出修改，并重新封装 的功能；iptable_mangle
+raw表：关闭nat表上启用的连接追踪机制；iptable_raw
+也就是说，我们自定义的所有规则，都是这四种分类中的规则，或者说，所有规则都存在于这4张”表”中。
+链和表的关系 我们需要注意的是，某些”链”中注定不会包含”某类规则”，就像某些”关卡”天生就不具备某些功能一样，比如，A”关卡”只负责打击陆地敌人，没有防空能力，B”关卡”只负责打击空中敌人，没有防御步兵的能力，C”关卡”可能比较NB，既能防空，也能防御陆地敌人，D”关卡”最屌，海陆空都能防。
+那让我们来看看，每个”关卡”都有哪些能力，或者说，让我们看看每个”链”上的规则都存在于哪些”表”中。
+我们还是以图为例，先看看prerouting”链”上的规则都存在于哪些表中。
+这幅图是什么意思呢？它的意思是说，prerouting”链”只拥有nat表、raw表和mangle表所对应的功能，所以，prerouting中的规则只能存放于nat表、raw表和mangle表中。
+根据上述思路，我们来总结一下，每个”关卡”都拥有什么功能，
+或者说，每个”链”中的规则都存在于哪些”表”中。
+PREROUTING 的规则可以存在于：raw表，mangle表，nat表。
+INPUT 的规则可以存在于：mangle表，filter表，（centos7中还有nat表，centos6中没有）。
+FORWARD 的规则可以存在于：mangle表，filter表。
+OUTPUT 的规则可以存在于：raw表mangle表，nat表，filter表。
+POSTROUTING 的规则可以存在于：mangle表，nat表。
+我们还需要注意一点，因为数据包经过一个”链”的时候，会将当前链的所有规则都匹配一遍，但是匹配时总归要有顺序，我们应该一条一条的去匹配，而且我们说过，相同功能类型的规则会汇聚在一张”表”中，那么，哪些”表”中的规则会放在”链”的最前面执行呢，这时候就需要有一个优先级的问题，我们还拿prerouting”链”做图示。
+prerouting链中的规则存放于三张表中，而这三张表中的规则执行的优先级如下：
+raw –&amp;gt; mangle –&amp;gt; nat
+但是我们知道，iptables为我们定义了4张”表”,当他们处于同一条”链”时，执行的优先级如下。
+优先级次序（由高而低）：
+raw –&amp;gt; mangle –&amp;gt; nat –&amp;gt; filter
+为了更方便的管理，我们还可以在某个表里面创建自定义链，将针对某个应用程序所设置的规则放置在这个自定义链中，但是自定义链接不能直接使用，只能被某个默认的链当做动作去调用才能起作用，我们可以这样想象，自定义链就是一段比较”短”的链子，这条”短”链子上的规则都是针对某个应用程序制定的，但是这条短的链子并不能直接使用，而是需要”焊接”在iptables默认定义链子上，才能被IPtables使用，这就是为什么默认定义的”链”需要把”自定义链”当做”动作”去引用的原因。</description>
+    </item>
+    
+    <item>
+      <title>Java8新特性</title>
+      <link>https://moyuduo.github.io/posts/java8%E6%96%B0%E7%89%B9%E6%80%A7/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/java8%E6%96%B0%E7%89%B9%E6%80%A7/</guid>
+      <description>Java8新特性 Lambda表达式 简介 Lambda表达式可以取代大部分匿名内部类，可以优化代码结构。
+可以取代匿名内部类？什么意思呢？
+在以前如果我们需要对集合排序，我们是这样做：
+Integer[] arr= {3,2,1}; Arrays.sort(arr, new Comparator&amp;lt;Integer&amp;gt;() { @Override public int compare(Integer o1, Integer o2) { return o1-o2; } }); System.out.println(Arrays.toString(arr)); 使用Arrays类提供的sort方法传入一个指定排序规则的Comparator，如果我们使用匿名内部类的话，可以看到整个内部类中只用return o1-o2;语句是有用的，其他的都是多余的，为了这一句话我们多写了很多代码。那么，有了Lambda表达式后我们就可以很轻松的解决这个问题了。
+java8中新增了Lambda表达式，现在我们可以这样做：
+Integer[] arr= {3,2,1}; Arrays.sort(arr, (x,y)-&amp;gt;x-y); System.out.println(Arrays.toString(arr)); 那么Lambda是如何实现的呢？我们知道sort方法需要传入一个Comparator，而Comparator是一个接口，那么我们来看看Comparator接口是怎样定义的：
+@FunctionalInterface public interface Comparator&amp;lt;T&amp;gt; { Comparator能够支持Lambda表达式的秘密就是类上标注的@FunctionalInterface注解，被这个注解标注的接口只能有一个抽象方法，我们知道我们写Lambda表达式时并没有指定方法，那么当使用Lambda表达式时我们重新的就是这个方法。
+Lambda表达式基本语法 语法形式为 () -&amp;gt; {}，其中 () 用来描述参数列表，{} 用来描述方法体，-&amp;gt; 为 lambda运算符
+接口无参无返回
+@FunctionalInterface interface NoParamNoReturn { void lambda(); } @Test public void test() { NoParamNoReturn noParamNoReturn=()-&amp;gt;{System.out.println(&amp;#34;No param No return&amp;#34;);}; noParamNoReturn.</description>
+    </item>
+    
+    <item>
+      <title>java克隆</title>
+      <link>https://moyuduo.github.io/posts/java%E5%85%8B%E9%9A%86/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/java%E5%85%8B%E9%9A%86/</guid>
+      <description>java克隆 为什么需要克隆 我们在很多时候需要使用一个对象去记录另外一个对象的当前状态，对象中可能会有很多属性，如果我们一个一个去设置，不仅不方便，而且效率很低,我们看一个初学者可能遇到的问题
+class Person{ String name; int age; public Person() {} public Person(String name, int age) { super(); this.name = name; this.age = age; } @Override public String toString() { return &amp;#34;Person [name=&amp;#34; + name + &amp;#34;, age=&amp;#34; + age + &amp;#34;]&amp;#34;; } } @Test public void test2() { Person p1=new Person(&amp;#34;tom&amp;#34;,20); Person p2=p1; System.out.println(p1); System.out.println(p2); System.out.println(&amp;#34;---------&amp;#34;); p1.age=30; System.out.println(p1); System.out.println(p2); } 输出： Person [name=tom, age=20] Person [name=tom, age=20] --------- Person [name=tom, age=30] Person [name=tom, age=30] 也许有的人认为Person p2=p1这样的方式就可以克隆一个对象，这种想法是错误的，这种使用等号赋值的方式只是将p1的地址赋值给了p2对象，那么p1和p2都指向了堆中的同一个对象，所以，修改p1那么p2也就变了</description>
+    </item>
+    
+    <item>
+      <title>Java序列化Serialize</title>
+      <link>https://moyuduo.github.io/posts/java%E5%BA%8F%E5%88%97%E5%8C%96serialize/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/java%E5%BA%8F%E5%88%97%E5%8C%96serialize/</guid>
+      <description>Java序列化Serialize 序列化与反序列化 序列化：把对象写入到流中
+反序列化：把对象从流中读取出来
+什么情况下序列化 对象需要通过网络进行传输 需要持久化对象到磁盘 需要持久化对象到数据库（把对象通过字节流的方式存储） 序列化的实现方式 实现Serializable接口 Serializable是一个标记接口，接口中没有任何方法 需要序列化的对象除基本数据类型属性外其他属性也必须实现Serializable接口 public class Student implements Serializable{ private static final long serialVersionUID = 2992794326818594180L; private String name; private int age; //省略constructor、setter、getter、toString } @Test public void test1() throws Exception { Student s1=new Student(&amp;#34;tom&amp;#34;,20); System.out.println(s1); ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&amp;#34;D:/student.txt&amp;#34;)); oos.writeObject(s1); ObjectInputStream ois=new ObjectInputStream(new FileInputStream(&amp;#34;D:/student.txt&amp;#34;)); Student s2=(Student)ois.readObject(); System.out.println(s2); } 输出： Student [name=tom, age=20] Student [name=tom, age=20] 如果序列化对象的非基本数据类型属性没有实现Serialize接口，会抛出NotSerializableException异常
+public class Student implements Serializable{ private static final long serialVersionUID = 2992794326818594180L; private String name; private int age; private School school; //省略constructor、setter、getter、toString } class School{ private String name; //省略constructor、setter、getter、toString } public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException { Student s1=new Student(&amp;#34;tom&amp;#34;,20,new School(&amp;#34;xw&amp;#34;)); System.</description>
+    </item>
+    
+    <item>
+      <title>JVM学习笔记</title>
+      <link>https://moyuduo.github.io/posts/jvm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/jvm%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <description>JVM学习笔记 JVM结构 Java虚拟机终止的情况 程序正常执行完成 程序显式调用System.exit()方法 程序中出现了异常或错误 操作系统底层出现了错误 Java类的加载、连接、初始化 加载：加载类的字节码文件到内存
+连接
+验证：验证字节码文件的正确性
+主要验证 1类文件结构
+​	2语义检查
+​	3字节码验证
+​	4二进制兼容性验证（老版本.class文件可以运行在新版本上）
+准备：为类静态变量分配地址空间，并初始化为默认值
+解析：把变量的字符引用替换为直接引用
+初始化：为类的静态变量赋值
+加载 JVM允许使用某个类之间提前加载他们，如果遇到.class文件缺失等错误，并不会立即报错，只有当类被第一次主动使用时才抛出错误
+加载器根据是否是用户自定义的可以分为
+系统自带类加载器 启动类加载器（BootStrap）没有父加载器，使用c++实现，主要是用来加载JRE/lib/rt.jar中类 扩展类记载器（Ext）主要加载JRE/lib/ext/*.jar中的类 应用类加载器（App）主要加载类路径下用户自定义的类 用户自定义加载器 用于加载指定路径的.class文件 类加载的双亲委托机制 加载器在逻辑上形成一种树形结构
+加载器之间的父子关系实际上是加载器之间的包含关系，并不是继承关系
+双亲委托机制的优点 双亲委托机制的优点是能提高软件的安全性。在这种机制下，用户自定义的加载器不能加载应该由父加载器加载的可靠的类，从而防止了恶意代码代替父加载器的可靠代码。如：用户自定义的类加载器要去加载rt.jar下的类，根据双新委托模型，rt.jar下的类总是由启动类加载器进行加载，所有保证了jdk核心类库的绝对安全。
+类加载器命名空间 同一个命名空间中的类是相互可见的。子加载器的命名空间包含所有父加载器命名空间，因此子加载器可以看见父加载器加载的类，父加载器不能看见子加载器加载的类。如果两个加载器之间没有父子关系，那么他们各自加载的类也是不可见的。
+当前类加载 每个类都有自己的类加载器（即加载自身的类加载器）,并且使用这个类加载器去加载依赖的其他类：如果ClassX类依赖ClassY，那么会使用ClassX的类加载器去加载ClassY
+线程的类加载器 每个线程也具有类加载器，可以通过setContextClassLoader方法区设置线程的类加载器，如果没有进行设置，那么会默认是父线程的类加载器，java初始化线程的类加载器是系统类加载器
+线程上下文加载器 在jdk中定义了很多服务提供接口，如jdbc的Statement接口，具体的实现是有数据库厂商完成的，根据双亲委托模型Statement接口是使用启动类加载器进行加载的，而第三方数据库driver是在类路径下的，启动类加载器无法进行加载，这种情况下双亲委托模型就出现了问题，通过设置线程的上下文加载器，父ClassLoader可以使用当前线程的ClassLoader去加载类，这就改变了双亲委托模型中父加载器不能加载子加载器加载的类的局面
+当高层提供了统一的接口让底层去实现，同时又需要在高层加载（或实例化）底层类时，就需要通过线程上下文类加载器来帮助高层的类加载器加载该类
+获取类加载器 //获取当前类的ClassLoader clazz.getClassLoader(); //获取当前线程的ClassLoader Thread.currentThread().getContextClassLoader(); //获取系统ClassLoader ClassLoader.getSystemClassLoader(); //获取调用者的ClassLoader DriverManager.getCallerClassLoader(); 初始化 Java虚拟机在类或接口“首次主动使用”的时候初始化
+主动使用：1. 创建类的实例
+​	2.访问类或接口的静态变量
+​	3.调用类的静态方法
+​	4.反射，Class.forName(&amp;ldquo;xxx&amp;rdquo;);
+​	5.初始化一个类的子类
+​	6.启动类(包含main方法的类)
+​	7.java.lang.invoke.MethodHandle实例解析结果REF_getStatic,REF_putStatic,REF_invokeStatic句柄对应的类没有初始化，则初始化</description>
+    </item>
+    
+    <item>
+      <title>k3s</title>
+      <link>https://moyuduo.github.io/posts/k3s/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/k3s/</guid>
+      <description>k3s k3s是一个轻量级低消耗的k8s发行版，之所以轻量级是因为k3s删除了旧的非必要的代码并且把k8s的组件打包到了一个进程内，减少了进程间通信的消耗，同时，k3s引入了sqlite、mysql、pg、etcd作为可选的数据持久化存储，内置Flannel网络插件和Helm chart包管理增强了k8s的能力。
+k3s的单节点架构 在单节点架构中，使用内嵌的sqlite作为数据持久化数据库，保存在/var/lib/rancher/k3s/server/db/state.db文件中。
+高可用架构 在高可用架构中，多个server需要使用到外部的数据库，支持mysql、pg、etcd。默认使用的是etcd作为数据持久化的数据库。保存在/var/lib/rancher/k3s/server/db/etcd目录下。
+负载均衡 在k8s的Service资源中，常用的type有ClusterIP、NodePort两个，还有一种不常用的LoadBalancer类型，这种类型的策略是使用云提供商的负载局衡器，可以向外部暴露服务。k3s对这种类型进行了扩展，使得type为LoadBalancer类型的Service直接可以通过宿主机直接访问。
+apiVersion: v1 kind: Service metadata: name: k3d-nginx-service-lb spec: type: LoadBalancer selector: app: k3d-nginx ports: - protocol: TCP port: 8888 targetPort: 80 iptable -t nat -nvL|grep DNAT crictl exec -it 使用docker创建k3s集群 docker run -d --name k3s-s1 -e K3S_TOKEN=moyuduo123 -e K3S-KUBECONFIG_OUTPUT=/output/kubeconfig.yaml -e CRI_CONFIG_FILE=/var/lib/rancher/k3s/agent/etc/crictl. rancher/k3s:v1.21.7-k3s1 server --cluster-init --tls-san 0.0.0.0 docker run -d --name k3s-a1 -e K3S_TOKEN=moyuduo123 -e K3S_URL=https://k3s-s1:6443 rancher/k3s:v1.21.7-k3s1 agent --snapshotter=native k3d k3d是在k3s的基础上，把k3s运行在容器中来创建k8s的组件，所以在单台宿主机上就可以搭建k8s集群，由于k3s移除了非必要k8s的组件如CloudProvider、把k8s的组件打包进单个二进制文件，所以k3s的二进制包大小和运行开销都比k8s小。
+目前k3d主要具有以下功能：</description>
+    </item>
+    
+    <item>
+      <title>k8s</title>
+      <link>https://moyuduo.github.io/posts/k8s/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/k8s/</guid>
+      <description>使用 busybox 访问集群内部 kubectl run busybox --rm=true --image=busybox --restart=Never -it 通过-o jsonpath=&amp;quot;{.data.token}&amp;quot;来获取资源的部分属性 k get secret admin-user-token-8v2sr -n kubernetes-dashboard -o jsonpath=&amp;#34;{.data.token}&amp;#34; | base64 -d </description>
+    </item>
+    
+    <item>
+      <title>k8s code-generator</title>
+      <link>https://moyuduo.github.io/posts/k8s-code-generator/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/k8s-code-generator/</guid>
+      <description>k8s code-generator 创建项目 #在GOPATH之外创建go project mkdir project cd project go mod init 创建目录 cd project mkdir -p apis/{group}/{version} 在新建的apis/{group}目录下新建register.go文件 package moyuduo const ( GroupName = &amp;#34;moyuduo.com&amp;#34; Version = &amp;#34;v1&amp;#34; ) 在apis/{group}/{version}目录下新建doc.go文件 // +k8s:deepcopy-gen=package // +groupName=moyuduo package v1 在apis/{group}/{version}目录下新建types.go文件 package v1 import ( metav1 &amp;#34;k8s.io/apimachinery/pkg/apis/meta/v1&amp;#34; ) // +genclient // +genclient:noStatus // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object type Student struct { metav1.TypeMeta `json:&amp;#34;,inline&amp;#34;` metav1.ObjectMeta `json:&amp;#34;metadata,omitempty&amp;#34;` Spec StudentSpec `json:&amp;#34;spec&amp;#34;` } type StudentSpec struct { name string `json:&amp;#34;name&amp;#34;` school string `json:&amp;#34;school&amp;#34;` } // +k8s:deepcopy-gen:interfaces=k8s.</description>
+    </item>
+    
+    <item>
+      <title>kafka相关</title>
+      <link>https://moyuduo.github.io/posts/kafka%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/kafka%E7%9B%B8%E5%85%B3/</guid>
+      <description>kafka相关 安装 安装JDK1.8
+yum install -y java-1.8.0* #使用java -version出现以下命令说明安装成功 openjdk version &amp;#34;1.8.0_302&amp;#34; OpenJDK Runtime Environment (build 1.8.0_302-b08) OpenJDK 64-Bit Server VM (build 25.302-b08, mixed mode) 安装zookeeper
+#创建zookeeper安装目录 mkdir -p /opt/zookeeper #进入目录 cd /opt/zookeeper #下载安装包 wget https://mirrors.aliyun.com/apache/zookeeper/zookeeper-3.6.3/apache-zookeeper-3.6.3-bin.tar.gz #解压 tar -zxvf apache-zookeeper-3.6.3-bin.tar.gz #进入配置文件目录 cd /opt/zookeeper/apache-zookeeper-3.6.3-bin/conf #复制配置文件 cp zoo_sample.cfg zoo.cfg #修改配置 #客户端会话超时时间 tickTime=2000 #客户端初始化可接受多少个心跳监测，默认10，即10*tickTime(默认2000)，表示20s没有连接上集群的配置则连接失败 initLimit=10 #Leader和follwer之间，允许多少个请求应答长度，默认5，即5*tickTime(默认2000)，表示默认10sLeader和Follwer之间如果消息5次没有发送成功就不尝试了 syncLimit=5 #存储快照文件的目录 dataDir=/opt/zookeeper/zoodata #事务日志存储的目录 dataLogDir=/opt/zookeeper/zoodatalog #服务端口 clientPort=2181 #server.X=A:B:C	X是一个数字，表示这是第几号server	A是该server所在的IP地址	B配置该server和集群中的leader交换消息所使用的端口	C配置选举leader时所使用的端口 server.1=127.0.0.1:2888:3888 #集群配置 server.1=192.168.37.151:2888:3888 server.2=192.168.37.152:2888:3888 server.3=192.168.37.153:2888:3888 #创建dataDir目录 mkdir -p /opt/zookeeper/zoodata #进入dataDir目录 cd /opt/zookeeper/zoodata #把节点号写入myid文件，不同节点各自配置 echo 1 &amp;gt; myid #配置防火墙 firewall-cmd --zone=public --add-port=2181/tcp --permanent firewall-cmd --zone=public --add-port=2888/tcp --permanent firewall-cmd --zone=public --add-port=3888/tcp --permanent firewall-cmd --reload #进入zookeeper执行目录 cd /opt/zookeeper/apache-zookeeper-3.</description>
+    </item>
+    
+    <item>
+      <title>ko_api</title>
+      <link>https://moyuduo.github.io/posts/ko_api/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/ko_api/</guid>
+      <description>获取namespace: url:http://139.198.112.218:31880/api/v1alpha1/namespaces method:get
+resp:
+{ &amp;#34;metadata&amp;#34;:{ &amp;#34;resourceVersion&amp;#34;:&amp;#34;15319237&amp;#34; }, &amp;#34;items&amp;#34;:[ { &amp;#34;metadata&amp;#34;:{ &amp;#34;name&amp;#34;:&amp;#34;default&amp;#34;, &amp;#34;uid&amp;#34;:&amp;#34;e3c6a8af-9d8a-412e-bca9-893635d545a6&amp;#34;, &amp;#34;resourceVersion&amp;#34;:&amp;#34;205&amp;#34;, &amp;#34;creationTimestamp&amp;#34;:&amp;#34;2021-10-07T04:16:49Z&amp;#34;, &amp;#34;labels&amp;#34;:{ &amp;#34;kubernetes.io/metadata.name&amp;#34;:&amp;#34;default&amp;#34; }, &amp;#34;managedFields&amp;#34;:[ { &amp;#34;manager&amp;#34;:&amp;#34;kube-apiserver&amp;#34;, &amp;#34;operation&amp;#34;:&amp;#34;Update&amp;#34;, &amp;#34;apiVersion&amp;#34;:&amp;#34;v1&amp;#34;, &amp;#34;time&amp;#34;:&amp;#34;2021-10-07T04:16:49Z&amp;#34;, &amp;#34;fieldsType&amp;#34;:&amp;#34;FieldsV1&amp;#34;, &amp;#34;fieldsV1&amp;#34;:{ &amp;#34;f:metadata&amp;#34;:{ &amp;#34;f:labels&amp;#34;:{ &amp;#34;.&amp;#34;:{ }, &amp;#34;f:kubernetes.io/metadata.name&amp;#34;:{ } } } } } ] }, &amp;#34;spec&amp;#34;:{ &amp;#34;finalizers&amp;#34;:[ &amp;#34;kubernetes&amp;#34; ] }, &amp;#34;status&amp;#34;:{ &amp;#34;phase&amp;#34;:&amp;#34;Active&amp;#34; } }, { &amp;#34;metadata&amp;#34;:{ &amp;#34;name&amp;#34;:&amp;#34;ingress-nginx&amp;#34;, &amp;#34;uid&amp;#34;:&amp;#34;db2263b3-992c-4aeb-99c8-3de1b66a91d9&amp;#34;, &amp;#34;resourceVersion&amp;#34;:&amp;#34;5156&amp;#34;, &amp;#34;creationTimestamp&amp;#34;:&amp;#34;2021-10-07T04:48:20Z&amp;#34;, &amp;#34;labels&amp;#34;:{ &amp;#34;app.kubernetes.io/instance&amp;#34;:&amp;#34;ingress-nginx&amp;#34;, &amp;#34;app.kubernetes.io/name&amp;#34;:&amp;#34;ingress-nginx&amp;#34;, &amp;#34;kubernetes.io/metadata.name&amp;#34;:&amp;#34;ingress-nginx&amp;#34; }, &amp;#34;annotations&amp;#34;:{ &amp;#34;kubectl.kubernetes.io/last-applied-configuration&amp;#34;:&amp;#34;{\&amp;#34;apiVersion\&amp;#34;:\&amp;#34;v1\&amp;#34;,\&amp;#34;kind\&amp;#34;:\&amp;#34;Namespace\&amp;#34;,\&amp;#34;metadata\&amp;#34;:{\&amp;#34;annotations\&amp;#34;:{},\&amp;#34;labels\&amp;#34;:{\&amp;#34;app.kubernetes.io/instance\&amp;#34;:\&amp;#34;ingress-nginx\&amp;#34;,\&amp;#34;app.kubernetes.io/name\&amp;#34;:\&amp;#34;ingress-nginx\&amp;#34;},\&amp;#34;name\&amp;#34;:\&amp;#34;ingress-nginx\&amp;#34;}}\n&amp;#34; }, &amp;#34;managedFields&amp;#34;:[ { &amp;#34;manager&amp;#34;:&amp;#34;kubectl-client-side-apply&amp;#34;, &amp;#34;operation&amp;#34;:&amp;#34;Update&amp;#34;, &amp;#34;apiVersion&amp;#34;:&amp;#34;v1&amp;#34;, &amp;#34;time&amp;#34;:&amp;#34;2021-10-07T04:48:20Z&amp;#34;, &amp;#34;fieldsType&amp;#34;:&amp;#34;FieldsV1&amp;#34;, &amp;#34;fieldsV1&amp;#34;:{ &amp;#34;f:metadata&amp;#34;:{ &amp;#34;f:annotations&amp;#34;:{ &amp;#34;.</description>
+    </item>
+    
+    <item>
+      <title>kubebuilder</title>
+      <link>https://moyuduo.github.io/posts/kubebuilder/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/kubebuilder/</guid>
+      <description>kubebuilder kubebuilder 是用于使用自定义资源(CRD)构建 kubernetes api 的框架，可以大大的提高开发人员的开发速度降低复杂性，以便快速的在 Go 中构建和发布 kubernetes api。kubebuilder 通过 Operator模式来定义自定义资源和发布 kubernetes api。
+Resource + Controller = Operator
+架构： 安装：
+安装 curl -L -o kubebuilder https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH) chmod +x kubebuilder &amp;amp;&amp;amp; mv kubebuilder /usr/local/bin/ 创建项目 mkdir operator-project cd operator-project go mod init operator-project kubebuilder init --domain qingcloud.com 创建 api kubebuilder edit --multigroup=true kubebuilder create api --group webapp --version v1 --kind GuestBook 目录结构 [root@centos72 guestbook1]# tree . ├── apis │ └── webapp │ └── v1 │ ├── groupversion_info.</description>
+    </item>
+    
+    <item>
+      <title>kustomize</title>
+      <link>https://moyuduo.github.io/posts/kustomize/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/kustomize/</guid>
+      <description>是什么 kustomize 使用 k8s 原生概念帮助创建并复用资源配置(YAML)，允许用户以一个应用描述文件 （YAML 文件）为基础（Base YAML），然后通过 Overlay 的方式生成最终部署应用所需的描述文件。
+可以把kustomize理解为轻量级的helm。
+解决什么问题 一般应用都会存在多套部署环境：开发环境、测试环境、生产环境，多套环境意味着存在多套 K8S 应用资源 YAML。而这么多套 YAML 之间只存在微小配置差异，比如镜像版本不同、Label 不同等，而这些不同环境下的YAML 经常会因为人为疏忽导致配置错误。再者，多套环境的 YAML 维护通常是通过把一个环境下的 YAML 拷贝出来然后对差异的地方进行修改。
+概念 kustomization：指的是 kustomization.yaml 文件，或者指的是包含kustomization.yaml 文件的目录以及它里面引用的所有相关文件路径 base：base 指的是一个 kustomization , 任何的 kustomization 包括 overlay，都可以作为另一个 kustomization 的 base (简单理解为基础目录)。base中描述了共享的内容，如资源和常见的资源配置。base 是需要通过 overlay 修订的基础配置 overlay：overlay 是一个 kustomization, 它修改(并因此依赖于)另外一个 kustomization variant：variant 是在集群中将 overlay 应用于 base 的结果。例如开发和生产环境都修改了一些共同 base以创建不同的 variant。这些 variant 使用相同的总体资源，并与简单的方式变化，例如 deployment的副本数、ConfigMap使用的数据源等。简而言之，variant 是含有同一组 base 的不同 resource：resource 是描述 k8s API 对象的 YAML 或 JSON文件的相对路径。即是指向一个声明了 kubernetes API 对象的 YAML 文件 patch：修改文件的一般说明。文件路径，指向一个声明了 kubernetes API patch 的 YAML 文件 安装 go get github.</description>
+    </item>
+    
+    <item>
+      <title>LinkedHashMap源码分析</title>
+      <link>https://moyuduo.github.io/posts/linkedhashmap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/linkedhashmap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
+      <description>LinkedHashMap源码分析 为什么要有LinkedHashMap？ 在分析HashMap的时候提到了HashMap是无序的，即添加节点的顺序和遍历的顺序不一致 @Test public void test1() { HashMap&amp;lt;String,String&amp;gt; hashMap=new HashMap&amp;lt;String, String&amp;gt;(); hashMap.put(&amp;#34;tom&amp;#34;, &amp;#34;american&amp;#34;); hashMap.put(&amp;#34;jack&amp;#34;, &amp;#34;chainese&amp;#34;); hashMap.put(&amp;#34;mary&amp;#34;, &amp;#34;japanese&amp;#34;); Set&amp;lt;Entry&amp;lt;String, String&amp;gt;&amp;gt; entrySet = hashMap.entrySet(); Iterator&amp;lt;Entry&amp;lt;String, String&amp;gt;&amp;gt; iterator = entrySet.iterator(); while(iterator.hasNext()) { Entry&amp;lt;String, String&amp;gt; entry = iterator.next(); String key = entry.getKey(); String value = entry.getValue(); System.out.println(key+&amp;#34;:&amp;#34;+value); } } 输出： tom:american mary:japanese jack:chainese LinkedHashMap保证节点的顺序，这也是LinkedHashMap和HashMap的主要区别 @Test public void test2() { LinkedHashMap&amp;lt;String,String&amp;gt; linkedHashMap=new LinkedHashMap(); linkedHashMap.put(&amp;#34;tom&amp;#34;, &amp;#34;american&amp;#34;); linkedHashMap.put(&amp;#34;jack&amp;#34;, &amp;#34;chainese&amp;#34;); linkedHashMap.put(&amp;#34;mary&amp;#34;, &amp;#34;japanese&amp;#34;); Set&amp;lt;Entry&amp;lt;String, String&amp;gt;&amp;gt; entrySet = linkedHashMap.entrySet(); Iterator&amp;lt;Entry&amp;lt;String, String&amp;gt;&amp;gt; iterator = entrySet.</description>
+    </item>
+    
+    <item>
+      <title>linux vxlan和tun网络</title>
+      <link>https://moyuduo.github.io/posts/linux-vxlan%E5%92%8Ctun%E7%BD%91%E7%BB%9C/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/linux-vxlan%E5%92%8Ctun%E7%BD%91%E7%BB%9C/</guid>
+      <description>linux vxlan和tun网络 vlan和tun都属于overlay网络，即建立在一个屋里网络(Underlay网络)之上的虚拟网络，Underlay网络是真正存在的实体，承载Overlay网络的通信。如两个设备通过udp/tcp进行通信这就是Underlay网络。但是在udp/tcp之上承载的应用层数据中如果包含了IP协议的数据，那么这就是Overlay三层网络，如果应用层数据包含了数据链路层的数据，那么这就是Overlay二层网络。
+linux tun:在四层网络之上构建三层网络。
+overlay网络通信协议位于Ip层及以上。
+overlay网络不支持arp协议。(arp协议位于数据链路层)
+linux vxlan:在四层网络之上构建二层网络。
+overlay网络通信协议位于Ip层及以上。
+overlay网络支持arp协议。
+vxlan实验 在host1上配置:
+ip link add name vxlan100 type vxlan id 100 dstport 4789 local 192.168.37.131 remote 192.168.37.134 ip link set vxlan100 up ip addr add 172.17.0.4/32 dev vxlan100 ip route add 172.17.0.0/24 dev vxlan100 在host2上配置:
+ip link add name vxlan100 type vxlan id 100 dstport 4789 local 192.168.37.134 remote 192.168.37.131 ip link set vxlan100 up ip addr add 172.17.0.3/32 dev vxlan100 ip route add 172.</description>
+    </item>
+    
+    <item>
+      <title>linux命令自查</title>
+      <link>https://moyuduo.github.io/posts/linux%E5%91%BD%E4%BB%A4%E8%87%AA%E6%9F%A5/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/linux%E5%91%BD%E4%BB%A4%E8%87%AA%E6%9F%A5/</guid>
+      <description>linux命令自查 查看cpu和内存 cpu个数 cat /proc/cpuinfo | grep &amp;#34;physical id&amp;#34; | uniq | wc -l cpu核数 cat /proc/cpuinfo | grep &amp;#34;cpu cores&amp;#34; | uniq cpu型号 cat /proc/cpuinfo | grep &amp;#39;model name&amp;#39; |uniq 内存大小 cat /proc/meminfo | grep MemTotal 设置linux开机自启动 linux文件/etc/rc.local文件中的内容会linux启动完成后执行，所以可以用来做开机自启动，/etc/rc.local默认是lrwxrwxrwx权限，但是由于它是/etc/rc.d/rc.local的一个软连接，所以/etc/rc.d/rc.local这个文件必须要有执行权限才能开机自启动，而这个人间默认是-rw-rw-rw-权限，所以必须要修改添加执行权限,注意在这个文件中添加开机执行死循环脚本时必须使用&amp;amp;后台执行。
+秒级检测脚本 #!/bin/bash while true do count=`ps -ef|grep etcd|grep -v grep|wc -l` if [ $count -eq 0 ]; then cd /opt/etcd-v3.5.0-linux-amd64 ./etcd -listen-client-urls=&amp;#34;http://0.0.0.0:2379&amp;#34; --advertise-client-urls=&amp;#34;http://0.0.0.0:2379&amp;#34; echo &amp;#34;restart etcd at $(date)&amp;#34; &amp;gt;&amp;gt; /opt/etcd-v3.5.0-linux-amd64/record fi sleep 1 done 原理是通过ps -ef|grep按照条件过滤执行的进程，再通过wc -l转换为进程个数，最后通过shell进行判断。</description>
+    </item>
+    
+    <item>
+      <title>makefile</title>
+      <link>https://moyuduo.github.io/posts/makefile/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/makefile/</guid>
+      <description>makefile 核心 makefile的主要有三个核心：目标、依赖、命令
+目标：一般指要编译的文件对象
+依赖：一般指要生成的可执行文件
+命令：指生成目标要执行的命令
+规则 所有命令都必须用tab缩进，不能使用空格也不行 如果有多个依赖可以用tab、空格分隔，如果一个目标有多个依赖，那么会依次执行依赖的命令，最后执行该目标本身的命令 $^代表所有依赖 $&amp;lt;代表第一个依赖 $@代表目标 使用echo xxx命令会把该命令输出再输出xxx,可以使用@echo xxx来只输出xxx 如果使用空格缩进，那么会报错Makefile:2: *** missing separator. Stop. 一条makefile规则的依赖可以是该makefile中其他规则的目标，那么再执行该规则时，会去执行依赖的规则 使用make命令生成目标时会检测依赖和目标的时间戳，如果目标已经存在且目标的时间戳大于所有依赖，那么意味着依赖并没有改动，那么无需重新生成目标，会提示make: clean&amp;rsquo; is up to date.` 如果一条makefile规则没有依赖且该目标文件存在，那么始终不会执行该规则的命令，而有些时候我会想执行一些清除操作，如rm如果这条规则的目标叫clean，如果恰巧该文件夹下有一个文件叫clean，那么就不能执行清除，此时可以使用.PHONY:clean标记clean目标不需要检查目标文件是否存在，目标文件的时间戳是否大于所有依赖 变量 ###自定义变量
+makefile中可以将经常使用的命令、依赖定义成变量
+makefile中变量区分大小写
+makefile中对变量的引用使用$(xxx)
+makefile中对变量的定义形式为A=xxx等号两边可以有空格，不需要加引号，因为makefile中变量中油字符串类型
+系统变量 CC：编译器名字，默认CC等于gcc CC = arm-linux-gcc
+RM：删除文件，相当于rm -f
+可以使用$(ENV_NAME)来获取系统定义好的环境变量，如：$(GOPATH) $(JAVA_HOME)
+自动化变量 $^代表所有依赖文件
+$&amp;lt;代表第一个依赖文件
+$@代表目标文件
+伪命令 如果一条makefile规则没有依赖且该目标文件存在，那么始终不会执行该规则的命令，而有些时候我会想执行一些清除操作，如rm如果这条规则的目标叫clean，如果恰巧该文件夹下有一个文件叫clean，那么就不能执行清除，此时可以使用.PHONY:clean标记clean目标不需要检查目标文件是否存在，目标文件的时间戳是否大于所有依赖
+实践 GO= CGO_ENABLED=0 GO111MODULE=on go GOCGO = CGO_ENABLED=1 GO111MODULE=on go #在申明变量时，如果要执行shell中的命令获取值需要使用$(shell xxx)，这是因为如果只使用$(xxx)的话回去取xxx变量的值，而xxx变量不存在，所以要在定义变量时使用shell命令必须使用shell关键字 GP = $(shell go env GOPATH) VERSION = v2.0.0 #commit id GIT_COMMIT=$(shell git rev-parse HEAD) #branch name GIT_BRANCH=$(shell git name-rev --name-only HEAD) #构建时间 BUILD_DATE=$(shell date &amp;#39;+%Y-%m-%d-%H:%M:%S&amp;#39;) #使用go build的-ldflags 参数可以在编译的时候对变量进行赋值，常用在编译时添加版本、架构、编译日期等信息 #使用-X参数进行替换，makef为项目名称，为go mod init makef, version是该项目下的一个包， Version为包中的一个变量 LDFLAGS = -ldflags &amp;#34;-X makef/version.</description>
+    </item>
+    
+    <item>
+      <title>MQTT vs AMQP</title>
+      <link>https://moyuduo.github.io/posts/mqtt-vs-amqp/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/mqtt-vs-amqp/</guid>
+      <description>MQTT vs AMQP 参考：
+http://jiagoushi.pro/technology-selection-amqp-vs-mqtt </description>
+    </item>
+    
+    <item>
+      <title>Mysql</title>
+      <link>https://moyuduo.github.io/posts/mysql/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/mysql/</guid>
+      <description>Mysql centos7下安装mysql 下载MySQL安装包
+wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz 把安装包解压
+#如果不知道安装包下载的位置可以使用 find / -name mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz 查看 tar -zxvf mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz 在/usr/local/下新建/usr/local/mysql
+mkdir -p /usr/local/mysql 把解压的安装包移动到/usr/local/mysql/mysql57目录下，并授权
+mv mysql-5.7.24-linux-glibc2.12-x86_64 //usr/local/mysql/mysql57 chown -R mysql.mysql /usr/local/mysql/mysql57 在/usr/local/mysql/mysql57下新建data目录用于存放数据库数据
+mkdir data 初始化mysql,初始化成功后会显示默认密码
+cd /usr/local/mysql/mysql57/bin ./mysqld --initialize --user=mysql --datadir=/usr/local/mysql/mysql57/data --basedir=/usr/local/mysql/mysql57 检查my.cnf文件
+vim /etc/my/cnf [mysqld] basedir=/usr/local/mysql/mysql57 #datadir=/usr/local/mysql/mysql57/data datadir=/data/mysql2 port = 3306 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES symbolic-links=0 max_connections=400 innodb_file_per_table=1 server_id=1 log_bin=mysql-bin binlog_format=row 添加软连接，启动mysql
+ln -s /usr/local/mysql//mysql57/support-files/mysql.server /etc/init.d/mysqld ln -s /usr/local/mysql//mysql57/bin/mysql /usr/bin/mysql 启动mysql
+service mysql start 登录mysql
+mysql -uroot -p 修改默认密码</description>
+    </item>
+    
+    <item>
+      <title>Postgresql相关</title>
+      <link>https://moyuduo.github.io/posts/postgresql%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/postgresql%E7%9B%B8%E5%85%B3/</guid>
+      <description>Postgresql相关 安装 安装不要使用yum安装，因为版本很老
+#centos7 x84 arch 安装 postgresql13 # Install the repository RPM: sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm # Install PostgreSQL: sudo yum install -y postgresql13-server # Optionally initialize the database and enable automatic start: sudo /usr/pgsql-13/bin/postgresql-13-setup initdb sudo systemctl enable postgresql-13 sudo systemctl start postgresql-13 #其他版本参考 https://www.postgresql.org/download/linux/ 修改配置文件支持远程连接 #使用ps查看postgresql是否启动，并获取数据保存路径	/var/lib/pgsql/13/data/ [root@i-u8fxb68q data]# ps -ef|grep postgre root 9821 7321 0 10:40 pts/0 00:00:00 su postgres postgres 9822 9821 0 10:40 pts/0 00:00:00 bash root 10896 9990 0 10:58 pts/0 00:00:00 su postgres postgres 10897 10896 0 10:58 pts/0 00:00:00 bash postgres 13020 1 0 11:27 ?</description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>https://moyuduo.github.io/posts/python/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/python/</guid>
+      <description>安装 在https://www.python.org/downloads/source/上找到合适的安装包 在linux上curl -O https://www.python.org/ftp/python/3.7.14/Python-3.7.14.tgz 解压tar -zxvf python/3.7.14/Python-3.7.14.tgz 修改解压目录下的Modules/Setup按需自定义 在解压目录下的bin目录下执行./configure 执行make 执行make install 输入py按tab看是否有提示验证是否安装成功 申明 在编写的python脚本文件中，可以在第一行申明#!/usr/bin/python标识默认改脚本的执行程序(路径未pythen可执行文件的具体路径)，如果使用./xxx.py时就会使用该程序执行脚本，如果未申明默认会当做shell脚本进行执行
+#!/usr/bin/python print(&amp;#34;ok&amp;#34;) 中文编码 如果在执行程序时遇到中文乱码问题，可以在脚本文件中申明# -*- coding: UTF-8 -*-或# coding=utf-8
+#!/usr/bin/python # coding=utf-8 print(&amp;#34;你好！&amp;#34;) 变量 #赋值 x, y = 1, 2 #交换 x, y = y, x 条件语句 num = 3 if num &amp;gt; 2: pass else: pass if num &amp;gt; 2: pass elif num &amp;lt; 0: pass else: pass 条件成立时执行的语句 if cond else 条件不成立时执行的语句 num=3 print(&amp;#34;num&amp;gt;5&amp;#34;) if num&amp;gt;5 else print(&amp;#34;num&amp;lt;=5&amp;#34;) 循环 for item in iterable: pass for item in iterable: pass else: pass #range函数可以用于生成一个数字可迭代对象 range(stop) #默认start为0,生成的数组序列不包含stop range(start, stop) range(start, stop, step) num = 3 while num &amp;gt; 0: pass #使用break跳出循环并不会执行else里面的代码 num = 3 while num &amp;gt; 0: pass else: pass 逻辑运算符 and:操作符左右为Ture才是True，相当于&amp;amp;&amp;amp; or:操作符左右任意一边为True就为True，相当于|| not:取反，相当于 !</description>
+    </item>
+    
+    <item>
+      <title>RabbitMQ</title>
+      <link>https://moyuduo.github.io/posts/rabbitmq/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/rabbitmq/</guid>
+      <description>RabbitMQ安装 安装erlang wget http://www.rabbitmq.com/releases/erlang/erlang-18.3-1.el7.centos.x86_64.rpm rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm 安装socat wget http://repo.iotti.biz/CentOS/7/x86_64/socat-1.7.3.2-5.el7.lux.x86_64.rpm rpm -ivh socat-1.7.3.2-5.el7.lux.x86_64.rpm 安装rabbitmq wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.5/rabbitmq-server-3.6.5-1.noarch.rpm rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm 如果没提示错误，就安装成功
+启用后台管理插件 rabbitmq-plugins enable rabbitmq_management 提示： The following plugins have been enabled: mochiweb webmachine rabbitmq_web_dispatch amqp_client rabbitmq_management_agent rabbitmq_management Applying plugin configuration to rabbit@localhost... started 6 plugins. 则安装成功 配置防火墙开启端口 firewall-cmd --zone=public --add-port=15672/tcp --permanent firewall-cmd --zone=public --add-port=5672/tcp --permanent firewall-cmd --reload 开启远程访问 由于rabbitmq默认用户guest只允许本机访问，为了能够支持远程访问，需要在/etc/rabbitmq目录下新建rabbitmq.config文件，内容为[{rabbit, [{loopback_users, []}]}].然后重启service rabbitmq-server restart即可
+远程访问 在浏览器地址栏输入http://192.168.37.131:15672即可访问登录页面，使用user：guest、password：guest登录成功说明安装配置成功
+队列 简单队列 package com.moyuduo.rabbitmq.utils; /** *@author litao,School of computer and software engineering,Xihua University *@date 2020/06/10 */ import java.</description>
+    </item>
+    
+    <item>
+      <title>redis-主从-哨兵-分片集群</title>
+      <link>https://moyuduo.github.io/posts/redis-%E4%B8%BB%E4%BB%8E-%E5%93%A8%E5%85%B5-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/redis-%E4%B8%BB%E4%BB%8E-%E5%93%A8%E5%85%B5-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/</guid>
+      <description>redis主从、哨兵、分片集群 概念：
+redis主从及哨兵
+redis分片集群
+单机 在redis安装目录下执行./src/redis-server redis.conf会在6379端口启动单机版redis 使用 python3:
+安装依赖库:pip3 install redis
+import redis conn = redis.StrictRedis(connection_pool=redis.ConnectionPool( host=&amp;#34;127.0.0.1&amp;#34;, port=&amp;#34;6381&amp;#34;, password=&amp;#34;&amp;#34; )) # string类型的写入读取 ret = conn.set(&amp;#34;py-k1&amp;#34;, &amp;#34;py-v1&amp;#34;) print(ret) val = conn.get(&amp;#34;py-k1&amp;#34;) print(val) 执行：
+python3 single-redis.py True b&amp;#39;py-v1&amp;#39; 主从搭建 参考：
+redis主从模式搭建
+下载redis 去http://download.redis.io/releases/上下载对应版本的redis(本次使用redis-6.0.0) curl -O http://download.redis.io/releases/redis-6.0.0.tar.gz 解压tar -zxvf redis-6.0.0.tar.gz 进入文件夹cd redis-6.0.0 编译redis文件make 规划 Name Role IP Port master1 master 127.0.0.1 6379 slave1 slave 127.0.0.1 6380 slave2 slave 127.0.0.1 6381 准备配置文件 修改redis安装目录下的redis.conf文件daemonize为yes后台启动 拷贝redis.</description>
+    </item>
+    
+    <item>
+      <title>shell</title>
+      <link>https://moyuduo.github.io/posts/shell/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/shell/</guid>
+      <description>申明 在shell脚本中，第一行写#!/bin/bash申请使用bash执行该脚本，当使用./执行脚本文件时就会使用第一行申明的执行器执行，如果使用sh/bash/source/.执行脚本，那么文件申不申明#!/bin/bash都无所谓
+执行方式 加可执行权限执行：会解析到文件第一行申明的执行器，使用该执行器开启子shell执行脚本 sh/bash执行：会使用指定的shell执行器开启子shell执行脚本 source/.执行：会使用当前的shell(终端登录的shell)执行脚本，可以避免父子shell变量作用域问题 环境变量 全局环境变量：在当前shell以及子shell中都能够访问的环境变量 局部环境变量：仅在当前shell中可以访问的环境变量，子shell不可访问 env\printenv查看所有全局环境变量
+[root@centos72 shell_t]# env XDG_SESSION_ID=1 HOSTNAME=centos72 SELINUX_ROLE_REQUESTED= [root@centos72 shell_t]# printenv XDG_SESSION_ID=1 HOSTNAME=centos72 SELINUX_ROLE_REQUESTED= printenv HOME /root 常用全局环境变量：$HOME $PWD $SHELL $USER
+set查看当前shell的所有环境变量(全局环境变量和局部环境变量)
+定义变量 定义局部变量 a=1 #等号前后不能有空格 b=&amp;#34;hello world&amp;#34; #变量的值不能用空格，如果用空格用引号 定义全局变量 a=1 export a #导出局部变量为全局环境变量 export b=&amp;#34;hello world&amp;#34; #直接申明为全局环境变量 在子shell中定义全局变量/修改父shell中的全局环境变量对父shell来说都是不可见的
+由于source/.执行脚本时都是在当前shell中执行，所以在脚本中导出的全局环境变量对当前终端是可见的，所以我们经常使用source /etc/profile导出全局环境变量，而不是sh /etc/profile
+一般局部环境变量用小写，全局环境变量用大写
+定义只读变量 # readonly定义只读变量,只读变量不可撤销 readonly pi=3.14 unset pi -bash: unset: pi: cannot unset: readonly variable 撤销变量 a=1 echo $a unset a echo $a 变量使用 使用$号取值: echo $a 使用${变量名}取值: echo ${a}_${b}_${c} a=1 b=2 c=3 echo $a_$b_$c #输出 3 3 echo ${a}_${b}_${c} #输出 1_2_3 1_2_3 特殊变量 特殊变量用于向脚本中传入参数</description>
+    </item>
+    
+    <item>
+      <title>StringBuilder、StringBuffer源码分析</title>
+      <link>https://moyuduo.github.io/posts/stringbuilderstringbuffer%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/stringbuilderstringbuffer%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
+      <description>StringBuilder、StringBuffer源码分析 StringBuilder源码分析 类结构 public final class StringBuilder extends AbstractStringBuilder implements java.io.Serializable, CharSequence StringBuilder使用final关键字修饰，和String一样不可以被继承
+StringBuilder继承AbstractStringBuilder并实现了Serializable和CharSequence，可以被序列化
+方法 StringBuilder 的方法多是直接调用父类AbstractStringBuilder的方法，这里找几个典型的方法看一下
+StringBuilder append(Object obj)方法重写父类的方法，追加Object类型的元素 @Override public StringBuilder append(Object obj) { return append(String.valueOf(obj));//String.valueOf(obj)获取对象转换成的字符串 } public static String valueOf(Object obj) { return (obj == null) ? &amp;#34;null&amp;#34; : obj.toString(); } @Override public StringBuilder append(String str) { super.append(str); return this; } public AbstractStringBuilder append(String str) { if (str == null) return appendNull();//如果为null追加字符串“null” int len = str.length(); ensureCapacityInternal(count + len); //拷贝字符串到数组 str.</description>
+    </item>
+    
+    <item>
+      <title>String源码分析</title>
+      <link>https://moyuduo.github.io/posts/string%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/string%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
+      <description>String源码分析 类结构 public final class String implements java.io.Serializable, Comparable&amp;lt;String&amp;gt;, CharSequence String类实现了Serializable可以被序列化
+String类实现了Comparable可以进行比较
+String类实现了CharSequence可以按下标进行相关操作
+并且String类使用final进行修饰，不可以被继承
+属性 //用来存储字符串的每一个字符 private final char value[]; //hash值 private int hash; // Default to 0 //序列化版本号 private static final long serialVersionUID = -6849794470754667710L; //从变量名大致可以看出和序列化有关，具体的不明白 private static final ObjectStreamField[] serialPersistentFields = new ObjectStreamField[0]; 构造方法 //无参，直接使用空字符串赋值，hash为0 public String() { this.value = &amp;#34;&amp;#34;.value; } //使用已有字符串初始化 public String(String original) { this.value = original.value; this.hash = original.hash; } //使用char数组初始化，hash为0 public String(char value[]) { this.</description>
+    </item>
+    
+    <item>
+      <title>temp</title>
+      <link>https://moyuduo.github.io/posts/temp/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/temp/</guid>
+      <description>HTTP 协议 · 笔试面试知识整理 https://labuladong.gitbook.io/algo/ 开篇词 - labuladong的算法小抄 https://www.jianshu.com/p/96f1189b95fe IO多路复用机制详解 - 简书 https://www.cnblogs.com/tiancai/p/9024351.html 为什么MySQL数据库索引选择使用B+树？ - 甜菜波波 - 博客园 https://hit-alibaba.github.io/interview/basic/network/HTTP.html TCP 协议 · 笔试面试知识整理 https://hit-alibaba.github.io/interview/basic/network/TCP.html Golang相关：[审稿进度80%]Go语法、Go并发思想、Go与web开发、Go微服务设施等 https://github.com/overnote/over-golang go 内部、源码分析 https://github.com/cch123/golang-notes https://github.com/teh-cmc/go-internals ✅ Solutions to LeetCode by Go https://github.com/halfrost/LeetCode-Go 从问题切入，串连 Go 语言相关的所有知识，融会贯通 https://golang.design/go-questions/ C/C++ 技术面试基础知识总结，包括语言、程序库、数据结构、算法、系统、网络、链接装载库等知识及面试经验、招聘、内推等信息。 https://github.com/huihut/interview 技术面试必备基础知识、Leetcode、计算机操作系统、计算机网络、系统设计 （内含 Java） http://www.cyc2018.xyz/</description>
+    </item>
+    
+    <item>
+      <title>test</title>
+      <link>https://moyuduo.github.io/posts/test/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/test/</guid>
+      <description>这是一个测试md</description>
+    </item>
+    
+    <item>
+      <title>windows命令备忘录</title>
+      <link>https://moyuduo.github.io/posts/windows%E5%91%BD%E4%BB%A4%E5%A4%87%E5%BF%98%E5%BD%95/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/windows%E5%91%BD%E4%BB%A4%E5%A4%87%E5%BF%98%E5%BD%95/</guid>
+      <description>windows命令备忘录 端口转发 #需要管理员权限 #查看端口转发 netsh interface portproxy show all #添加端口转发 netsh interface portproxy add v4tov4 listenaddress=172.31.164.1 listenport=9309 connectaddress=192.168.37.131 connectport=9309 #删除端口转发 netsh interface portproxy delete v4tov4 listenaddress=172.31.164.1 listenport=9309 </description>
+    </item>
+    
+    <item>
+      <title>yurt-device-controller和yurt-edgex-manager调研</title>
+      <link>https://moyuduo.github.io/posts/yurt-device-controller%E5%92%8Cyurt-edgex-manager%E8%B0%83%E7%A0%94/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/yurt-device-controller%E5%92%8Cyurt-edgex-manager%E8%B0%83%E7%A0%94/</guid>
+      <description>yurt-device-controller和yurt-edgex-manager调研 openyurt架构：
+openyurt云端通过各个controller同apiServer控制openyurt节点，如Yurt Controller Manager就是一个基于节点控制器开发的组件它能实现即使边端节点心跳丢失节点上的pod也不会被驱逐 openyurt 边端节点上通过yunrtHub代理k8s各个组件的请求同云端的apiServer通信 在云端部署Tunnel Server，边端部署Tunnel Agent，通过边端Tunnel Agent发起建立长连接到云端Tunnel Server，通过云端Tunnel Server来做代理实现云边运维通道 特点：
+从整个Openyurt的架构来看它只涉及到了云和边，它并不内置端的设备管理，仅仅只是专注于计算资源和业务容器的管理。 当使用 Kubernetes 来解决边缘计算场景的需求时，现有的解决方案要么改变系统架构（如将控制平面和 kubelet 打包在一起），要么重度修改核心组件（如kubelet 中糅合设备管理）。 受 Unix 哲学：“做一件事，做好它”（Do one thing and do it well）的启发，OpenYurt 社区认为 Kubernetes 应该专注于计算资源和业务容器的管理，而边缘设备管理可以通过采用现有的边缘计算平台来完成。 OpenYurt 社区定义了通用的 Kubernetes CRDs，它们充当 OpenYurt 和边缘平台之间的中介。通过为这些 CRDs 实现自定义控制器，任何现有的边缘平台(如 EdgeX Foundry)都可以集成到 OpenYurt 中。同时这些 CRDs 允许用户以声明式的方式管理边缘设备，这为用户提供了 Kubernetes-native 的边缘设备管理体验。 云原生iot模型 为管理现实世界中的设备，需要对设备管理相关的服务进行抽象，使用k8s的Customer Resource Definition(CRD)最终抽象出了3个CRD用于映射设备资源。
+DeviceProfile：描述了使用相同协议的一种设备类型，其中包括一些通用信息，如制造商名称、设备描述和设备型号，此外还定义了此类设备提供的资源类型（例如，温度、湿度）以及如何读取/写入这些资源。类似于Edgewize1.0中的设备数据模型 DeviceService：是与设备交互的边缘连接器在云端的映射，定义了如何将设备接入到边缘设备管理平台，包括设备的通信协议，通信地址等信息。类似Edgewize1.0中驱动的配置信息 Device：是现实世界中端设备的映射，如一个真实的温度传感器，它包括关联的DeviceProfile、DeviceService和一些设备特有的属性。 yurt-device-controller yurt-device-controller通过与边缘平台交互获取边缘平台所连接的真实设备，并将设备抽象为device、deviceService、deviceProfile，通过yurtHub上报到云端
+yurt-edgex-manager yurt-edgex-manager是部署在云端的edgex生命周期控制器，通过CR来对边端的edgex安装、卸载、升级</description>
+    </item>
+    
+    <item>
+      <title>交控备忘录</title>
+      <link>https://moyuduo.github.io/posts/%E4%BA%A4%E6%8E%A7%E9%A1%B9%E7%9B%AE%E5%A4%87%E5%BF%98%E5%BD%95/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E4%BA%A4%E6%8E%A7%E9%A1%B9%E7%9B%AE%E5%A4%87%E5%BF%98%E5%BD%95/</guid>
+      <description>交控项目备忘录 串口网口调试工具 终端设备主要和边端主要是通过串口或网口进行通信，串口就是使用物理接线的方式通过设备接线连接两个设备，网口就是在终端设备方启动一个tcp的server监听连接，边端驱动通过tcp连接到终端设备，然后通过tcp协议发送控制指令。
+通过串口接入的设备可以串口调试工具来模拟出多个串口(vistual serial port driver)对和进行串口数据的监听(XCOM V2.0.exe串口调试助手)。通过串口虚拟工具在主机windows上虚拟出多个串口对，然后通过虚拟机配置把一对串口中的一个网口映射到虚拟机中(vmware参考https://www.cnblogs.com/mjiu/p/9258459.html)，在windows主机中通过串口调试工具来接受指令
+通过网口接入的设备通过SocketTool来快速启动一个tcp server来接受指令
+vmware串口 通过设置使用物理串口接入虚拟机的，一般串口不一定是/dev/ttyS0，可以使用ls -l ttyS*来查看可用的串口，但是并不能断定接入的串口是哪一个，此时可以使用cat /proc/tty/driver/serial来查看
+cat /proc/tty/driver/serial serinfo:1.0 driver revision: 0: uart:16550A port:000003F8 irq:4 tx:82220847 rx:0 RTS|CTS|DTR|DSR|CD 1: uart:16550A port:000002F8 irq:3 tx:0 rx:0 2: uart:unknown port:000003E8 irq:4 3: uart:unknown port:000002E8 irq:3 可以看到前两个有内容，可能是可用的串口，0对应ttyS0,1对应ttyS1
+现在估计可能是虚拟机设置中的串行端口和虚拟机中的串口文件由对应关系，如串行端口1对应/dev/ttyS0,所以串行端口2就对应/dev/ttyS1
+串口的对应关系为：
+vm中配置的串行端口2使用的物理端口COM1对应要使用COM2来接收发送消息，由于是vm中串行端口2，所以对应/dev/ttyS1
+vm中串行端口n &amp;lt;=&amp;gt; /dev/ttyS(n-1)	vm中串行端口n &amp;lt;=&amp;gt; 对应vm中配置的物理端口X 物理端口X &amp;lt;=&amp;gt; 物理端口(X+1)或物理端口(X-1)
+称台驱动粘包导致响应慢问题 {&amp;#34;level&amp;#34;:&amp;#34;debug&amp;#34;,&amp;#34;timestamp&amp;#34;:&amp;#34;2021-09-23T14:16:09.371+0800&amp;#34;,&amp;#34;content&amp;#34;:&amp;#34;！！！！！！！！！！！！！！！！recv:0xFF00001B07E50917\n！！！！！！！！！！！！！！！！1111frameLength:27\n!!!!!!!!!!!!!!!!!! frameLength:27&amp;#34;,&amp;#34;appID&amp;#34;:&amp;#34;3475ba9f-e2ed-11eb-92bd-52549e8f212b&amp;#34;,&amp;#34;source&amp;#34;:&amp;#34;EdgeWize&amp;#34;} {&amp;#34;level&amp;#34;:&amp;#34;debug&amp;#34;,&amp;#34;timestamp&amp;#34;:&amp;#34;2021-09-23T14:16:09.380+0800&amp;#34;,&amp;#34;content&amp;#34;:&amp;#34;！！！！！！！！！！！！！！！！recv:0x0C340B0000920002\n！！！！！！！！！！！！！！！！1111frameLength:27\n!!!!!!!!!!!!!!!!!! frameLength:27&amp;#34;,&amp;#34;appID&amp;#34;:&amp;#34;3475ba9f-e2ed-11eb-92bd-52549e8f212b&amp;#34;,&amp;#34;source&amp;#34;:&amp;#34;EdgeWize&amp;#34;} {&amp;#34;level&amp;#34;:&amp;#34;debug&amp;#34;,&amp;#34;timestamp&amp;#34;:&amp;#34;2021-09-23T14:16:09.388+0800&amp;#34;,&amp;#34;content&amp;#34;:&amp;#34;！！！！！！！！！！！！！！！！recv:0x02004E003C010101\n！！！！！！！！！！！！！！！！1111frameLength:27\n!!!!!!!!!!!!!!!!!! frameLength:27&amp;#34;,&amp;#34;appID&amp;#34;:&amp;#34;3475ba9f-e2ed-11eb-92bd-52549e8f212b&amp;#34;,&amp;#34;source&amp;#34;:&amp;#34;EdgeWize&amp;#34;} {&amp;#34;level&amp;#34;:&amp;#34;debug&amp;#34;,&amp;#34;timestamp&amp;#34;:&amp;#34;2021-09-23T14:16:13.990+0800&amp;#34;,&amp;#34;content&amp;#34;:&amp;#34;！！！！！！！！！！！！！！！！recv:0x21E26FFF00001B07E50917\n！！！！！！！！！！！！！！！！1111frameLength:27\n!!!!!!!!!!!!!!!!!! frameLength:27\n！！！！！！！！！！！！！！！！dataBuf:0xFF00001B07E50917\n！！！！！！！！！！！！！！！！33333333recv:0xFF00001B07E509170C340B000092000202004E003C01010121E26F\n!!!!!!!!!!!!!AckWeight:0xFF0000004BA3 \n！！！！！！！！！！！！！！！！report WeightWholeCar event&amp;#34;,&amp;#34;appID&amp;#34;:&amp;#34;3475ba9f-e2ed-11eb-92bd-52549e8f212b&amp;#34;,&amp;#34;source&amp;#34;:&amp;#34;EdgeWize&amp;#34;} {&amp;#34;level&amp;#34;:&amp;#34;debug&amp;#34;,&amp;#34;timestamp&amp;#34;:&amp;#34;2021-09-23T14:16:14.021+0800&amp;#34;,&amp;#34;content&amp;#34;:&amp;#34;!!!!!!! reportEvent param:{WeightTime:1632401531000 OverrunSign:1 Speed:14.</description>
+    </item>
+    
+    <item>
+      <title>使用dlv调试k8s中运行的go程序</title>
+      <link>https://moyuduo.github.io/posts/%E4%BD%BF%E7%94%A8dlv%E8%B0%83%E8%AF%95k8s%E4%B8%AD%E8%BF%90%E8%A1%8C%E7%9A%84go%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E4%BD%BF%E7%94%A8dlv%E8%B0%83%E8%AF%95k8s%E4%B8%AD%E8%BF%90%E8%A1%8C%E7%9A%84go%E7%A8%8B%E5%BA%8F/</guid>
+      <description>dlv install go install github.com/go-delve/delve/cmd/dlv@latest go install github.com/go-delve/delve/cmd/dlv@v1.7.3 use [root@centos72 k8s-dlv-debug]# dlv help Delve is a source level debugger for Go programs. Delve enables you to interact with your program by controlling the execution of the process, evaluating variables, and providing information of thread / goroutine state, CPU register state and more. The goal of this tool is to provide a simple yet powerful interface for debugging Go programs. Pass flags to the program you are debugging using `--`, for example: `dlv exec .</description>
+    </item>
+    
+    <item>
+      <title>单例模式</title>
+      <link>https://moyuduo.github.io/posts/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</guid>
+      <description>饿汉式 静态变量方式 public class Singleton1 { private final static Singleton1 instance=new Singleton1(); private Singleton1() {} public static Singleton1 getInstance() { return instance; } } 静态代码块方式 public class Singleton2 { private static Singleton2 instance; static { instance=new Singleton2(); } private Singleton2() {} public static Singleton2 getInstance() { return instance; } } 懒汉式 线程不安全式 public class Singleton3 { private static Singleton3 instance; private Singleton3() {} public static Singleton3 getInstance() { if(instance==null) { instance=new Singleton3(); } return instance; } } 线程安全式 public class Singleton4 { private static Singleton4 instance; private Singleton4() {} public synchronized static Singleton4 getInstance() { if(instance==null) { instance=new Singleton4(); } return instance; } } 双重检查方式 public class Singleton5 { private static volatile Singleton5 instance; private Singleton5() {} public static Singleton5 getInstance() { if(instance==null) { synchronized (Singleton5.</description>
+    </item>
+    
+    <item>
+      <title>多线程</title>
+      <link>https://moyuduo.github.io/posts/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</guid>
+      <description>多线程 创建 public static void main(String[] args) { new Thread(new Runnable() { @Override public void run() { for(int i=0;i&amp;lt;100;i++) { System.out.println(&amp;#34;A:&amp;#34;+i); } } }).start(); new Thread(new Runnable() { @Override public void run() { for(int i=0;i&amp;lt;100;i++) { System.out.println(&amp;#34;B:&amp;#34;+i); } } }).start(); } </description>
+    </item>
+    
+    <item>
+      <title>应用层数据校验和心跳包的必要性</title>
+      <link>https://moyuduo.github.io/posts/%E5%BA%94%E7%94%A8%E5%B1%82%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E5%92%8C%E5%BF%83%E8%B7%B3%E5%8C%85%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E5%BA%94%E7%94%A8%E5%B1%82%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E5%92%8C%E5%BF%83%E8%B7%B3%E5%8C%85%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7/</guid>
+      <description>分享的问题： TCP本来就具有数据包校验功能，那么为什么基于TCP的上层协议还需要自定义数据校验？ TCP具有Keepalive机制为什么需要应用层使用心跳包来探测对方是否存活？ 为什么要分享这几个问题： 不知道有没有伙伴和我一样有这些问题，比如：
+TCP不是可靠的网络传输协议吗，TCP的超时重传、拥塞控制、CheckSum校验难道还不能保证数据的可靠性？ TCP具有开启keepalive的选项，为什么应用层去发送心跳包？ 在TCP网络编程中，客户端服务器建立了连接，但是没有发送数据连接会不会断开？多久断开？为什么断开？ 最近在看交控的一些设备驱动代码，终端设备的接入方式基本为网口接入和串口接入使用自定义的通信协议封装数据来传送数据帧，对于网口接入的设备往往会使用goroutine的方式去发送心跳数据包，并且自定义的通信协议也有数据校验的过程
+百度百科定义：
+传输控制协议（TCP，Transmission Control Protocol）是一种面向连接的、可靠的、基于字节流的传输层通信协议
+TCP本来就具有数据包校验功能，那么为什么基于TCP的上层协议还需要自定义数据校验 回顾一下网络模型：
+各层数据包的封装就像俄罗斯套娃一样
+以太网帧：
+以太网帧的校验码FCS采用32位循环冗余码(CRC);不但需要检验MAC帧的数据部分，还要检验目的地址、源地址和类型字段，但是不校验前导码
+IP数据包：
+IP数据包也包含校验码，但是它只对IP数据报的头部信息计算校验码并不包含数据区域，而且计算校验和的算法为将IP数据包头按16位划分为一个单元，对各个单元采取反码加法运算(对每个单元取反码相加，高位溢出位会加到低位，所有单元计算完后将得到的和填入校验和字段)
+TCP数据包：
+TCP数据包也包含了校验和，生成校验和的算法和IP数据包的一样，但是不同的是TCP的校验和是把数据区域也加入了计算的校验和的范围内而IP数据包不是
+所以：
+虽然在Mac帧层使用了Crc32位进行校验但是还是可能会有出错的概率，导致错误的数据包传递给了上层，我们都知道数据在物理层上传输是使用电信号、光信号但是这些信号在传输过程中是很容易出错的，比如电信号，它在物理层上的传输是通过规定阈值来区分01的，比如1伏一下表示0，一伏以上表示1，但是数据在物理上传输是会受到磁场等干扰，所容易原来的0可能变成1,1也可能变成0，这里的核心思想是，距离数据的发源地越近的地方，将错误的数据丢弃，避免错误的数据奔袭万里贻害网络资源 如果一个错误的数据包在数据链路层没有被检查到，那么在上传的IP层、TCP层有没有可能也没有检测到？当然有可能！所以我们为了保证万无一失还可以在应用层使用复杂的检测算法来检测数据的完整性 TCP具有KeepAlive机制为什么需要应用层使用心跳包来探测对方是否存活 不知道有没有同事试过或者想过建立好的连接如果遇到断网、断电等情况会怎么样？
+在说明TCP KeepAlive机制之前，聊一聊内网主机一般如何上外网：我们的绝大多数主机，不管是公司电脑还是家庭电脑的ip都是运营商提供的内网IP，内网IP可以和本局域网的其他主机直接通信，但是要和外部网络的主机通信就需要借助网关，一般使用的NAT网络地址转换协议
+比如一台主机它的内网ip为172.31.164.1端口10000的程序要去访问外网ip110.242.68.4端口80的程序，它是没办法直接访问的，于是它把数据包发送给它的网关172.31.165.254端口8000，网关会把ip数据报里的源地址修改为自己的ip172.31.165.254源端口修改为8000，并生成一张端口转换表：
+内网主机IP 内网主机端口 网关转发端口 外网主机IP 外网主机端口 172.31.164.1 10000 8000 110.242.68.4 80 当网关8000端口接收到主机110.242.68.4回复的数据时，会查询端口映射表，把ip数据报里的目的IP修改为内网主机172.31.164.1并把目的端口修改为10000，通过这个过程内网IP就完成了和外网IP的通信
+但是我们知道一台设备它的端口最多为65536个(0-65535),当内网中的主机特别多或主机上特别多进程要访问外部ip时，网关上的端口可能就不够用了，所以网关会监控端口的状况，如果网关上的端口很久没有转发数据了，那么就会把该端口释放掉，供其他需要和外部通信的内部主机使用，并且不会进行通知
+**TCP KeepAlive是用来干嘛的：**使用TCP连接的C/S模式的应用中，当TCP连接建立后，如果一方发生宕机、断网、路由器故障等情况时，另一方是没有办法感知到连接失效的，导致它一直维护着这个连接，如果是服务端，那么维护过多的半开连接还会造成系统资源的浪费。所以不管是客户端还是服务端都需要快速感知到对方还是否存活，这就有了TCP层面的KeepAlive机制。TCP KeepAlive机制是指不管是客户端还是服务端都可以在建立连接的时候指定是否开启KeepAlive，开启之后(TCP协议层面默认不开启)如果连接没有发送数据达到一定时间(TCP_KeepAlive_Idle 参数Linux下默认7200s也就是2h)，会向对方发送TCP KeepAlive数据包，对方收到数据包之后必须ACK，如果对方应该特殊情况收不到这个KeepAlive包那么就没办法回复ACK，这是会定时(TCP_KeepAlive_Interval参数，Linux下默认75s)发送KeepAlive包，当这些KeepAlive包未被应答累计到了一定的数量(TCP_KeepAlive_Probes参数，linux下默认为9)之后，TCP就会返回错误。
+**心跳包HeartBeat:**HeartBeat和TCP的KeepAlive机制类似，都是通过发送数据来检验对方是否存活，不同的是应用层面的HeartBeat不用要求另一方应用层面回复数据，可以通过TCP层面的数据包是否被ACK来检验对方是否存活。
+所以已经有KeepAlive机制了为什么还要应用层HeartBeat呢？
+TCP的KeepAlive是传输层面的，TCP协议层面是规定默认不开启的，而且不同操作系统（windows、linux）去实现TCP协议时参数设置还有差异 TCP层面的KeepAlive和应用层的HeartBeat并不冲突，是不同层在进行控制，可以达到更好的效果 TCP的KeepAlive机制是传输层协议在发送接收数据包，发送接收的内容不可控制，对于一些要监听设备状态IM应用，HeartBeat就是必须的 参考资料： https://www.zhihu.com/question/370717865?utm_source=wechat_session
+https://my.oschina.net/zhongwcool/blog/4617109
+https://www.cnblogs.com/fhefh/archive/2011/10/18/2216885.html
+https://www.bilibili.com/read/cv10935452?from=search</description>
+    </item>
+    
+    <item>
+      <title>数据库隔离级别</title>
+      <link>https://moyuduo.github.io/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/</guid>
+      <description>数据库隔离级别 如果没有隔离级别会出现的问题 脏读 意思是读取到了事务正在修改的数据，如果事务回滚，那么拿到的数据就是错误的
+时间 事务A 事务B 1 开始事务 2 读取quantity为5 3 修改quantity为4 4 开始事务 5 读取到quantity为4 6 发生错误，回滚，quantity为5 7 提交事务 在按照正常逻辑quantity应该为5
+不可重复读 时间 事务A 事务B 1 开始事务 2 读取quantity为5 3 开始事务 4 修改quantity为4 5 提交事务 6 读取quantity为4 7 提交事务 在同一个事务内，两次读取同一个数据产生不一致
+幻读 时间 事务A 事务B 1 开始事务 2 更新所有行的quantity为100 3 开始事务 4 插入一行quantity为5 5 提交事务 6 查询所有行的quantity 7 提交事务 当一个事务内更新所有行后，另一个事务插入了新行，当再次查看记录时，发现有未更新的记录，好像幻觉一样
+丢失更新 第一种情况：
+时间 事务A 事务B 1 开始事务 2 查询到quantity为10 3 开始事务 4 查询到quantity为10 5 更新quantity为11 6 提交事务 7 更新quantity为9 8 事务回滚，quantity为10 可以看到，回滚的事务把正常事务的数据覆盖了，正常事务的数据丢失了</description>
+    </item>
+    
+    <item>
+      <title>数据结构和算法</title>
+      <link>https://moyuduo.github.io/posts/%E7%BB%8F%E5%85%B8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E7%BB%8F%E5%85%B8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/</guid>
+      <description>经典数据结构和算法 目录 两种数据结构
+线性结构 非线性结构 稀疏数组
+队列
+链表
+介绍 单链表 双链表 单向循环链表 栈
+介绍 中缀表达式 逆波兰表达式 中缀表达式转后缀表达式 递归
+介绍 迷宫问题 回溯算法 排序算法
+介绍 冒泡排序 选择排序 插入排序 希尔排序 快速排序 归并排序 基数排序 排序算法的比较 查找算法
+介绍 二分查找 插值查找 斐波拉契查找 哈希表
+介绍 应用 树
+二叉树 介绍 二叉树三种遍历方式 查找指定节点 删除节点 顺序存储二叉树 介绍 遍历 线索化二叉树 介绍 遍历 树的应用
+堆排序 哈夫曼树 哈夫曼编码 二叉排序树 平衡二叉树AVL树 图
+介绍 图的临接矩阵表示法 图的临接表表示法 图的深度优先遍历 图的广度优先遍历 深度优先和广度优先的比较 算法
+分治算法 动态规划 KMP算法 贪心算法 普利姆算法 克鲁斯卡尔算法 迪杰斯特拉算法 弗洛伊德算法 1.</description>
+    </item>
+    
+    <item>
+      <title>笔试题</title>
+      <link>https://moyuduo.github.io/posts/%E7%AC%94%E8%AF%95%E9%A2%98%E7%AD%94%E6%A1%88/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E7%AC%94%E8%AF%95%E9%A2%98%E7%AD%94%E6%A1%88/</guid>
+      <description>面试题答案 ==可以用来比较基本数据类型和引用数据类型，当比较基本数据类型时，比较的是值，比较引用数据类型时，比较的是对象的地址。equals是Object定义的方法，默认比较的是对象的地址，编写类时重写equals方法，逻辑上相等的对象调用equals应该为true。
+equals是Object的方法，默认比较的是对象地址，重写用来判断对象是否相等。hashCode也是Object的方法，是用来生成散列码的函数，默认返回的是对象地址。当不使用散列集合存储对象时，可以只重写equals，当需要使用散列集合存储对象时，一定要重写equals和hashCode，因为散列集合底层是通过hashCode生成的hash计算存储下标，使用equals判断对象是否相等。
+首先31这个数是一个素数，即只能被1和自身整除，那么当计算hash时，就能减少hash碰撞的次数，其次任何n*31可以被JVM转换为(n&amp;laquo;5)-n只有移位和减法的操作，速度更快。
+输出的结果是： false false false ============== false true true 当使用new关键字创建字符串时，首先会去对空间创建对象，然后去字符串常量池中找有没有该字符串，如果有就把堆空间对象指向字符串常量池中对象，如果没有，就在字符串常量池中添加该字符串常量，然后把堆空间对象指向字符串常量，所以，使用new方法的变量实际是指向堆空间地址。而使用=“abc”这种方式是直接去字符创常量池中找有没有该字符串常量，没有就加入，然后变量指向字符串常量池中对象。
+String类的intern方法是获取字符串常量池中的对象，即如果是=“abc”这种方式就直接可以去到对象，如果是new出来的，那么会通过栈然后拿到常量池中的对象。
+输出： true false false 任何字符串变量类型和变量类型（s5+s6）或和常量类型（&amp;ldquo;ja&amp;rdquo;+s6）操作，都会在堆空间生成对象，然后执行常量池。所以不推荐使用String s=s1+&amp;ldquo;hello&amp;rdquo;；这样的方法式来生成字符串，会消耗堆内存，推荐使用StringBuilder的append方法进行字符串拼接。
+10 10 jack abc 可以简单的理解为java中8种基本数据类型及其包装类型和String是引用传值，所以这里只有change3是引用传值方法。但是实际上java使用的是值传递。
+Father Static代码块 Son Static代码块 Father普通代码块 Father构造器 Son普通代码块 Son构造器 Father普通代码块 Father构造器 Father普通代码块 Father构造器 Son普通代码块 Son构造器 类的加载顺序为从父类到子类，先加载器静态代码块，且静态代码块只加载一次，然后后父类到子类，加载普通代码块和构造器，普通代码块先于构造器
+负载因子是用来计算阈值的，可以指定，负载因子的设计是用来减少hash碰撞的次数的，如果HashMap元素个数要达到数组大小才扩容的话，可能会造成链表的长度过长，查询效率低。
+阈值是判断HashMap扩容的条件，是通过capacity*loadFactor计算得到的，当HashMap中节点的个数达到阈值就要进行扩容。
+HashMap的默认容量是16，默认负载因子是0.75
+HashMap在put的时候会根据key的hashCode计算一个hash值，并通过这个hash值计算存储下标，如果数组 的下标位置为空，就直接添加，如果不空的话，该节点的next可能是链表或红黑树，如果是链表通过为插法添加，是红黑树就按照红黑树的规则添加，添加完元素后如果size到达阈值，那么进行扩容。
+get的时候也是通过key的hashCode计算hash值在计算下标，然后进行判断，共有三种情况：①数组下标元素就是查找的节点②数组下标节点是next是链表，那么遍历链表查找③数组下标节点是next是红黑树，那么按照红黑树规则查找。
+resize方法会把数组的容量扩大为原容量的二倍，然后把所有的元素进行重新计算元素下标进行添加，这个过程也是使用的尾插法，所以节点添加的相对顺序不会变。</description>
+    </item>
+    
+    <item>
+      <title>网络协议</title>
+      <link>https://moyuduo.github.io/posts/%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E5%8D%8F%E8%AE%AE/</guid>
+      <description>TCP/IP协议 模型图：
+三次握手 客户端向服务器发送一个包，请求建立连接 服务器接受到这个包，同意建立连接的请求，返回一个包给客户端表示服务器同意建立连接 客户端接受到这个同意建立连接的包，但是客户端得告诉服务器它收到了这个包，再次回复个确认包 四次挥手 客户端告诉服务器我不传输数据了，请求关闭连接 服务器接收到这个包，会一个包告诉客户端表示收到了断开连接的请求，由于客户端可能还有往客户端传输的数据没传完，所以此时不能断开连接 服务器端往客户端传输的数据传完了，此时可以断开连接，服务器端发送一个包给客户端告诉客户端我也数据传完了，可以断开连接 客户端接受到这个包后回复一个确认包，双方断开连接 Http协议 Http工作原理 HTTP协议定义Web客户端如何从Web服务器请求Web页面，以及服务器如何把Web页面传送给客户端。HTTP协议采用了请求/响应模型。客户端向服务器发送一个请求报文，请求报文包含请求的方法、URL、协议版本、请求头部和请求数据。服务器以一个状态行作为响应，响应的内容包括协议的版本、成功或者错误代码、服务器信息、响应头部和响应数据。
+HTTP 请求/响应的步骤：
+客户端连接到web服务器：一个Http客户端，通常是浏览器，与web服务器的Http端口（默认80）建立一个TCP套接字连接 发送HTTP请求：通过TCP套接字，客户端向web服务器发送一个文本的请求报文（请求行、请求头、空行、请求数据） 服务器接受请求返回Http响应：web服务器解析请求，定位请求资源，服务器将资源副本写到TCP套接字，由客户端读取，包括状态行、响应头、空行、响应数据。 释放TCP连接：若connection模式为close，则服务器主动关闭TCP连接；若connection模式为keepalive，则连接会保持一段时间，在该时间内可以继续接受请求。 客户端解析内容：客户端浏览器首先解析状态行，查看表明是否成功的状态码，然后解析每一个响应头，判断返回内容的格式（html、jpg、json）和字符集，然后客户端浏览器根据响应的规则渲染。 请求 请求行 请求行又分为三部分
+请求方法 GET POST PUT DELETE HEAD:和GET方法基本一致，只是不返回内容 TRACE：使用代理上网访问网站，你想看看代理有没有修改你的HTTp请求 OPTIONS：返回服务器可用的请求方法 请求路径 /	根路径
+所用协议 HTTP/1.1
+请求头信息 key：value
+Referer防盗链 在Http协议中，头信息有一个重要的选项：Referer，这个选项指明是请求是从哪儿网站过来的
+如何实现防盗链？
+原理：在web服务器层面，根据Http协议的referer头信息，判断请求来自于哪个网站，如果是站外请求，重写到另一个url
+请求主体信息 主体信息内容是可选的。为发送的内容。
+响应 响应行 响应行由协议、状态码、状态文字三部分组成。
+状态码：
+状态码 定义 说明 1xx 信息 接受到请求，继续处理 2xx 成功 操作成功 3xx 重定向 为了完成求情，必须采取进一步措施 4xx 客户端错误 请求语法有错误或请求不能满足 5xx 服务端错误 服务器无法完成请求 200	服务器成功返回页面
+301/2	永久/临时重定向</description>
+    </item>
+    
+    <item>
+      <title>脚本军规</title>
+      <link>https://moyuduo.github.io/posts/%E8%84%9A%E6%9C%AC%E5%86%9B%E8%A7%84/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E8%84%9A%E6%9C%AC%E5%86%9B%E8%A7%84/</guid>
+      <description>脚本执行前需要检查的点 脚本依赖的环境是否都已经安装了 如果是批量 增/删/改 的脚本一定要写一个只影响一条数据的版本，然后执行脚本，验证对业务的影响!!! 脚本中每个阶段都必须有输出，特别是循环中，一定要打印信息给脚本执行者，不要脚本一执行一片黑，只有最后才有结果输出!!! </description>
+    </item>
+    
+    <item>
+      <title>解决staging环境下edgewize无法上线问题</title>
+      <link>https://moyuduo.github.io/posts/%E8%A7%A3%E5%86%B3staging%E7%8E%AF%E5%A2%83%E4%B8%8Bedgewize%E6%97%A0%E6%B3%95%E4%B8%8A%E7%BA%BF%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E8%A7%A3%E5%86%B3staging%E7%8E%AF%E5%A2%83%E4%B8%8Bedgewize%E6%97%A0%E6%B3%95%E4%B8%8A%E7%BA%BF%E9%97%AE%E9%A2%98/</guid>
+      <description>解决staging环境下edgewize无法上线问题 修改edgewize安装目录/services/scheduler/scheduler.yml文件中cloud_addr、iot_addr的地址为192.168.14.94 linux同步时间
+yum install -y ntpdate ntpdate time.nist.gov 安装lzo组件
+cd ~ curl -O http://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz tar zxvf lzo-2.10.tar.gz -C /usr/src/ cd /usr/src/lzo-2.10/ ./configure --enable-shared make &amp;amp;&amp;amp; make install 安装openvpn的依赖
+yum install -y epel-release openssl lzo pam openssl-devel lzo-devel pam-devel easy-rsa 安装openvpn
+cd ~ curl -O https://swupdate.openvpn.org/community/releases/openvpn-2.4.6.tar.gz tar zxvf openvpn-2.4.6.tar.gz -C /usr/src/ cd /usr/src/openvpn-2.4.6/ ./configure --prefix=/usr/local/openvpn make &amp;amp;&amp;amp; make install 创建配置文件目录
+mkdir /usr/local/openvpn/etc #把windows下配置office vpn时的配置文件上传到该目录 #windows下配置vpn参考https://cwiki.yunify.com/pages/viewpage.action?pageId=3539103 #上传后etc目录下有以下文件 [root@localhost etc]# pwd /usr/local/openvpn/etc [root@localhost etc]# ls -l total 16 -rw-r--r--.</description>
+    </item>
+    
+    <item>
+      <title>静态代理和动态代理</title>
+      <link>https://moyuduo.github.io/posts/%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86%E5%92%8C%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86%E5%92%8C%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</guid>
+      <description>静态代理 为某个对象提供一个代理，以控制对这个对象的访问。 代理类和被代理类有共同的父类或父接口，这样在任何使用被代理类对象的地方都可以用代理对象替代。代理类负责请求的预处理、过滤、将请求分派给被代理对象处理、以及被代理对象执行完请求后的后续处理。
+代理类是手动编写的代码，在编译期代理类和被代理类的关系就确定了。
+public class StaticProxy { public static void main(String[] args) { Sell mall=new ClothMall(new NikeFactory()); double price = mall.sell(); System.out.println(&amp;#34;商场卖出商品的价格：&amp;#34;+price); } } interface Sell{ double sell(); } //被代理对象 class NikeFactory implements Sell{ @Override public double sell() { return 100; } } //代理对象 class ClothMall implements Sell{ //被代理对象 private Sell target; public ClothMall(Sell target) { this.target=target; } @Override public double sell() { double originalPrice = target.sell(); //提价 return originalPrice+50; } } 动态代理 动态代理类的源码是在程序运行期间由JVM根据反射等机制动态的生成，所以不存在代理类的字节码文件。代理类和被代理类的关系是在程序运行时确定。</description>
+    </item>
+    
+    <item>
+      <title>面试储备</title>
+      <link>https://moyuduo.github.io/posts/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/</guid>
+      <description>面试相关知识储备 你觉得java研发岗位需要什么能力？ 要成为java研发工程师，我觉得首先要具备很好的代码能力，能够使用技术完成需求，其次需要有良好的沟通能力，因为我们是一个团队进行开发，每个人都不是独立的一个单位，需要彼此合作，才能完成项目。然后还需要有学习的能力，作为互联网从业者，我们都知道技术的更替是很快的，有不断的新技术出现，作为一个开发者，快速学习新技术是很有必要的。
+你觉得你有什么缺点？ 我是一个不太愿意去麻烦别人的人，如果遇到了什么问题，必须要寻求别人的帮助，那么我也一定会在物质和态度上去感谢对方，这就导致我也不喜欢别人轻易麻烦我，这可能算是我很大一个缺点。
+你还有什么要问的？ 加入我有幸加入贵公司，那在入职之前还有什么需要去学习和准备的吗？入职之后公司有没有相关培训？
+你的职业规划是怎么样的？ 作为一个一个应届毕业生，刚刚工作，在工作经验和技术上面还有很多需要积累的，我准备在未来2-3年主要提升自己的技术实力，达到能在团队内独挡一面，然后再经过 几年的学习，能够带领团队，进行项目开发，当自己技术具备一定广度，我准备往架构师方向发展。
+集合 ArrayList ArrayList底层使用Object数组来保存元素，默认初始化大小为10，当需要扩容时，新容量是原容量的1.5倍，modCount属性与集合遍历时的快速失败机制有关，ArrayList不是线程安全的
+Vector Vector底层使用Object数组来保存元素，默认初始化大小是10，具有一个capacityIncrement属性，可以指定扩容时的增长因子，在进行扩容时，如果指定了增长因子，那么新容量为原容量+增长因子，否则新容量为原容量的2倍，Vector的所有方法都加了锁，所以是线程安全的
+LinkedList LinkedList底层使用的是一个不带头结点的双向链表来保存元素的，在插入元素的时候进行的是尾插法，LinkedList实现了Deque接口，可以在链表的两端进行入队和出队的操作，所以可以把LinkedList当做栈和队列使用，LinkedList不是线程安全的
+HashMap 在jdk1.7以前HashMap使用的是数组+链表的结构来存储元素的，由于添加元素过多后，hash碰撞的次数增加，导致链表的长度过长，访问的时候有效率的问题，jdk1.8为了解决这个问题采用数组+链表+红黑树的结构存储元素，当添加元素后，链表的长度达到8（还需要满足最少有64个元素的一条件）就会把链表转化为红黑树，HashMap默认的初始化大小是16，加载因子是0.75，添加元素如果对应节点是链表，进行的是尾插法，添加元素后到达阈值，需要进行扩容时，数组的新容量扩大为原来的2倍，并将所有元素进行rehash操作，HashMap的所有方法都没有加锁，所以不是线程安全的
+HashSet HashSet底层维护了一个HashMap，把添加的元素当做key来存储，利用HashMap中key不能重复的特性了保证HashSet中的元素不重复，不是线程安全的
+Hashtable Hashtable底层采用数组+链表结构存储，默认初始化大小为11，加载因子为0.75，当元素个数达到阈值进行扩容时，新容量为原容量的2倍+1，并且使用头插法进行rehash，Hashtable的所有方法都加了锁，所以是线程安全的
+LinkedHashMap LinkedHashMap是HashMap的子类，节点新增了before和after两个属性保存前驱了后继，LinkedHashMap保证了遍历时按照添加/访问的顺序,LinkedHashMap不是线程安全的
+项目遇到的问题 主键问题 在在线学习项目中，数据库的主键使用的是mybatisPlus的生成策略，默认生成的是一个19位字符长度，js只能解析16位长度整数，发现这个问题户我们把主键生成策略改成了生成字符串，解决了这个问题
+413错误 在视频上传的时候，刚开始测试是没有问题，配置了nginx请求转发后报出了413异常，我们直接判断是nginx出了问题，后来查阅资料发现是nginx的上传问题默认不能超过1M，通过配置client_max_body_size解决了这个问题
+JVM 类加载器有什么好处？ 可以确保java核心类库的安全：如果java类库中的类是由自定义的加载器去加载的，那么可能在会在JVM中存在多个版本类，而且这些类是不兼容的，项目不可见的，借助双亲委派机制，java核心类库都由启动类加载器来统一加载，所以他们是类型兼容的。 确保java的核心类库不会被自定义类替换，每个加载器都有自己的加载路径，即使和java核心类同名，也会去加载java自己的类。 不同类的加载器可以为同名的类创建额外的命名空间，使得相同名称的类可以并存在java虚拟机中，并且他们 是不兼容的，相当于在java虚拟机中创建了一个个隔离的类空间，这种技术在很多框架中都有使用。 mybatis中#和$有什么区别 #{}意味着预编译语句，sql语句中的#{}参数会使用jdbc的PreparedStatement替换为？占位符，这种方式可以防止sql注入,替换后的每个参数都有单引号
+${}是直接将参数的字符串取值拼接sql后再去编译，这样就带来了sql注入的风险，当然${}并不是一无是处，在进行动态排序时，就需要使用
+mybatis中嵌套查询和嵌套结果有什么区别 嵌套查询是对单表的查询后拿到关联的列再对关联对象进行查询，特点是简单但是需要执行多条sql语句效率低
+嵌套结果是对多表的连接查询，一条sql查出所有的信息，然后再进行对象封装
+mysql中如何实现分页 可以使用limit来进行分页，如果要查询pageNum页时，就使用limit （pageNum-1）*pageSize,pageSize
+servlet的生命周期 servlet的生命周期主要包括四个阶段：①加载和实例化 ②初始化 ③处理请求 ④服务终止
+当客户端第一次向web服务器发起一个servlet请求时，web服务器会创建一个该servlet的实例，并调用servlet的init方法；如果web服务器已经存在该servlet实例，那么就直接使用该实例；然后调用service方法；当web服务器reload或关闭tocat时，web服务器将调用servlet的destroy方法释放资源，然后将servlet从服务器内存中删除。
+http和https区别 http采用的是明文传输，信息在网络上有可能被拦截
+https采用ssl证书，运用对称加密+非对称加密+CA第三方对传输的数据进行加密，即使传输的数据在网络上被劫持了也不能被破译
+TCP/IP几次握手，为什么 三次握手。第一次握手是客户端向服务器发送一个syn包包含一个seq标志位，第二次握手是服务器收到了客户端连接的请求，同意建议连接，回复一个包，包含syn+ack，ack为seq+1表示收到了请求包，并且也有一个同步标志seq，第三次握手是客户端收到这个syn+ack包，此时客户端就知道服务器同意连接，并且准备就绪。如果只是两次握手，由于包在网络上传输是有延迟的，tcp是具有超时重传的，如果第一个请求建立连接的包在网络上阻塞了，客户端发送了第二个请求建立连接的包后，服务器收到了第一个延迟的包，给客户端回了一个确认包就建立连接的话。由于服务器是以延迟包的seq为标志，而客户端以为是新的请求连接的seq，导致后续客户端发送数据包时以客户端的seq的准，这些数据包发送到服务器都被丢弃了。如果是四次握手的话，也能保证建立连接，但是并不能显著增加可靠性，没有必要。
+TCP和UDP有什么区别 TCP是面向连接的，在建立逻辑连接之前需要三次握手建立连接，并且TCP协议具有超时重传，数据包去重，所以TCP是保证可靠性的协议。
+UDP是面向无连接的，不需要建立连接，发送端不保证数据包能被接收端收到，可能存在丢包的情况，是不保证数据可靠性的连接。
+有哪些状态码 200 500 404 401 413 302 304
+401是访问一些需要权限页面时，如果直接使用url访问，会返回状态码401表示没有权限访问
+413请求体大小超过了nginx的默认1m大小，可以配置client_max_body_size解决了这个问题
+302重定向，浏览器会从响应头中取出Location值的地址，然后去请求这个地址</description>
+    </item>
+    
+    <item>
+      <title>面试题</title>
+      <link>https://moyuduo.github.io/posts/%E7%AC%94%E8%AF%95%E9%A2%98/</link>
+      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/%E7%AC%94%E8%AF%95%E9%A2%98/</guid>
+      <description>面试题 ==和equals的区别
+说说equals和hashCode
+为什么eclipse重写hashCode会有31这个数
+String s1=new String(&amp;#34;abc&amp;#34;); String s2=&amp;#34;abc&amp;#34;; String s3=new String(&amp;#34;abc&amp;#34;); System.out.println(s1==s2); System.out.println(s1==s3); System.out.println(s2==s3); System.out.println(&amp;#34;==============&amp;#34;); System.out.println(s1==s1.intern()); System.out.println(s2==s2.intern()); System.out.println(s1.intern()==s2.intern()); 输出结果是什么？为什么？ String s4=&amp;#34;java&amp;#34;; String s5=&amp;#34;ja&amp;#34;; String s6=&amp;#34;va&amp;#34;; System.out.println(s4==&amp;#34;java&amp;#34;); System.out.println(s4==(s5+s6)); System.out.println(s4==&amp;#34;ja&amp;#34;+s6); 输出什么，为什么？ class Person{ String name; public Person(String name) { this.name=name; } public String getName() { return name; } public void setName(String name) { this.name = name; } } public void change1(int x) { x=20; } public void change2(Integer x) { x=20; } public void change3(Person p) { p.</description>
+    </item>
+    
+    <item>
+      <title>Docker简介及使用</title>
+      <link>https://moyuduo.github.io/posts/docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Sun, 27 Nov 2022 16:14:14 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E4%BD%BF%E7%94%A8/</guid>
+      <description>Docker相关 为什么要使用Docker？ 想想在分布式项目中，Nginx后会有很多的服务器提供服务，并且当一些特殊的情况下我们需要对服务器进行扩容，假如我们要新增100台服务器，我们需要一个一个服务器都去装tomcat吗？每台都去进行相关配置吗？再想想我们学习开源项目，很多情况下都需要安装Mysql、Redis、MongoDB、Tomcat等，这时候一个一个去装，一个个去配置是不是很麻烦，Docker就为我们提供了一个简洁的方式完成这些工作。
+简介 Docker是一个开源的应用容器引擎；是一个轻量级容器技术；
+Docker支持将软件编译成一个镜像；然后在镜像中各种软件做好配置，将镜像发布出去，其他使用者可以直接使用这个镜像；
+运行中的这个镜像称为容器，容器启动是非常快速的。
+核心概念 docker主机(Host)：安装了Docker程序的机器（Docker直接安装在操作系统之上）；
+docker客户端(Client)：连接docker主机进行操作；
+docker仓库(Registry)：用来保存各种打包好的软件镜像；
+docker镜像(Images)：软件打包好的镜像；放在docker仓库中；
+docker容器(Container)：镜像启动后的实例称为一个容器；容器是独立运行的一个或一组应用；
+安装Docker 1）可以使用VmWare或VirtualBox
+2）安装好centos，内核版本必须是3.1以上，可以使用uname -r查看
+3）配置好网络，保证能连上外网
+4）使用yum命令安装docker
+yum install docker yum list installed|grep docker #卸载原有的docker yum remove -y docker-ce docker-ce-cli docker-ce-rootless-extras docker-scan-plugin containerd.io #删除镜像、容器、配置文件等内容 rm -rf /var/lib/docker #查询docker可按照版本 yum list docker-ce --showduplicates | sort -r # !!!亲测centos7.2下安装这个版本不会有问题 yum install -y docker-ce-17.06.2.ce-1.el7.centos 20.10.7-3 yum install -y docker-ce-20.10.7-3.el7.x86_64 containerd.io systemctl start docker docker run hello-world 5)安装的过程中会提示是否继续？[y/N]：y	输入y即可	最后出现完毕!即完成
+启动Docker #启动docker [root@localhost yum.</description>
+    </item>
+    
     <item>
       <title>Linux</title>
-      <link>https://examplesite.com/posts/linux/</link>
+      <link>https://moyuduo.github.io/posts/linux/</link>
       <pubDate>Sat, 26 Nov 2022 14:14:07 +0800</pubDate>
       
-      <guid>https://examplesite.com/posts/linux/</guid>
+      <guid>https://moyuduo.github.io/posts/linux/</guid>
       <description>linux命令自查 查看cpu和内存 cpu个数 cat /proc/cpuinfo | grep &amp;#34;physical id&amp;#34; | uniq | wc -l cpu核数 cat /proc/cpuinfo | grep &amp;#34;cpu cores&amp;#34; | uniq cpu型号 cat /proc/cpuinfo | grep &amp;#39;model name&amp;#39; |uniq 内存大小 cat /proc/meminfo | grep MemTotal 设置linux开机自启动 linux文件/etc/rc.local文件中的内容会linux启动完成后执行，所以可以用来做开机自启动，/etc/rc.local默认是lrwxrwxrwx权限，但是由于它是/etc/rc.d/rc.local的一个软连接，所以/etc/rc.d/rc.local这个文件必须要有执行权限才能开机自启动，而这个人间默认是-rw-rw-rw-权限，所以必须要修改添加执行权限,注意在这个文件中添加开机执行死循环脚本时必须使用&amp;amp;后台执行。
 秒级检测脚本 #!/bin/bash while true do count=`ps -ef|grep etcd|grep -v grep|wc -l` if [ $count -eq 0 ]; then cd /opt/etcd-v3.5.0-linux-amd64 ./etcd -listen-client-urls=&amp;#34;http://0.0.0.0:2379&amp;#34; --advertise-client-urls=&amp;#34;http://0.0.0.0:2379&amp;#34; echo &amp;#34;restart etcd at $(date)&amp;#34; &amp;gt;&amp;gt; /opt/etcd-v3.5.0-linux-amd64/record fi sleep 1 done 原理是通过ps -ef|grep按照条件过滤执行的进程，再通过wc -l转换为进程个数，最后通过shell进行判断。</description>
     </item>
     
     <item>
       <title>My First Post</title>
-      <link>https://examplesite.com/posts/my-first-post/</link>
+      <link>https://moyuduo.github.io/posts/my-first-post/</link>
       <pubDate>Sat, 26 Nov 2022 13:05:14 +0800</pubDate>
       
-      <guid>https://examplesite.com/posts/my-first-post/</guid>
+      <guid>https://moyuduo.github.io/posts/my-first-post/</guid>
       <description>Introduction This is bold text, and this is emphasized text.
 Visit the Hugo website!</description>
     </item>
