@@ -2,10 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://moyuduo.github.io/posts/arraylistlinkedlist%E5%92%8Cvector%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2022-11-27T16:16:14+08:00</lastmod>
+    <loc>https://moyuduo.github.io/</loc>
+    <lastmod>2022-11-30T11:01:00+08:00</lastmod>
+  </url><url>
+    <loc>https://moyuduo.github.io/posts/</loc>
+    <lastmod>2022-11-30T11:01:00+08:00</lastmod>
+  </url><url>
+    <loc>https://moyuduo.github.io/posts/python/</loc>
+    <lastmod>2022-11-30T11:01:00+08:00</lastmod>
   </url><url>
     <loc>https://moyuduo.github.io/posts/clickhouse/</loc>
+    <lastmod>2022-11-30T11:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://moyuduo.github.io/posts/arraylistlinkedlist%E5%92%8Cvector%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</loc>
     <lastmod>2022-11-27T16:16:14+08:00</lastmod>
   </url><url>
     <loc>https://moyuduo.github.io/posts/edgewize1.1/</loc>
@@ -107,9 +116,6 @@
     <loc>https://moyuduo.github.io/posts/makefile/</loc>
     <lastmod>2022-11-27T16:16:14+08:00</lastmod>
   </url><url>
-    <loc>https://moyuduo.github.io/</loc>
-    <lastmod>2022-11-27T16:16:14+08:00</lastmod>
-  </url><url>
     <loc>https://moyuduo.github.io/posts/mqtt-vs-amqp/</loc>
     <lastmod>2022-11-27T16:16:14+08:00</lastmod>
   </url><url>
@@ -117,12 +123,6 @@
     <lastmod>2022-11-27T16:16:14+08:00</lastmod>
   </url><url>
     <loc>https://moyuduo.github.io/posts/postgresql%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2022-11-27T16:16:14+08:00</lastmod>
-  </url><url>
-    <loc>https://moyuduo.github.io/posts/</loc>
-    <lastmod>2022-11-27T16:16:14+08:00</lastmod>
-  </url><url>
-    <loc>https://moyuduo.github.io/posts/python/</loc>
     <lastmod>2022-11-27T16:16:14+08:00</lastmod>
   </url><url>
     <loc>https://moyuduo.github.io/posts/rabbitmq/</loc>
@@ -141,9 +141,6 @@
     <lastmod>2022-11-27T16:16:14+08:00</lastmod>
   </url><url>
     <loc>https://moyuduo.github.io/posts/temp/</loc>
-    <lastmod>2022-11-27T16:16:14+08:00</lastmod>
-  </url><url>
-    <loc>https://moyuduo.github.io/posts/test/</loc>
     <lastmod>2022-11-27T16:16:14+08:00</lastmod>
   </url><url>
     <loc>https://moyuduo.github.io/posts/windows%E5%91%BD%E4%BB%A4%E5%A4%87%E5%BF%98%E5%BD%95/</loc>
@@ -203,8 +200,12 @@
     <loc>https://moyuduo.github.io/posts/my-first-post/</loc>
     <lastmod>2022-11-26T13:05:14+08:00</lastmod>
   </url><url>
+    <loc>https://moyuduo.github.io/archives/</loc>
+  </url><url>
     <loc>https://moyuduo.github.io/categories/</loc>
   </url><url>
     <loc>https://moyuduo.github.io/tags/</loc>
+  </url><url>
+    <loc>https://moyuduo.github.io/posts/test/</loc>
   </url>
 </urlset>

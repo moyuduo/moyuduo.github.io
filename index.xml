@@ -9,7 +9,27 @@
       <link>https://moyuduo.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 27 Nov 2022 16:16:14 +0800</lastBuildDate><atom:link href="https://moyuduo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Nov 2022 11:01:00 +0800</lastBuildDate><atom:link href="https://moyuduo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>python</title>
+      <link>https://moyuduo.github.io/posts/python/</link>
+      <pubDate>Wed, 30 Nov 2022 11:01:00 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/python/</guid>
+      <description>安装 在https://www.python.org/downloads/source/上找到合适的安装包 在linux上curl -O https://www.python.org/ftp/python/3.7.14/Python-3.7.14.tgz 解压tar -zxvf python/3.7.14/Python-3.7.14.tgz 修改解压目录下的Modules/Setup按需自定义 在解压目录下的bin目录下执行./configure 执行make 执行make install 输入py按tab看是否有提示验证是否安装成功 申明 在编写的python脚本文件中，可以在第一行申明#!/usr/bin/python标识默认改脚本的执行程序(路径未pythen可执行文件的具体路径)，如果使用./xxx.py时就会使用该程序执行脚本，如果未申明默认会当做shell脚本进行执行
+#!/usr/bin/python print(&amp;#34;ok&amp;#34;) 中文编码 如果在执行程序时遇到中文乱码问题，可以在脚本文件中申明# -*- coding: UTF-8 -*-或# coding=utf-8
+#!/usr/bin/python # coding=utf-8 print(&amp;#34;你好！&amp;#34;) 变量 #赋值 x, y = 1, 2 #交换 x, y = y, x 条件语句 num = 3 if num &amp;gt; 2: pass else: pass if num &amp;gt; 2: pass elif num &amp;lt; 0: pass else: pass 条件成立时执行的语句 if cond else 条件不成立时执行的语句 num=3 print(&amp;#34;num&amp;gt;5&amp;#34;) if num&amp;gt;5 else print(&amp;#34;num&amp;lt;=5&amp;#34;) 循环 for item in iterable: pass for item in iterable: pass else: pass #range函数可以用于生成一个数字可迭代对象 range(stop) #默认start为0,生成的数组序列不包含stop range(start, stop) range(start, stop, step) num = 3 while num &amp;gt; 0: pass #使用break跳出循环并不会执行else里面的代码 num = 3 while num &amp;gt; 0: pass else: pass 逻辑运算符 and:操作符左右为Ture才是True，相当于&amp;amp;&amp;amp; or:操作符左右任意一边为True就为True，相当于|| not:取反，相当于 !</description>
+    </item>
+    
+    <item>
+      <title>clickhouse</title>
+      <link>https://moyuduo.github.io/posts/clickhouse/</link>
+      <pubDate>Wed, 30 Nov 2022 11:00:00 +0800</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/clickhouse/</guid>
+      <description>clickhouse 安装 检查限制 ulimit -a #主要关注open files和max user processes core file size (blocks, -c) 0 data seg size (kbytes, -d) unlimited scheduling priority (-e) 0 file size (blocks, -f) unlimited pending signals (-i) 14989 max locked memory (kbytes, -l) 64 max memory size (kbytes, -m) unlimited open files (-n) 1024 pipe size (512 bytes, -p) 8 POSIX message queues (bytes, -q) 819200 real-time priority (-r) 0 stack size (kbytes, -s) 8192 cpu time (seconds, -t) unlimited max user processes (-u) 14989 virtual memory (kbytes, -v) unlimited file locks (-x) unlimited 修改限制 vi /etc/security/limits.</description>
+    </item>
+    
     <item>
       <title>ArrayList、LinkedList和Vector源码分析</title>
       <link>https://moyuduo.github.io/posts/arraylistlinkedlist%E5%92%8Cvector%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
@@ -23,15 +43,6 @@ ArrayList实现了RandomAccess接口，这个接口是一个标记接口，接�
 public void test1() { List&amp;lt;Integer&amp;gt; list=new ArrayList&amp;lt;Integer&amp;gt;(); list.add(1); if(list instanceof RandomAccess) {//RandomAccess实现类，使用下标访问 for(int i=0;i&amp;lt;list.size();i++) { //todo } }else {//不是RandomAccess实现类，使用iterator遍历 Iterator&amp;lt;Integer&amp;gt; iterator = list.iterator(); while(iterator.hasNext()) { //todo } } } ArrayList实现了Cloneable接口,所以可以合法调用clone方法，如果没有实现Cloneable接口，那么会抛出CloneNotSupporteddException，详见
 ArrayList实现了Serializable接口，可以将对象序列化，用于传输或持久化，详见
 属性 //序列化Id private static final long serialVersionUID = 8683452581122892189L; //默认初始化大小 private static final int DEFAULT_CAPACITY = 10; //空数组对象，用于有参构造且初始化大小为0时 private static final Object[] EMPTY_ELEMENTDATA = {}; //空数组对象，用于无参构造时，这两个属性主要用来区分创建ArrayList时有没有指定容量 private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}; //保存对象的容器，使用transient修饰即在序列化时，不进行序列化，这是因为ArrayList添加了序列化方法private void writeObject(java.</description>
-    </item>
-    
-    <item>
-      <title>clickhouse</title>
-      <link>https://moyuduo.github.io/posts/clickhouse/</link>
-      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
-      
-      <guid>https://moyuduo.github.io/posts/clickhouse/</guid>
-      <description>clickhouse 安装 检查限制 ulimit -a #主要关注open files和max user processes core file size (blocks, -c) 0 data seg size (kbytes, -d) unlimited scheduling priority (-e) 0 file size (blocks, -f) unlimited pending signals (-i) 14989 max locked memory (kbytes, -l) 64 max memory size (kbytes, -m) unlimited open files (-n) 1024 pipe size (512 bytes, -p) 8 POSIX message queues (bytes, -q) 819200 real-time priority (-r) 0 stack size (kbytes, -s) 8192 cpu time (seconds, -t) unlimited max user processes (-u) 14989 virtual memory (kbytes, -v) unlimited file locks (-x) unlimited 修改限制 vi /etc/security/limits.</description>
     </item>
     
     <item>
@@ -551,17 +562,6 @@ mysql -uroot -p 修改默认密码</description>
     </item>
     
     <item>
-      <title>python</title>
-      <link>https://moyuduo.github.io/posts/python/</link>
-      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
-      
-      <guid>https://moyuduo.github.io/posts/python/</guid>
-      <description>安装 在https://www.python.org/downloads/source/上找到合适的安装包 在linux上curl -O https://www.python.org/ftp/python/3.7.14/Python-3.7.14.tgz 解压tar -zxvf python/3.7.14/Python-3.7.14.tgz 修改解压目录下的Modules/Setup按需自定义 在解压目录下的bin目录下执行./configure 执行make 执行make install 输入py按tab看是否有提示验证是否安装成功 申明 在编写的python脚本文件中，可以在第一行申明#!/usr/bin/python标识默认改脚本的执行程序(路径未pythen可执行文件的具体路径)，如果使用./xxx.py时就会使用该程序执行脚本，如果未申明默认会当做shell脚本进行执行
-#!/usr/bin/python print(&amp;#34;ok&amp;#34;) 中文编码 如果在执行程序时遇到中文乱码问题，可以在脚本文件中申明# -*- coding: UTF-8 -*-或# coding=utf-8
-#!/usr/bin/python # coding=utf-8 print(&amp;#34;你好！&amp;#34;) 变量 #赋值 x, y = 1, 2 #交换 x, y = y, x 条件语句 num = 3 if num &amp;gt; 2: pass else: pass if num &amp;gt; 2: pass elif num &amp;lt; 0: pass else: pass 条件成立时执行的语句 if cond else 条件不成立时执行的语句 num=3 print(&amp;#34;num&amp;gt;5&amp;#34;) if num&amp;gt;5 else print(&amp;#34;num&amp;lt;=5&amp;#34;) 循环 for item in iterable: pass for item in iterable: pass else: pass #range函数可以用于生成一个数字可迭代对象 range(stop) #默认start为0,生成的数组序列不包含stop range(start, stop) range(start, stop, step) num = 3 while num &amp;gt; 0: pass #使用break跳出循环并不会执行else里面的代码 num = 3 while num &amp;gt; 0: pass else: pass 逻辑运算符 and:操作符左右为Ture才是True，相当于&amp;amp;&amp;amp; or:操作符左右任意一边为True就为True，相当于|| not:取反，相当于 !</description>
-    </item>
-    
-    <item>
       <title>RabbitMQ</title>
       <link>https://moyuduo.github.io/posts/rabbitmq/</link>
       <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
@@ -638,15 +638,6 @@ String类实现了CharSequence可以按下标进行相关操作
       
       <guid>https://moyuduo.github.io/posts/temp/</guid>
       <description>HTTP 协议 · 笔试面试知识整理 https://labuladong.gitbook.io/algo/ 开篇词 - labuladong的算法小抄 https://www.jianshu.com/p/96f1189b95fe IO多路复用机制详解 - 简书 https://www.cnblogs.com/tiancai/p/9024351.html 为什么MySQL数据库索引选择使用B+树？ - 甜菜波波 - 博客园 https://hit-alibaba.github.io/interview/basic/network/HTTP.html TCP 协议 · 笔试面试知识整理 https://hit-alibaba.github.io/interview/basic/network/TCP.html Golang相关：[审稿进度80%]Go语法、Go并发思想、Go与web开发、Go微服务设施等 https://github.com/overnote/over-golang go 内部、源码分析 https://github.com/cch123/golang-notes https://github.com/teh-cmc/go-internals ✅ Solutions to LeetCode by Go https://github.com/halfrost/LeetCode-Go 从问题切入，串连 Go 语言相关的所有知识，融会贯通 https://golang.design/go-questions/ C/C++ 技术面试基础知识总结，包括语言、程序库、数据结构、算法、系统、网络、链接装载库等知识及面试经验、招聘、内推等信息。 https://github.com/huihut/interview 技术面试必备基础知识、Leetcode、计算机操作系统、计算机网络、系统设计 （内含 Java） http://www.cyc2018.xyz/</description>
-    </item>
-    
-    <item>
-      <title>test</title>
-      <link>https://moyuduo.github.io/posts/test/</link>
-      <pubDate>Sun, 27 Nov 2022 16:16:14 +0800</pubDate>
-      
-      <guid>https://moyuduo.github.io/posts/test/</guid>
-      <description>这是一个测试md</description>
     </item>
     
     <item>
@@ -955,6 +946,8 @@ yum install docker yum list installed|grep docker #卸载原有的docker yum rem
       <description>Introduction This is bold text, and this is emphasized text.
 Visit the Hugo website!</description>
     </item>
+    
+    
     
   </channel>
 </rss>
