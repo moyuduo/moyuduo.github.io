@@ -947,6 +947,5 @@ yum install docker yum list installed|grep docker #卸载原有的docker yum rem
 Visit the Hugo website!</description>
     </item>
     
-    
   </channel>
 </rss>
