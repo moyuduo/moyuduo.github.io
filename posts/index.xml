@@ -947,5 +947,16 @@ yum install docker yum list installed|grep docker #卸载原有的docker yum rem
 Visit the Hugo website!</description>
     </item>
     
+    <item>
+      <title>My Test</title>
+      <link>https://moyuduo.github.io/posts/page/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      
+      <guid>https://moyuduo.github.io/posts/page/</guid>
+      <description>test page md
+一级标题 123
+二级标题 456</description>
+    </item>
+    
   </channel>
 </rss>
